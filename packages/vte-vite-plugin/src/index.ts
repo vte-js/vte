@@ -26,10 +26,13 @@ export interface VtePluginOptions {
     /** 输出文件前缀（默认 "tokens"） */
     prefix?: string;
   };
+  /** Sourcemap 配置 */
+  sourcemap?: boolean | "inline" | "hidden";
 }
 
 export default function vtePlugin(options: VtePluginOptions = {}): Plugin {
   const platform: Platform = options.platform ?? "web";
+  const sourcemapOption = options.sourcemap ?? true;
   const outputOptions = {
     types: true,
     css: true,
@@ -327,13 +330,18 @@ export default function vtePlugin(options: VtePluginOptions = {}): Plugin {
         }
       }
 
+      // 生成 sourcemap
+      const sourcemap = sourcemapOption
+        ? s.generateMap({
+            source: id,
+            includeContent: true,
+            hires: true,
+          })
+        : null;
+
       return {
         code: s.toString(),
-        map: s.generateMap({
-          source: id,
-          includeContent: true,
-          hires: true,
-        }),
+        map: sourcemap,
       };
     },
   };

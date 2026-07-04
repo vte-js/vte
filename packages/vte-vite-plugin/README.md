@@ -109,6 +109,9 @@ vte({
   // 目标平台: "web" | "mp" | "rn"
   platform: "web",
 
+  // Sourcemap 配置
+  sourcemap: true, // true | "inline" | "hidden" | false
+
   // 构建时输出配置
   output: {
     types: true,      // 生成 tokens.d.ts（TypeScript 类型声明）
@@ -119,14 +122,17 @@ vte({
 })
 ```
 
-### 输出配置详情
+### 配置选项详情
 
 | 选项 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `types` | `boolean` | `true` | 生成 `tokens.d.ts` TypeScript 类型声明 |
-| `css` | `boolean` | `true` | 生成 `tokens.css` CSS 变量定义文件 |
-| `agentJson` | `boolean` | `true` | 生成 `tokens.agent.json` AI 可读格式 |
-| `prefix` | `string` | `"tokens"` | 输出文件名前缀 |
+| `tokenFile` | `string` | `"design-tokens.ts"` | Token 文件路径 |
+| `platform` | `string` | `"web"` | 目标平台：`"web"` \| `"mp"` \| `"rn"` |
+| `sourcemap` | `boolean \| string` | `true` | Sourcemap 配置 |
+| `output.types` | `boolean` | `true` | 生成 `tokens.d.ts` |
+| `output.css` | `boolean` | `true` | 生成 `tokens.css` |
+| `output.agentJson` | `boolean` | `true` | 生成 `tokens.agent.json` |
+| `output.prefix` | `string` | `"tokens"` | 输出文件名前缀 |
 
 ### 自定义前缀示例
 
@@ -147,6 +153,27 @@ vte({
     types: false,    // 不生成 .d.ts
     css: false,      // 不生成 .css
     agentJson: true, // 只生成 .agent.json
+  },
+})
+```
+
+### Sourcemap 配置
+
+```typescript
+vte({
+  sourcemap: true,   // 生成 .map 文件（默认）
+  sourcemap: "inline", // 内联 sourcemap
+  sourcemap: "hidden", // 生成 .map 文件但不引用
+  sourcemap: false,  // 禁用 sourcemap
+})
+```
+
+**注意**：需要在 Vite 配置中也启用 sourcemap：
+
+```typescript
+export default defineConfig({
+  build: {
+    sourcemap: true,
   },
 })
 ```
