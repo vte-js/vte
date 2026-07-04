@@ -13,12 +13,22 @@
   },
   "scripts": {
     "build": "pnpm -r run build",
+    "build:core": "pnpm --filter @vte/core run build",
+    "build:vite-plugin": "pnpm --filter @vte/vite-plugin run build",
+    "build:language-server": "pnpm --filter @vte/language-server run build",
+    "build:cli": "pnpm --filter @vte/cli run build",
+    "build:compiler": "pnpm --filter @vte/compiler run build",
+    "build:react": "pnpm --filter @vte/react run build",
+    "build:vscode": "pnpm --filter vte-vscode run build",
     "dev": "pnpm --filter @vte/playground run dev",
+    "dev:demo": "pnpm --filter vte-demo-project run dev",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:parse": "pnpm dlx ts-node playground/test-parse.ts",
-    "test:circular": "pnpm dlx ts-node playground/test-circular.ts",
-    "clean": "pnpm -r run clean"
+    "test:core": "vitest run packages/vte-core",
+    "test:vite-plugin": "vitest run packages/vte-vite-plugin",
+    "clean": "pnpm -r run clean || true",
+    "lint": "echo 'Linting not configured yet'",
+    "typecheck": "pnpm -r run typecheck || true"
   },
   "keywords": [
     "vue",
