@@ -38,3 +38,4 @@ temp/
 # Build artifacts
 *.js.map
 *.d.ts.map
+playground/*.js
