@@ -19,8 +19,8 @@ export function replaceTokenRefs(
   map: TokenMap,
 ): string {
   // 匹配 $token.path 和 $token."path-with-quotes" 两种格式
-  // 例如: $semantic.color.primary 或 $semantic.color."primary-hover"
-  return content.replace(/\$([\w][\w.]*)(?:"([\w-]+)")?/g, (match, tokenPath: string, quotedPart: string) => {
+  // 支持连字符：$semantic.spacing-lg, $semantic.color.primary-hover
+  return content.replace(/\$([\w][\w.\-]*)(?:"([\w\-]+)")?/g, (match, tokenPath: string, quotedPart: string) => {
     // 构建完整路径（移除引号，保留连字符）
     const fullPath = quotedPart ? `${tokenPath}${quotedPart}` : tokenPath;
 

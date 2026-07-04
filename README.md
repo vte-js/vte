@@ -37,6 +37,7 @@ vte/
 │   ├── @vte/cli               命令行工具
 │   ├── @vte/compiler          编译器
 │   ├── @vte/react             React 绑定
+│   ├── @vte/playground        可视化调试工具
 │   ├── @vte/language-server   IDE 无关的语言服务器
 │   └── vte-vscode             VS Code 扩展
 ├── playground/                开发测试
@@ -47,6 +48,7 @@ vte/
 |------|------|------|
 | `@vte/core` | Token 解析、类型定义、工具函数 | [README](packages/vte-core/README.md) |
 | `@vte/vite-plugin` | Vite 插件，`<style token>` 语法支持 | [README](packages/vte-vite-plugin/README.md) |
+| `@vte/playground` | 可视化调试工具，自动生成 playground | [README](packages/vte-playground/README.md) |
 | `@vte/cli` | 命令行工具，validate/extract/generate | [README](packages/vte-cli/README.md) |
 | `@vte/compiler` | 生成 agent.json 和 tokens.d.ts | [README](packages/vte-compiler/README.md) |
 | `@vte/react` | React hooks 和 Provider | [README](packages/vte-react/README.md) |

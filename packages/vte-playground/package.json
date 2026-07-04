@@ -1,0 +1,25 @@
+{
+  "name": "@vte/playground",
+  "version": "1.0.0",
+  "description": "Auto-generated VTE playground for visual debugging",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "vte-playground": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@vte/core": "workspace:*",
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "typescript": "^6.0.3"
+  },
+  "keywords": ["playground", "debug", "visual", "design-tokens"],
+  "license": "ISC"
+}

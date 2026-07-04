@@ -39,3 +39,12 @@ temp/
 *.js.map
 *.d.ts.map
 playground/*.js
+
+# Playground generated files
+.vte-playground/
+
+# Image files
+*.png
+*.jpg
+*.jpeg
+*.gif
