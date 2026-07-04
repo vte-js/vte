@@ -1,0 +1,21 @@
+{
+  "name": "@vte/compiler",
+  "version": "1.0.0",
+  "description": "Compiler for Vue Token Engine - generates agent.json and tokens.d.ts",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@vte/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "typescript": "^6.0.3"
+  },
+  "keywords": ["vue", "design-tokens", "compiler", "ai"],
+  "license": "ISC"
+}

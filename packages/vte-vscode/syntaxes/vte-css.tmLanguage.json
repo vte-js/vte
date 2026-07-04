@@ -1,0 +1,194 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "VTE CSS",
+  "scopeName": "source.css.vte",
+  "fileTypes": [],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#token-reference" },
+    { "include": "#css" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.css",
+          "begin": "/\\*",
+          "end": "\\*/",
+          "captures": {
+            "0": { "name": "punctuation.definition.comment.css" }
+          }
+        }
+      ]
+    },
+    "token-reference": {
+      "patterns": [
+        {
+          "name": "variable.other.token.css",
+          "match": "\\$([\\w][\\w.]*)",
+          "captures": {
+            "1": {
+              "patterns": [
+                {
+                  "name": "support.type.token.path.css",
+                  "match": "([\\w]+)\\.([\\w]+)\\.([\\w]+)",
+                  "captures": {
+                    "1": { "name": "entity.name.token.namespace.css" },
+                    "2": { "name": "entity.name.token.category.css" },
+                    "3": { "name": "entity.name.token.name.css" }
+                  }
+                },
+                {
+                  "name": "support.type.token.path.css",
+                  "match": "([\\w]+)\\.([\\w]+)",
+                  "captures": {
+                    "1": { "name": "entity.name.token.category.css" },
+                    "2": { "name": "entity.name.token.name.css" }
+                  }
+                },
+                {
+                  "name": "support.type.token.path.css",
+                  "match": "([\\w]+)",
+                  "captures": {
+                    "1": { "name": "entity.name.token.name.css" }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "css": {
+      "patterns": [
+        {
+          "name": "meta.property-list.css",
+          "begin": "\\{",
+          "beginCaptures": {
+            "0": { "name": "punctuation.section.property-list.begin.css" }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": { "name": "punctuation.section.property-list.end.css" }
+          },
+          "patterns": [
+            { "include": "#comments" },
+            { "include": "#token-reference" },
+            { "include": "#css-properties" },
+            { "include": "#css-values" }
+          ]
+        },
+        {
+          "name": "meta.selector.css",
+          "match": "([^{}@;]+)(?=\\{)",
+          "captures": {
+            "1": {
+              "patterns": [
+                {
+                  "name": "entity.other.attribute-name.class.css",
+                  "match": "\\.[a-zA-Z_][\\w-]*"
+                },
+                {
+                  "name": "entity.other.attribute-name.id.css",
+                  "match": "#[a-zA-Z_][\\w-]*"
+                },
+                {
+                  "name": "entity.name.tag.css",
+                  "match": "\\b[a-zA-Z][a-zA-Z0-9]*\\b"
+                },
+                {
+                  "name": "entity.other.attribute-name.pseudo-class.css",
+                  "match": ":[a-zA-Z_][\\w-]*"
+                },
+                {
+                  "name": "entity.other.attribute-name.pseudo-element.css",
+                  "match": "::[a-zA-Z_][\\w-]*"
+                },
+                {
+                  "name": "keyword.operator.combinator.css",
+                  "match": "[>+~]"
+                },
+                {
+                  "name": "punctuation.separator.list.comma.css",
+                  "match": ","
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "meta.at-rule.media.css",
+          "match": "@media\\b",
+          "captures": {
+            "0": { "name": "keyword.control.at-rule.media.css" }
+          }
+        },
+        {
+          "name": "meta.at-rule.import.css",
+          "match": "@import\\b",
+          "captures": {
+            "0": { "name": "keyword.control.at-rule.import.css" }
+          }
+        }
+      ]
+    },
+    "css-properties": {
+      "patterns": [
+        {
+          "name": "support.type.property-name.css",
+          "match": "\\b([a-zA-Z-]+)\\s*(?=\\:)",
+          "captures": {
+            "1": { "name": "support.type.property-name.css" }
+          }
+        },
+        {
+          "name": "punctuation.separator.key-value.css",
+          "match": "\\:"
+        },
+        {
+          "name": "punctuation.terminator.rule.css",
+          "match": "\\;"
+        }
+      ]
+    },
+    "css-values": {
+      "patterns": [
+        {
+          "name": "support.constant.color.css",
+          "match": "#[0-9a-fA-F]{3,8}\\b"
+        },
+        {
+          "name": "constant.numeric.css",
+          "match": "\\b\\d+(\\.\\d+)?(px|rem|em|%|vh|vw|rpx)?\\b"
+        },
+        {
+          "name": "support.constant.css",
+          "match": "\\b(transparent|inherit|initial|unset|none|auto|normal|bold)\\b"
+        },
+        {
+          "name": "support.function.css",
+          "match": "\\b(var|calc|rgb|rgba|hsl|hsla|url|linear-gradient|radial-gradient)\\s*(?=\\()"
+        },
+        {
+          "name": "meta.function-call.css",
+          "begin": "\\b(var)\\s*\\(",
+          "beginCaptures": {
+            "1": { "name": "support.function.css" },
+            "2": { "name": "punctuation.section.function.begin.css" }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": { "name": "punctuation.section.function.end.css" }
+          },
+          "patterns": [
+            { "include": "#token-reference" },
+            {
+              "name": "variable.parameter.css",
+              "match": "--[\\w-]+"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

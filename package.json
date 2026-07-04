@@ -1,0 +1,45 @@
+{
+  "name": "vte",
+  "version": "0.1.0",
+  "description": "Vue Token Engine - Design Tokens First 的样式方案",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:vte-js/vte.git"
+  },
+  "homepage": "https://github.com/vte-js/vte",
+  "bugs": {
+    "url": "https://github.com/vte-js/vte/issues"
+  },
+  "scripts": {
+    "build": "pnpm -r run build",
+    "dev": "pnpm --filter @vte/playground run dev",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:parse": "pnpm dlx ts-node playground/test-parse.ts",
+    "test:circular": "pnpm dlx ts-node playground/test-circular.ts",
+    "clean": "pnpm -r run clean"
+  },
+  "keywords": [
+    "vue",
+    "design-tokens",
+    "css-variables",
+    "vite",
+    "vue3",
+    "typescript",
+    "style-system",
+    "cross-platform"
+  ],
+  "author": "vte-js",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3",
+    "vitest": "^3.2.0"
+  },
+  "packageManager": "pnpm@9.0.0"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@vte/react",
+  "version": "1.0.0",
+  "description": "React bindings for Vue Token Engine",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@vte/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "react": "^18.0.0",
+    "typescript": "^6.0.3"
+  },
+  "keywords": ["react", "design-tokens", "hooks"],
+  "license": "ISC"
+}

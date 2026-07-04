@@ -1,0 +1,74 @@
+{
+  "name": "vte-vscode",
+  "displayName": "VTE - Vue Token Engine",
+  "description": "IDE support for Vue Token Engine <style token> blocks",
+  "version": "1.0.0",
+  "publisher": "vte",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": ["Programming Languages"],
+  "activationEvents": [
+    "onLanguage:vue"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vte.goToTokenDefinition",
+        "title": "VTE: Go to Token Definition"
+      },
+      {
+        "command": "vte.goToClassDefinition",
+        "title": "VTE: Go to Class Definition"
+      },
+      {
+        "command": "vte.findTokenReferences",
+        "title": "VTE: Find Token References"
+      }
+    ],
+    "languages": [
+      {
+        "id": "vte-css",
+        "aliases": ["VTE CSS", "vte-css"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "vte-css",
+        "scopeName": "source.css.vte",
+        "path": "./syntaxes/vte-css.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.css.vte-inject",
+        "path": "./syntaxes/vte-css-language.json",
+        "injectTo": [
+          "source.vue"
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "VTE",
+      "properties": {
+        "vte.tokenFile": {
+          "type": "string",
+          "default": "design-tokens.ts",
+          "description": "Path to design tokens file"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "watch": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch"
+  },
+  "dependencies": {
+    "@vte/language-server": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "esbuild": "^0.20.0",
+    "typescript": "^6.0.3"
+  }
+}

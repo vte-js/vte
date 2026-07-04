@@ -1,0 +1,10 @@
+{
+  "scopeName": "source.css.vte-custom",
+  "fileTypes": [],
+  "patterns": [
+    {
+      "name": "support.type.token.css",
+      "match": "\\$[\\w][\\w.]*"
+    }
+  ]
+}

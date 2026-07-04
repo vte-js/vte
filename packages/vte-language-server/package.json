@@ -1,0 +1,21 @@
+{
+  "name": "@vte/language-server",
+  "version": "1.0.0",
+  "description": "IDE-agnostic language server core for Vue Token Engine",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@vte/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "typescript": "^6.0.3"
+  },
+  "keywords": ["language-server", "ide", "design-tokens"],
+  "license": "ISC"
+}

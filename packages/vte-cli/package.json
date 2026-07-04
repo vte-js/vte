@@ -1,0 +1,24 @@
+{
+  "name": "@vte/cli",
+  "version": "1.0.0",
+  "description": "CLI tool for Vue Token Engine",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "vte": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@vte/core": "workspace:*",
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "typescript": "^6.0.3"
+  },
+  "keywords": ["vue", "design-tokens", "cli"],
+  "license": "ISC"
+}
