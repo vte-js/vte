@@ -8,6 +8,10 @@ export default defineConfig({
     vte({
       tokenFile: "design-tokens.ts",
       platform: "web",
+      output: {
+        // 可自定义前缀：prefix: "design-tokens"
+        // 可禁用特定输出：types: false, css: false, agentJson: false
+      },
     }),
   ],
   resolve: {
