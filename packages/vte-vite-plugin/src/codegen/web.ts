@@ -18,11 +18,25 @@ export function replaceTokenRefs(
   content: string,
   map: TokenMap,
 ): string {
-  return content.replace(/\$([\w][\w.]*)/g, (match, tokenPath: string) => {
-    if (map.has(tokenPath)) {
-      const varName = `--vte-${tokenPath.replace(/\./g, "-")}`;
+  // 匹配 $token.path 和 $token."path-with-quotes" 两种格式
+  // 例如: $semantic.color.primary 或 $semantic.color."primary-hover"
+  return content.replace(/\$([\w][\w.]*)(?:"([\w-]+)")?/g, (match, tokenPath: string, quotedPart: string) => {
+    // 构建完整路径（移除引号，保留连字符）
+    const fullPath = quotedPart ? `${tokenPath}${quotedPart}` : tokenPath;
+
+    // 检查直接匹配
+    if (map.has(fullPath)) {
+      const varName = `--vte-${fullPath.replace(/\./g, "-")}`;
       return `var(${varName})`;
     }
+
+    // 尝试带连字符的路径（如 primary-hover）
+    const hyphenPath = quotedPart ? `${tokenPath}-${quotedPart}` : null;
+    if (hyphenPath && map.has(hyphenPath)) {
+      const varName = `--vte-${hyphenPath.replace(/\./g, "-")}`;
+      return `var(${varName})`;
+    }
+
     return match;
   });
 }
