@@ -62,9 +62,10 @@
                 <h3>返回值</h3>
                 <p>返回深度只读的 token 配置对象 <code>TokenConfig&lt;T&gt;</code></p>
                 <h3>示例</h3>
-                <CodeBlock label="design-tokens.ts" :code="defineTokensExample" />
+                <CodeBlock label="design-tokens.ts" :code="defineTokensExample" language="typescript" />
+
                 <h3>类型推导</h3>
-                <CodeBlock label="类型定义" :code="typeExample" />
+                <CodeBlock label="类型定义" :code="typeExample" language="typescript" />
               </div>
             </div>
 
@@ -93,7 +94,7 @@
                   <li><code>Unresolved reference</code> - 引用了不存在的 token</li>
                 </ul>
                 <h3>示例</h3>
-                <CodeBlock label="使用示例" :code="parseTokensExample" />
+                <CodeBlock label="使用示例" :code="parseTokensExample" language="typescript" />
               </div>
             </div>
 
@@ -107,7 +108,7 @@
               <div class="api-body">
                 <p>扁平化的 Token 字典，键为点路径（如 <code>semantic.color.primary</code>）。</p>
                 <h3>TokenValue 结构</h3>
-                <CodeBlock label="TokenValue" :code="tokenValueExample" />
+                <CodeBlock label="TokenValue" :code="tokenValueExample" language="typescript" />
               </div>
             </div>
 
@@ -121,7 +122,7 @@
               <div class="api-body">
                 <p>类型工具，从 token 定义中提取所有合法的点路径联合类型。用于 IDE 自动补全和类型检查。</p>
                 <h3>示例</h3>
-                <CodeBlock label="类型推导" :code="tokenPathExample" />
+                <CodeBlock label="类型推导" :code="tokenPathExample" language="typescript" />
               </div>
             </div>
 
@@ -135,7 +136,7 @@
               <div class="api-body">
                 <p>Token 引用类型，表示对其他 token 的引用。</p>
                 <h3>示例</h3>
-                <CodeBlock label="引用语法" :code="tokenRefExample" />
+                <CodeBlock label="引用语法" :code="tokenRefExample" language="typescript" />
               </div>
             </div>
 
@@ -189,7 +190,7 @@
                   </div>
                 </div>
                 <h3>示例</h3>
-                <CodeBlock label="vite.config.ts" :code="vitePluginExample" />
+                <CodeBlock label="vite.config.ts" :code="vitePluginExample" language="javascript" />
               </div>
             </div>
 
@@ -221,9 +222,9 @@
                   </div>
                 </div>
                 <h3>示例</h3>
-                <CodeBlock label="Vue SFC" :code="styleTokenExample" />
+                <CodeBlock label="Vue SFC" :code="styleTokenExample" language="css" />
                 <h3>编译输出</h3>
-                <CodeBlock label="CSS" :code="styleTokenOutput" />
+                <CodeBlock label="CSS" :code="styleTokenOutput" language="css" />
               </div>
             </div>
 
@@ -250,7 +251,7 @@
                   </div>
                 </div>
                 <h3>示例</h3>
-                <CodeBlock label="React 使用" :code="tokenProviderExample" />
+                <CodeBlock label="React 使用" :code="tokenProviderExample" language="typescript" />
               </div>
             </div>
 
@@ -264,9 +265,9 @@
               <div class="api-body">
                 <p>获取完整的 token 上下文。</p>
                 <h3>返回值</h3>
-                <CodeBlock label="TokenContextValue" :code="tokenContextExample" />
+                <CodeBlock label="TokenContextValue" :code="tokenContextExample" language="typescript" />
                 <h3>示例</h3>
-                <CodeBlock label="React 使用" :code="useTokenExample" />
+                <CodeBlock label="React 使用" :code="useTokenExample" language="typescript" />
               </div>
             </div>
           </main>
