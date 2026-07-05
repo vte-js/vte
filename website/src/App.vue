@@ -1,5 +1,8 @@
 <template>
   <div class="app" :class="{ dark: isDark }">
+    <MouseGlow />
+    <ScanLines />
+    <FloatingOrbs />
     <Navbar :is-dark="isDark" @toggle-theme="isDark = !isDark" />
     <Hero />
     <Features />
@@ -12,6 +15,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import MouseGlow from "./components/MouseGlow.vue";
+import ScanLines from "./components/ScanLines.vue";
+import FloatingOrbs from "./components/FloatingOrbs.vue";
 import Navbar from "./components/Navbar.vue";
 import Hero from "./components/Hero.vue";
 import Features from "./components/Features.vue";
@@ -20,15 +26,16 @@ import QuickStart from "./components/QuickStart.vue";
 import Packages from "./components/Packages.vue";
 import Footer from "./components/Footer.vue";
 
-const isDark = ref(false);
+const isDark = ref(true);
 
 onMounted(() => {
-  isDark.value = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  // Always dark mode for sci-fi theme
+  document.documentElement.classList.add("dark");
 });
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 * {
   margin: 0;
@@ -40,22 +47,13 @@ onMounted(() => {
   --vte-primary: #42b883;
   --vte-primary-light: #6dd5a0;
   --vte-dark: #35495e;
-  --vte-bg: #ffffff;
-  --vte-bg-alt: #f8fafc;
-  --vte-bg-code: #0f172a;
-  --vte-text: #0f172a;
-  --vte-text-secondary: #64748b;
-  --vte-border: #e2e8f0;
-  --vte-gradient: linear-gradient(135deg, #42b883 0%, #35495e 100%);
-}
-
-.dark {
   --vte-bg: #0f172a;
   --vte-bg-alt: #1e293b;
-  --vte-bg-code: #020617;
+  --vte-bg-code: #0a0f1a;
   --vte-text: #f1f5f9;
   --vte-text-secondary: #94a3b8;
   --vte-border: #334155;
+  --vte-gradient: linear-gradient(135deg, #42b883 0%, #35495e 100%);
 }
 
 html {
@@ -67,7 +65,7 @@ body {
   background: var(--vte-bg);
   color: var(--vte-text);
   line-height: 1.6;
-  transition: background 0.3s, color 0.3s;
+  overflow-x: hidden;
 }
 
 .app {
@@ -75,7 +73,8 @@ body {
 }
 
 ::selection {
-  background: rgba(66, 184, 131, 0.3);
+  background: rgba(66, 184, 131, 0.4);
+  color: white;
 }
 
 ::-webkit-scrollbar {
@@ -92,6 +91,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--vte-text-secondary);
+  background: var(--vte-primary);
+}
+
+code, pre {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
 }
 </style>
