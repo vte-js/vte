@@ -17,25 +17,25 @@
             <nav class="sidebar-nav">
               <div class="nav-group">
                 <h4>核心</h4>
-                <a href="#defineTokens" class="nav-item active">defineTokens</a>
-                <a href="#parseTokens" class="nav-item">parseTokens</a>
-                <a href="#TokenMap" class="nav-item">TokenMap</a>
+                <a href="#defineTokens" class="nav-item" :class="{ active: activeSection === 'defineTokens' }" @click.prevent="scrollTo('defineTokens')">defineTokens</a>
+                <a href="#parseTokens" class="nav-item" :class="{ active: activeSection === 'parseTokens' }" @click.prevent="scrollTo('parseTokens')">parseTokens</a>
+                <a href="#TokenMap" class="nav-item" :class="{ active: activeSection === 'TokenMap' }" @click.prevent="scrollTo('TokenMap')">TokenMap</a>
               </div>
               <div class="nav-group">
                 <h4>类型</h4>
-                <a href="#TokenPath" class="nav-item">TokenPath</a>
-                <a href="#TokenRef" class="nav-item">TokenRef</a>
-                <a href="#TokenValue" class="nav-item">TokenValue</a>
+                <a href="#TokenPath" class="nav-item" :class="{ active: activeSection === 'TokenPath' }" @click.prevent="scrollTo('TokenPath')">TokenPath</a>
+                <a href="#TokenRef" class="nav-item" :class="{ active: activeSection === 'TokenRef' }" @click.prevent="scrollTo('TokenRef')">TokenRef</a>
+                <a href="#TokenValue" class="nav-item" :class="{ active: activeSection === 'TokenValue' }" @click.prevent="scrollTo('TokenValue')">TokenValue</a>
               </div>
               <div class="nav-group">
                 <h4>Vite 插件</h4>
-                <a href="#vte-plugin" class="nav-item">VtePlugin</a>
-                <a href="#style-token" class="nav-item">&lt;style token&gt;</a>
+                <a href="#vte-plugin" class="nav-item" :class="{ active: activeSection === 'vte-plugin' }" @click.prevent="scrollTo('vte-plugin')">VtePlugin</a>
+                <a href="#style-token" class="nav-item" :class="{ active: activeSection === 'style-token' }" @click.prevent="scrollTo('style-token')">&lt;style token&gt;</a>
               </div>
               <div class="nav-group">
                 <h4>React</h4>
-                <a href="#TokenProvider" class="nav-item">TokenProvider</a>
-                <a href="#useToken" class="nav-item">useToken</a>
+                <a href="#TokenProvider" class="nav-item" :class="{ active: activeSection === 'TokenProvider' }" @click.prevent="scrollTo('TokenProvider')">TokenProvider</a>
+                <a href="#useToken" class="nav-item" :class="{ active: activeSection === 'useToken' }" @click.prevent="scrollTo('useToken')">useToken</a>
               </div>
             </nav>
           </aside>
@@ -43,7 +43,7 @@
           <!-- 主要内容 -->
           <main class="docs-main">
             <!-- defineTokens -->
-            <div id="defineTokens" class="api-section">
+            <div id="defineTokens" class="api-section" data-section="defineTokens">
               <div class="api-header">
                 <span class="api-badge function">Function</span>
                 <h2>defineTokens</h2>
@@ -112,7 +112,7 @@
             </div>
 
             <!-- parseTokens -->
-            <div id="parseTokens" class="api-section">
+            <div id="parseTokens" class="api-section" data-section="parseTokens">
               <div class="api-header">
                 <span class="api-badge async">Async</span>
                 <h2>parseTokens</h2>
@@ -161,7 +161,7 @@ console.log(primary?.value); <span class="hl-comment">// "#3b82f6"</span>
             </div>
 
             <!-- TokenMap -->
-            <div id="TokenMap" class="api-section">
+            <div id="TokenMap" class="api-section" data-section="TokenMap">
               <div class="api-header">
                 <span class="api-badge type">Type</span>
                 <h2>TokenMap</h2>
@@ -190,7 +190,7 @@ console.log(primary?.value); <span class="hl-comment">// "#3b82f6"</span>
             </div>
 
             <!-- TokenPath -->
-            <div id="TokenPath" class="api-section">
+            <div id="TokenPath" class="api-section" data-section="TokenPath">
               <div class="api-header">
                 <span class="api-badge type">Type</span>
                 <h2>TokenPath&lt;T&gt;</h2>
@@ -217,7 +217,7 @@ console.log(primary?.value); <span class="hl-comment">// "#3b82f6"</span>
             </div>
 
             <!-- TokenRef -->
-            <div id="TokenRef" class="api-section">
+            <div id="TokenRef" class="api-section" data-section="TokenRef">
               <div class="api-header">
                 <span class="api-badge type">Type</span>
                 <h2>TokenRef&lt;P&gt;</h2>
@@ -248,7 +248,7 @@ console.log(primary?.value); <span class="hl-comment">// "#3b82f6"</span>
             </div>
 
             <!-- TokenValue -->
-            <div id="TokenValue" class="api-section">
+            <div id="TokenValue" class="api-section" data-section="TokenValue">
               <div class="api-header">
                 <span class="api-badge type">Type</span>
                 <h2>TokenValue</h2>
@@ -260,7 +260,7 @@ console.log(primary?.value); <span class="hl-comment">// "#3b82f6"</span>
             </div>
 
             <!-- Vite Plugin -->
-            <div id="vte-plugin" class="api-section">
+            <div id="vte-plugin" class="api-section" data-section="vte-plugin">
               <div class="api-header">
                 <span class="api-badge plugin">Plugin</span>
                 <h2>Vite Plugin</h2>
@@ -327,7 +327,7 @@ console.log(primary?.value); <span class="hl-comment">// "#3b82f6"</span>
             </div>
 
             <!-- style token -->
-            <div id="style-token" class="api-section">
+            <div id="style-token" class="api-section" data-section="style-token">
               <div class="api-header">
                 <span class="api-badge syntax">Syntax</span>
                 <h2>&lt;style token&gt;</h2>
@@ -387,7 +387,7 @@ console.log(primary?.value); <span class="hl-comment">// "#3b82f6"</span>
             </div>
 
             <!-- TokenProvider -->
-            <div id="TokenProvider" class="api-section">
+            <div id="TokenProvider" class="api-section" data-section="TokenProvider">
               <div class="api-header">
                 <span class="api-badge component">Component</span>
                 <h2>TokenProvider</h2>
@@ -430,7 +430,7 @@ function App() {
             </div>
 
             <!-- useToken -->
-            <div id="useToken" class="api-section">
+            <div id="useToken" class="api-section" data-section="useToken">
               <div class="api-header">
                 <span class="api-badge hook">Hook</span>
                 <h2>useToken</h2>
@@ -477,6 +477,75 @@ function MyComponent() {
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
+
+const activeSection = ref("defineTokens");
+
+const sections = [
+  "defineTokens",
+  "parseTokens",
+  "TokenMap",
+  "TokenPath",
+  "TokenRef",
+  "TokenValue",
+  "vte-plugin",
+  "style-token",
+  "TokenProvider",
+  "useToken",
+];
+
+function scrollTo(id: string) {
+  const el = document.getElementById(id);
+  if (el) {
+    const headerOffset = 100;
+    const elementPosition = el.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
+
+    activeSection.value = id;
+  }
+}
+
+let observer: IntersectionObserver | null = null;
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute("data-section");
+          if (id) {
+            activeSection.value = id;
+          }
+        }
+      });
+    },
+    {
+      rootMargin: "-100px 0px -70% 0px",
+      threshold: 0,
+    }
+  );
+
+  sections.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      observer!.observe(el);
+    }
+  });
+});
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect();
+  }
+});
+</script>
 
 <style scoped>
 .page-docs {
