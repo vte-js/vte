@@ -13,42 +13,19 @@
         {{ copied ? '已复制' : '复制' }}
       </button>
     </div>
-    <div class="code-content" v-html="highlightedCode"></div>
+    <pre class="code-content"><code>{{ code }}</code></pre>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 
 const props = defineProps<{
   label: string;
   code: string;
-  language?: string;
 }>();
 
 const copied = ref(false);
-
-const highlightedCode = computed(() => {
-  return highlightSyntax(props.code);
-});
-
-function highlightSyntax(code: string): string {
-  let html = code
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-
-  html = html
-    .replace(/(\/\/.*$)/gm, '<span class="hl-comment">$1</span>')
-    .replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="hl-comment">$1</span>')
-    .replace(/("(?:[^"\\]|\\.)*")/g, '<span class="hl-string">$1</span>')
-    .replace(/('(?:[^'\\]|\\.)*')/g, '<span class="hl-string">$1</span>')
-    .replace(/\b(import|from|export|default|const|let|var|function|return|if|else|for|while|class|extends|new|async|await|typeof|instanceof|interface|type|enum)\b/g, '<span class="hl-keyword">$1</span>')
-    .replace(/\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\(/g, '<span class="hl-fn">$1</span>(')
-    .replace(/\b(\d+\.?\d*)\b/g, '<span class="hl-number">$1</span>');
-
-  return html;
-}
 
 function copyCode() {
   navigator.clipboard.writeText(props.code);
@@ -102,18 +79,12 @@ function copyCode() {
 .code-content {
   padding: 16px;
   overflow-x: auto;
+}
+
+.code-content code {
   font-family: 'JetBrains Mono', monospace;
   font-size: 14px;
   line-height: 1.7;
   color: #e2e8f0;
-  white-space: pre;
 }
-
-.hl-keyword { color: #c084fc; }
-.hl-string { color: #86efac; }
-.hl-number { color: #fbbf24; }
-.hl-comment { color: #64748b; font-style: italic; }
-.hl-fn { color: #60a5fa; }
-.hl-tag { color: #7dd3fc; }
-.hl-prop { color: #93c5fd; }
 </style>
