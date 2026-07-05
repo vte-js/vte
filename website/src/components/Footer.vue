@@ -4,53 +4,41 @@
       <div class="footer-top">
         <div class="footer-brand">
           <div class="footer-logo">
-            <svg viewBox="0 0 128 128" width="36" height="36">
+            <svg viewBox="0 0 128 128" width="32" height="32">
               <path fill="#42b883" d="M12,10 L44,10 L64,72 L84,10 L116,10 L88,104 Q64,124 40,104 Z"/>
               <path fill="#546e7a" d="M32,10 L52,10 L64,32 L76,10 L96,10 L80,76 Q64,84 48,76 L32,10 Z"/>
             </svg>
-            <div>
-              <span class="footer-name">VTE</span>
-              <span class="footer-full">Vue Token Engine</span>
-            </div>
+            <span class="footer-name">Vue Token Engine</span>
           </div>
           <p class="footer-desc">Design Tokens First — 让样式必须通过 token 引用，编译期拦截错误，天然支持多端转换。</p>
-          <div class="footer-badges">
-            <a href="https://github.com/vte-js/vte/actions" target="_blank" class="badge">
-              <img src="https://img.shields.io/badge/license-ISC-green" alt="License">
-            </a>
-            <a href="https://www.npmjs.com/package/@vte-js/core" target="_blank" class="badge">
-              <img src="https://img.shields.io/npm/v/@vte-js/core" alt="npm">
-            </a>
-          </div>
         </div>
 
         <div class="footer-links">
           <div class="footer-group">
             <h4>产品</h4>
-            <a href="#quickstart">快速开始</a>
+            <a href="#features">Features</a>
+            <a href="#quickstart">Quick Start</a>
+            <a href="#packages">Packages</a>
             <a href="/playground">Playground</a>
+          </div>
+          <div class="footer-group">
+            <h4>资源</h4>
             <a href="https://github.com/vte-js/vte" target="_blank">GitHub</a>
             <a href="https://www.npmjs.com/package/@vte-js/core" target="_blank">npm</a>
+            <a href="https://github.com/vte-js/vte/issues" target="_blank">Issues</a>
           </div>
           <div class="footer-group">
             <h4>包</h4>
             <a href="https://www.npmjs.com/package/@vte-js/core" target="_blank">@vte-js/core</a>
             <a href="https://www.npmjs.com/package/@vte-js/vite-plugin" target="_blank">@vte-js/vite-plugin</a>
             <a href="https://www.npmjs.com/package/@vte-js/cli" target="_blank">@vte-js/cli</a>
-            <a href="https://www.npmjs.com/package/@vte-js/compiler" target="_blank">@vte-js/compiler</a>
-          </div>
-          <div class="footer-group">
-            <h4>社区</h4>
-            <a href="https://github.com/vte-js/vte/issues" target="_blank">Issue Tracker</a>
-            <a href="https://github.com/vte-js/vte/pulls" target="_blank">Pull Requests</a>
-            <a href="https://github.com/vte-js/vte/discussions" target="_blank">Discussions</a>
           </div>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p class="footer-copyright">© {{ currentYear }} VTE Team. ISC License.</p>
-        <p class="footer-credit">Made with 💚 by <a href="https://github.com/vte-js" target="_blank">VTE Team</a></p>
+        <p>© {{ currentYear }} VTE Team</p>
+        <p>ISC License · Made with 💚</p>
       </div>
     </div>
   </footer>
@@ -62,8 +50,7 @@ const currentYear = new Date().getFullYear();
 
 <style scoped>
 .footer {
-  background: #0f172a;
-  color: #94a3b8;
+  background: var(--vte-bg-code);
   padding: 80px 24px 32px;
 }
 
@@ -76,7 +63,7 @@ const currentYear = new Date().getFullYear();
   display: grid;
   grid-template-columns: 1.5fr 2fr;
   gap: 64px;
-  margin-bottom: 48px;
+  margin-bottom: 60px;
 }
 
 .footer-logo {
@@ -87,44 +74,31 @@ const currentYear = new Date().getFullYear();
 }
 
 .footer-name {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: white;
-}
-
-.footer-full {
-  display: block;
-  font-size: 12px;
-  color: #64748b;
 }
 
 .footer-desc {
   font-size: 14px;
   line-height: 1.7;
-  margin-bottom: 20px;
   color: #94a3b8;
-}
-
-.footer-badges {
-  display: flex;
-  gap: 8px;
-}
-
-.badge img {
-  height: 20px;
+  max-width: 320px;
 }
 
 .footer-links {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
+  gap: 40px;
 }
 
 .footer-group h4 {
   color: white;
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .footer-group a {
@@ -132,12 +106,12 @@ const currentYear = new Date().getFullYear();
   color: #94a3b8;
   text-decoration: none;
   font-size: 14px;
-  margin-bottom: 10px;
-  transition: color 0.2s ease;
+  margin-bottom: 12px;
+  transition: color 0.2s;
 }
 
 .footer-group a:hover {
-  color: #42b883;
+  color: var(--vte-primary);
 }
 
 .footer-bottom {
@@ -145,17 +119,8 @@ const currentYear = new Date().getFullYear();
   padding-top: 24px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   font-size: 13px;
-}
-
-.footer-credit a {
-  color: #42b883;
-  text-decoration: none;
-}
-
-.footer-credit a:hover {
-  text-decoration: underline;
+  color: #64748b;
 }
 
 @media (max-width: 768px) {
