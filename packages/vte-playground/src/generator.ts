@@ -31,18 +31,45 @@ export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: strin
   <div :class="['playground', { dark: isDark }]">
     <header class="header">
       <div class="header-content">
-        <h1 class="title">VTE Playground</h1>
-        <p class="subtitle">Auto-generated from design-tokens.ts</p>
+        <svg class="logo" viewBox="0 0 100 100" width="32" height="32">
+          <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#42b883"/><stop offset="100%" stop-color="#35495e"/></linearGradient></defs>
+          <path d="M50 4 L92 26 C95 28 97 31 97 35 L97 75 C97 79 95 82 92 84 L50 106 C47 108 43 108 40 106 L8 84 C5 82 3 79 3 75 L3 35 C3 31 5 28 8 26 Z" fill="url(#logoGrad)"/>
+          <path d="M50 22 L28 66 L39 66 L50 42 L61 66 L72 66 Z" fill="#fff"/>
+          <circle cx="50" cy="82" r="7" fill="#fff"/>
+        </svg>
+        <div>
+          <h1 class="title">VTE Playground</h1>
+          <p class="subtitle">Auto-generated from design-tokens.ts</p>
+        </div>
       </div>
       <div class="header-actions">
-        <button class="theme-toggle" @click="toggleTheme" :title="isDark ? 'Switch to light' : 'Switch to dark'">
-          {{ isDark ? '☀️' : '🌙' }}
-        </button>
         <div class="header-stats">
-          <span class="badge">${tokenCount} tokens</span>
-          <span class="badge success">${primitiveCount} primitives</span>
-          <span class="badge info">${referenceCount} references</span>
+          <span class="stat-item">
+            <span class="stat-icon">◆</span>
+            <span class="stat-value">${tokenCount}</span>
+            <span class="stat-label">Tokens</span>
+          </span>
+          <span class="stat-item success">
+            <span class="stat-icon">●</span>
+            <span class="stat-value">${primitiveCount}</span>
+            <span class="stat-label">Base</span>
+          </span>
+          <span class="stat-item info">
+            <span class="stat-icon">→</span>
+            <span class="stat-value">${referenceCount}</span>
+            <span class="stat-label">Ref</span>
+          </span>
         </div>
+        <div class="header-divider"></div>
+        <a href="https://github.com/vte-js/vte" target="_blank" rel="noopener" class="icon-btn github-link" title="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+        <button class="icon-btn theme-toggle" @click="toggleTheme" :title="isDark ? 'Light mode' : 'Dark mode'">
+          <span v-if="isDark">☀️</span>
+          <span v-else>🌙</span>
+        </button>
       </div>
     </header>
 
@@ -62,7 +89,7 @@ export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: strin
         <h2 class="section-title">🎨 颜色</h2>
         <div class="color-grid">
           ${colors.map(path => `
-          <div class="color-card" :style="{ background: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\` }">
+          <div class="color-card" :style="{ background: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\`, color: getContrastColor(tokenValues['${path}']) }">
             <span class="color-name">${path.split('.').pop()}</span>
             <span class="color-value">{{ getVarValue('${path}') }}</span>
           </div>`).join('')}
@@ -212,7 +239,7 @@ export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: strin
             </button>
           </div>
           <div class="export-preview">
-            <pre class="export-code">{{ exportContent }}</pre>
+            <pre class="export-code" v-html="highlightedExport"></pre>
           </div>
           <div class="export-actions">
             <button class="export-btn" @click="copyExport">
@@ -305,6 +332,15 @@ function scrollTo(id: string) {
   }
 }
 
+function getContrastColor(hex: string): string {
+  if (!hex || !hex.startsWith('#')) return '#ffffff';
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.5 ? '#1f2937' : '#ffffff';
+}
+
 // Export functionality
 const activeExportFormat = ref("json");
 const copiedExport = ref(false);
@@ -333,6 +369,38 @@ const exportContent = computed(() => {
     default:
       return "";
   }
+});
+
+function highlightCode(code: string, format: string): string {
+  let html = code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  if (format === 'json' || format === 'js') {
+    html = html
+      .replace(/"([^"]+)":/g, '<span class="hl-key">"$1"</span>:')
+      .replace(/: "([^"]*)"/g, ': <span class="hl-string">"$1"</span>')
+      .replace(/: (\\d+)/g, ': <span class="hl-number">$1</span>')
+      .replace(/\\b(true|false|null)\\b/g, '<span class="hl-keyword">$1</span>')
+      .replace(/\\b(export|const)\\b/g, '<span class="hl-keyword">$1</span>');
+  } else if (format === 'css') {
+    html = html
+      .replace(/(:root|\\.[\\w-]+)/g, '<span class="hl-selector">$1</span>')
+      .replace(/(--[\\w-]+)/g, '<span class="hl-variable">$1</span>')
+      .replace(/: ([^;]+);/g, ': <span class="hl-value">$1</span>;')
+      .replace(/\\{([^}]+)\\}/g, '{<span class="hl-body">$1</span>}');
+  } else if (format === 'scss') {
+    html = html
+      .replace(/(\\$[\\w-]+)/g, '<span class="hl-variable">$1</span>')
+      .replace(/: ([^;]+);/g, ': <span class="hl-value">$1</span>;');
+  }
+
+  return html;
+}
+
+const highlightedExport = computed(() => {
+  return highlightCode(exportContent.value, activeExportFormat.value);
 });
 
 function copyExport() {
@@ -379,10 +447,22 @@ function downloadExport() {
   backdrop-filter: blur(10px);
 }
 
+.logo {
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: $semantic.spacing.md;
+}
+
 .title {
   font-size: $semantic.fontSize.2xl;
   font-weight: $semantic.fontWeight.bold;
   letter-spacing: -0.02em;
+  margin: 0;
 }
 
 .subtitle {
@@ -394,7 +474,7 @@ function downloadExport() {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: $semantic.spacing.md;
+  gap: $semantic.spacing.sm;
 }
 
 .header-stats {
@@ -402,18 +482,64 @@ function downloadExport() {
   gap: $semantic.spacing.sm;
 }
 
-.theme-toggle {
-  width: 40px;
-  height: 40px;
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.12);
   border-radius: $semantic.borderRadius.full;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.1);
-  font-size: $semantic.fontSize.xl;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+}
+
+.stat-icon {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+.stat-item.success .stat-icon { color: #4ade80; }
+.stat-item.info .stat-icon { color: #60a5fa; }
+
+.stat-value {
+  font-size: 13px;
+  font-weight: $semantic.fontWeight.semibold;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  font-size: 11px;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.header-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 $semantic.spacing.xs;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: $semantic.borderRadius.full;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .theme-toggle:hover {
@@ -422,10 +548,7 @@ function downloadExport() {
 }
 
 .badge {
-  padding: $semantic.spacing.xs $semantic.spacing.sm;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: $semantic.borderRadius.full;
-  font-size: $semantic.fontSize.sm;
+  display: none;
 }
 
 .badge.success { background: rgba(34, 197, 94, 0.3); }
@@ -516,7 +639,7 @@ function downloadExport() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
+  gap: $semantic.spacing.xs;
   font-size: $semantic.fontSize.xs;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
@@ -528,8 +651,8 @@ function downloadExport() {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
-.color-name { font-weight: $semantic.fontWeight.semibold; margin-top: $semantic.spacing.sm; }
-.color-value { font-size: 10px; opacity: 0.85; font-family: monospace; background: rgba(0, 0, 0, 0.15); padding: 2px 6px; border-radius: 4px; }
+.color-name { font-weight: $semantic.fontWeight.semibold; font-size: $semantic.fontSize.sm; color: inherit; }
+.color-value { font-size: 10px; font-family: monospace; padding: 2px 6px; border-radius: 4px; color: inherit; }
 
 .spacing-grid { display: flex; flex-direction: column; gap: $semantic.spacing.md; }
 .spacing-card { display: flex; align-items: center; gap: $semantic.spacing.md; padding: $semantic.spacing.md; border-radius: $semantic.borderRadius.md; transition: all 0.2s ease; border: 1px solid transparent; }
@@ -607,6 +730,15 @@ function downloadExport() {
 .export-btn:hover { background: $semantic.color.background-secondary; border-color: $semantic.color.primary; }
 .export-btn.secondary { background: transparent; }
 
+.hl-key { color: #9333ea; }
+.hl-string { color: #16a34a; }
+.hl-number { color: #d97706; }
+.hl-keyword { color: #2563eb; }
+.hl-selector { color: #dc2626; }
+.hl-variable { color: #0891b2; }
+.hl-value { color: #16a34a; }
+.hl-body { color: $semantic.color.text; }
+
 .footer { background: $semantic.color.background-secondary; padding: $semantic.spacing.xl $semantic.spacing.xl; text-align: center; color: $semantic.color.text-tertiary; border-top: 1px solid $semantic.color.border; margin-left: 180px; font-size: $semantic.fontSize.sm; }
 
 /* 暗黑模式 */
@@ -637,8 +769,6 @@ function downloadExport() {
 
 .dark .color-card { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
 .dark .color-card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4); }
-.dark .color-name { color: #f1f5f9; }
-.dark .color-value { background: rgba(255, 255, 255, 0.1); color: #cbd5e1; }
 
 .dark .spacing-card:hover { background: #334155; }
 .dark .spacing-bar { background: $semantic.color.primary; }
@@ -678,6 +808,15 @@ function downloadExport() {
 .dark .autocomplete-item .token-value { background: #334155; color: #94a3b8; }
 .dark .autocomplete-more { border-color: #334155; color: #64748b; }
 
+.dark .export-tab { color: #94a3b8; }
+.dark .export-tab:hover { background: #334155; color: #e2e8f0; }
+.dark .export-tab.active { background: $semantic.color.primary; color: white; }
+.dark .export-preview { background: #0f172a; border-color: #334155; }
+.dark .export-code { color: #e2e8f0; }
+.dark .export-btn { border-color: #334155; color: #94a3b8; }
+.dark .export-btn:hover { background: #334155; border-color: $semantic.color.primary; color: #e2e8f0; }
+.dark .export-btn.secondary { background: transparent; color: #94a3b8; }
+
 .dark .result-header { border-color: #334155; }
 .dark .result-title { color: #94a3b8; }
 
@@ -691,6 +830,15 @@ function downloadExport() {
 .dark .badge { background: rgba(255, 255, 255, 0.1); }
 .dark .badge.success { background: rgba(34, 197, 94, 0.2); }
 .dark .badge.info { background: rgba(59, 130, 246, 0.2); }
+
+.dark .hl-key { color: #c084fc; }
+.dark .hl-string { color: #4ade80; }
+.dark .hl-number { color: #fbbf24; }
+.dark .hl-keyword { color: #60a5fa; }
+.dark .hl-selector { color: #f87171; }
+.dark .hl-variable { color: #22d3ee; }
+.dark .hl-value { color: #4ade80; }
+.dark .hl-body { color: #e2e8f0; }
 </style>
 `;
 }

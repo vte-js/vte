@@ -1,9 +1,18 @@
-# Vue Token Engine (VTE)
+<p align="center">
+  <img src="logo.svg" width="120" alt="VTE Logo">
+</p>
 
-[![License: ISC](https://img.shields.io/badge/License-ISC-yellow.svg)](https://opensource.org/licenses/ISC)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+<h1 align="center">Vue Token Engine</h1>
 
-> **Design Tokens First** — 样式必须通过 `$token.path` 引用，禁止硬编码，在编译期拦截错误，天然支持多端转换。
+<p align="center">
+  <strong>Design Tokens First</strong> — 样式必须通过 <code>$token.path</code> 引用，禁止硬编码，在编译期拦截错误，天然支持多端转换。
+</p>
+
+<p align="center">
+  <a href="https://opensource.org/licenses/ISC"><img src="https://img.shields.io/badge/License-ISC-yellow.svg" alt="License: ISC"></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.0-blue.svg" alt="TypeScript"></a>
+  <a href="https://github.com/vte-js/vte"><img src="https://img.shields.io/badge/GitHub-vte--js%2Fvte-181717?logo=github" alt="GitHub"></a>
+</p>
 
 ## 项目地址
 
@@ -32,28 +41,28 @@ git@github.com:vte-js/vte.git
 ```
 vte/
 ├── packages/
-│   ├── @vte/core              核心解析器
-│   ├── @vte/vite-plugin       Vite 插件
-│   ├── @vte/cli               命令行工具
-│   ├── @vte/compiler          编译器
-│   ├── @vte/react             React 绑定
-│   ├── @vte/playground        可视化调试工具
-│   ├── @vte/language-server   IDE 无关的语言服务器
-│   └── vte-vscode             VS Code 扩展
-├── playground/                开发测试
-└── demo-project/              完整示例
+│   ├── @vte-js/core              核心解析器
+│   ├── @vte-js/vite-plugin       Vite 插件
+│   ├── @vte-js/cli               命令行工具
+│   ├── @vte-js/compiler          编译器
+│   ├── @vte-js/react             React 绑定
+│   ├── @vte-js/playground        可视化调试工具
+│   ├── @vte-js/language-server   IDE 无关的语言服务器
+│   └── @vte-js/vscode            VS Code 扩展
+├── playground/                   开发测试
+└── demo-project/                 完整示例
 ```
 
 | 包名 | 说明 | 文档 |
 |------|------|------|
-| `@vte/core` | Token 解析、类型定义、工具函数 | [README](packages/vte-core/README.md) |
-| `@vte/vite-plugin` | Vite 插件，`<style token>` 语法支持 | [README](packages/vte-vite-plugin/README.md) |
-| `@vte/playground` | 可视化调试工具，自动生成 playground | [README](packages/vte-playground/README.md) |
-| `@vte/cli` | 命令行工具，validate/extract/generate | [README](packages/vte-cli/README.md) |
-| `@vte/compiler` | 生成 agent.json 和 tokens.d.ts | [README](packages/vte-compiler/README.md) |
-| `@vte/react` | React hooks 和 Provider | [README](packages/vte-react/README.md) |
-| `@vte/language-server` | IDE 无关的语言服务器核心 | [README](packages/vte-language-server/README.md) |
-| `vte-vscode` | VS Code 扩展 | [README](packages/vte-vscode/README.md) |
+| `@vte-js/core` | Token 解析、类型定义、工具函数 | [README](packages/vte-core/README.md) |
+| `@vte-js/vite-plugin` | Vite 插件，`<style token>` 语法支持 | [README](packages/vte-vite-plugin/README.md) |
+| `@vte-js/playground` | 可视化调试工具，自动生成 playground | [README](packages/vte-playground/README.md) |
+| `@vte-js/cli` | 命令行工具，validate/extract/generate | [README](packages/vte-cli/README.md) |
+| `@vte-js/compiler` | 生成 agent.json 和 tokens.d.ts | [README](packages/vte-compiler/README.md) |
+| `@vte-js/react` | React hooks 和 Provider | [README](packages/vte-react/README.md) |
+| `@vte-js/language-server` | IDE 无关的语言服务器核心 | [README](packages/vte-language-server/README.md) |
+| `@vte-js/vscode` | VS Code 扩展 | [README](packages/vte-vscode/README.md) |
 
 ## 快速开始
 
@@ -69,7 +78,7 @@ pnpm install
 
 ```typescript
 // design-tokens.ts
-import { defineTokens } from "@vte/core";
+import { defineTokens } from "@vte-js/core";
 
 export default defineTokens({
   primitive: {
@@ -105,7 +114,7 @@ export default defineTokens({
 ### 3. React 使用
 
 ```tsx
-import { TokenProvider, useTokenValue } from "@vte/react";
+import { TokenProvider, useTokenValue } from "@vte-js/react";
 
 function App() {
   return (
@@ -172,7 +181,7 @@ npm install && npm run build
 IDE 无关的语言服务器核心，支持多种 IDE 接入。
 
 ```typescript
-import { TokenManager, TokenHoverProvider } from "@vte/language-server";
+import { TokenManager, TokenHoverProvider } from "@vte-js/language-server";
 
 const manager = new TokenManager({ tokenFile: "design-tokens.ts" });
 const hover = new TokenHoverProvider(manager);
@@ -184,10 +193,10 @@ const result = hover.provideHover(document, position);
 
 | IDE | 状态 | 包名 |
 |-----|------|------|
-| VS Code | ✅ 已实现 | `vte-vscode` |
-| JetBrains | 📋 计划中 | `@vte/jetbrains` |
-| Vim/Neovim | 📋 计划中 | `@vte/vim` |
-| Emacs | 📋 计划中 | `@vte/emacs` |
+| VS Code | ✅ 已实现 | `@vte-js/vscode` |
+| JetBrains | 📋 计划中 | `@vte-js/jetbrains` |
+| Vim/Neovim | 📋 计划中 | `@vte-js/vim` |
+| Emacs | 📋 计划中 | `@vte-js/emacs` |
 
 ## 平台支持
 

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#42b883"/>
+      <stop offset="100%" stop-color="#35495e"/>
+    </linearGradient>
+  </defs>
+  <!-- Token hexagon -->
+  <path d="M50 4 L92 26 C95 28 97 31 97 35 L97 75 C97 79 95 82 92 84 L50 106 C47 108 43 108 40 106 L8 84 C5 82 3 79 3 75 L3 35 C3 31 5 28 8 26 Z" fill="url(#grad)"/>
+  <!-- Vue V -->
+  <path d="M50 22 L28 66 L39 66 L50 42 L61 66 L72 66 Z" fill="#fff"/>
+  <!-- Token dot -->
+  <circle cx="50" cy="82" r="7" fill="#fff"/>
+</svg>
