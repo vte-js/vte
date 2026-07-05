@@ -26,7 +26,9 @@
               <div class="code-block">
                 <div class="code-header">
                   <span class="code-label">Terminal</span>
-                  <button class="copy-btn" @click="copyInstall">复制</button>
+                  <button class="copy-btn" @click="copyInstall">
+                    {{ copiedInstall ? '✓ 已复制' : '复制' }}
+                  </button>
                 </div>
                 <pre><code>{{ pkg.install }}</code></pre>
               </div>
@@ -55,6 +57,9 @@
               <div class="code-block">
                 <div class="code-header">
                   <span class="code-label">示例代码</span>
+                  <button class="copy-btn" @click="copyUsage">
+                    {{ copiedUsage ? '✓ 已复制' : '复制' }}
+                  </button>
                 </div>
                 <pre><code>{{ pkg.usage }}</code></pre>
               </div>
@@ -66,6 +71,9 @@
               <div class="code-block">
                 <div class="code-header">
                   <span class="code-label">API Reference</span>
+                  <button class="copy-btn" @click="copyApi">
+                    {{ copiedApi ? '✓ 已复制' : '复制' }}
+                  </button>
                 </div>
                 <pre><code>{{ pkg.api }}</code></pre>
               </div>
@@ -110,13 +118,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { packages } from "../data/packages";
 
 const route = useRoute();
 const pkgName = computed(() => route.params.name as string);
 const pkg = computed(() => packages[pkgName.value]);
+
+const copiedInstall = ref(false);
+const copiedUsage = ref(false);
+const copiedApi = ref(false);
 
 const relatedPackages = computed(() => {
   if (!pkg.value) return {};
@@ -132,6 +144,24 @@ const relatedPackages = computed(() => {
 function copyInstall() {
   if (pkg.value) {
     navigator.clipboard.writeText(pkg.value.install);
+    copiedInstall.value = true;
+    setTimeout(() => { copiedInstall.value = false; }, 2000);
+  }
+}
+
+function copyUsage() {
+  if (pkg.value) {
+    navigator.clipboard.writeText(pkg.value.usage);
+    copiedUsage.value = true;
+    setTimeout(() => { copiedUsage.value = false; }, 2000);
+  }
+}
+
+function copyApi() {
+  if (pkg.value && pkg.value.api) {
+    navigator.clipboard.writeText(pkg.value.api);
+    copiedApi.value = true;
+    setTimeout(() => { copiedApi.value = false; }, 2000);
   }
 }
 </script>
