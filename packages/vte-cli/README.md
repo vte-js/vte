@@ -1,13 +1,13 @@
-# @vte/cli
+# @vte-js/cli
 
 Vue Token Engine 的命令行工具。
 
 ## 安装
 
 ```bash
-npm install -g @vte/cli
+npm install -g @vte-js/cli
 # 或
-pnpm add -g @vte/cli
+pnpm add -g @vte-js/cli
 ```
 
 ## 命令

@@ -29,8 +29,8 @@
 ## 架构
 
 ```
-@vte/language-server  ← IDE 无关核心
-└── vte-vscode        ← VS Code 适配器（本包）
+@vte-js/language-server  ← IDE 无关核心
+└── @vte-js/vscode       ← VS Code 适配器（本包）
 ```
 
 ## 安装

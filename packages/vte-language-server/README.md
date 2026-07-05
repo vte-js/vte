@@ -1,4 +1,4 @@
-# @vte/language-server
+# @vte-js/language-server
 
 **VTE Language Server** - IDE 无关的 Vue Token Engine 语言服务器核心。
 
@@ -7,7 +7,7 @@
 ## 架构
 
 ```
-@vte/language-server  ← 本包（IDE 无关核心）
+@vte-js/language-server  ← 本包（IDE 无关核心）
 ├── TokenManager         Token 管理器
 ├── Providers            各种提供器接口
 │   ├── HoverProvider
@@ -18,17 +18,17 @@
 │   └── DocumentSymbolProvider
 └── Utils                工具函数
 
-@vte/vscode             VS Code 适配器（使用本包）
-@vte/jetbrains          JetBrains 适配器（计划中）
-@vte/vim                Vim/Neovim 适配器（计划中）
+@vte-js/vscode           VS Code 适配器（使用本包）
+@vte-js/jetbrains        JetBrains 适配器（计划中）
+@vte-js/vim              Vim/Neovim 适配器（计划中）
 ```
 
 ## 安装
 
 ```bash
-npm install @vte/language-server
+npm install @vte-js/language-server
 # 或
-pnpm add @vte/language-server
+pnpm add @vte-js/language-server
 ```
 
 ## API
@@ -38,7 +38,7 @@ pnpm add @vte/language-server
 Token 管理器，负责 token 的解析、缓存和查询。
 
 ```typescript
-import { TokenManager } from "@vte/language-server";
+import { TokenManager } from "@vte-js/language-server";
 
 const manager = new TokenManager({
   tokenFile: "design-tokens.ts",
@@ -72,7 +72,7 @@ const location = manager.getTokenDefinition("semantic.color.primary");
 悬停提供器，提供 token 的详细信息。
 
 ```typescript
-import { TokenHoverProvider } from "@vte/language-server";
+import { TokenHoverProvider } from "@vte-js/language-server";
 
 const hoverProvider = new TokenHoverProvider(manager);
 
@@ -85,7 +85,7 @@ const result = hoverProvider.provideHover(document, { line: 5, character: 10 });
 补全提供器，提供 token 路径的自动补全。
 
 ```typescript
-import { TokenCompletionProvider } from "@vte/language-server";
+import { TokenCompletionProvider } from "@vte-js/language-server";
 
 const completionProvider = new TokenCompletionProvider(manager);
 
@@ -98,7 +98,7 @@ const items = completionProvider.provideCompletionItems(document, { line: 5, cha
 定义提供器，提供 token 的定义位置。
 
 ```typescript
-import { TokenDefinitionProvider } from "@vte/language-server";
+import { TokenDefinitionProvider } from "@vte-js/language-server";
 
 const definitionProvider = new TokenDefinitionProvider(manager);
 
@@ -111,7 +111,7 @@ const location = definitionProvider.provideDefinition(document, { line: 5, chara
 诊断提供器，检测无效的 token 引用。
 
 ```typescript
-import { TokenDiagnosticProvider } from "@vte/language-server";
+import { TokenDiagnosticProvider } from "@vte-js/language-server";
 
 const diagnosticProvider = new TokenDiagnosticProvider(manager);
 
@@ -124,7 +124,7 @@ const diagnostics = diagnosticProvider.provideDiagnostics(document);
 Code Lens 提供器，显示 token 使用次数。
 
 ```typescript
-import { TokenCodeLensProvider } from "@vte/language-server";
+import { TokenCodeLensProvider } from "@vte-js/language-server";
 
 const codeLensProvider = new TokenCodeLensProvider(manager);
 
@@ -137,7 +137,7 @@ const lenses = codeLensProvider.provideCodeLenses(document);
 文档符号提供器，提供大纲视图的符号。
 
 ```typescript
-import { VueDocumentSymbolProvider } from "@vte/language-server";
+import { VueDocumentSymbolProvider } from "@vte-js/language-server";
 
 const symbolProvider = new VueDocumentSymbolProvider();
 
@@ -150,7 +150,7 @@ const symbols = symbolProvider.provideDocumentSymbols(document);
 ### 颜色工具
 
 ```typescript
-import { isColorValue, colorToRgba, generateColorSvg, generateColorDataUri } from "@vte/language-server";
+import { isColorValue, colorToRgba, generateColorSvg, generateColorDataUri } from "@vte-js/language-server";
 
 isColorValue("#3b82f6");     // true
 isColorValue("red");          // true
@@ -177,13 +177,13 @@ import type {
   CodeLens,
   DocumentSymbol,
   TextDocument,
-} from "@vte/language-server";
+} from "@vte-js/language-server";
 
 import {
   CompletionItemKind,
   DiagnosticSeverity,
   SymbolKind,
-} from "@vte/language-server";
+} from "@vte-js/language-server";
 ```
 
 ## 实现自己的 IDE 适配器
@@ -238,7 +238,7 @@ import {
   TokenCompletionProvider,
   TokenDefinitionProvider,
   TokenDiagnosticProvider,
-} from "@vte/language-server";
+} from "@vte-js/language-server";
 
 class MyLanguageServer {
   private manager: TokenManager;

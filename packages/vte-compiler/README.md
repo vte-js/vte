@@ -1,13 +1,13 @@
-# @vte/compiler
+# @vte-js/compiler
 
 Vue Token Engine 的编译器，生成 `agent.json`（AI 可读）和 `tokens.d.ts`（TypeScript 类型）。
 
 ## 安装
 
 ```bash
-npm install @vte/compiler
+npm install @vte-js/compiler
 # 或
-pnpm add @vte/compiler
+pnpm add @vte-js/compiler
 ```
 
 ## API
@@ -17,7 +17,7 @@ pnpm add @vte/compiler
 编译 token 文件，生成输出文件。
 
 ```typescript
-import { compile } from "@vte/compiler";
+import { compile } from "@vte-js/compiler";
 
 const result = await compile({
   tokenFile: "./design-tokens.ts",

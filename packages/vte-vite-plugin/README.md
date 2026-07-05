@@ -1,13 +1,13 @@
-# @vte/vite-plugin
+# @vte-js/vite-plugin
 
 Vue Token Engine 的 Vite 插件，支持在 Vue SFC 中使用 `<style token>` 语法。
 
 ## 安装
 
 ```bash
-npm install @vte/vite-plugin
+npm install @vte-js/vite-plugin
 # 或
-pnpm add @vte/vite-plugin
+pnpm add @vte-js/vite-plugin
 ```
 
 ## 快速开始
@@ -16,7 +16,7 @@ pnpm add @vte/vite-plugin
 // vite.config.ts
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import vte from "@vte/vite-plugin";
+import vte from "@vte-js/vite-plugin";
 
 export default defineConfig({
   plugins: [

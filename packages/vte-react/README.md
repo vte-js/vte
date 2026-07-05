@@ -1,13 +1,13 @@
-# @vte/react
+# @vte-js/react
 
 Vue Token Engine 的 React 绑定，提供 hooks 访问 design tokens。
 
 ## 安装
 
 ```bash
-npm install @vte/react
+npm install @vte-js/react
 # 或
-pnpm add @vte/react
+pnpm add @vte-js/react
 ```
 
 ## 使用
@@ -17,7 +17,7 @@ pnpm add @vte/react
 在应用根部注入 token 上下文：
 
 ```tsx
-import { TokenProvider } from "@vte/react";
+import { TokenProvider } from "@vte-js/react";
 import { tokenMap } from "./tokens";
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
 获取单个 token 的值：
 
 ```tsx
-import { useTokenValue } from "@vte/react";
+import { useTokenValue } from "@vte-js/react";
 
 function MyComponent() {
   const color = useTokenValue("semantic.color.primary");
@@ -61,7 +61,7 @@ const rnColor = useTokenValue("semantic.color.primary", "rn");
 将 token 路径映射转换为样式对象：
 
 ```tsx
-import { useTokenStyle } from "@vte/react";
+import { useTokenStyle } from "@vte-js/react";
 
 function MyComponent() {
   const style = useTokenStyle({
@@ -85,7 +85,7 @@ function MyComponent() {
 获取完整的 token 映射：
 
 ```tsx
-import { useTokenMap } from "@vte/react";
+import { useTokenMap } from "@vte-js/react";
 
 function TokenList() {
   const tokenMap = useTokenMap();
@@ -109,7 +109,7 @@ function TokenList() {
 获取完整的 token 上下文：
 
 ```tsx
-import { useToken } from "@vte/react";
+import { useToken } from "@vte-js/react";
 
 function MyComponent() {
   const { tokenMap, platform, getToken, getTokenValue } = useToken();
@@ -128,7 +128,7 @@ function MyComponent() {
 ### Button 组件
 
 ```tsx
-import { useTokenValue, useTokenStyle } from "@vte/react";
+import { useTokenValue, useTokenStyle } from "@vte-js/react";
 
 interface ButtonProps {
   children: React.ReactNode;

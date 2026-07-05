@@ -1,13 +1,13 @@
-# @vte/core
+# @vte-js/core
 
 Vue Token Engine 的核心包，提供 token 解析和类型工具。
 
 ## 安装
 
 ```bash
-npm install @vte/core
+npm install @vte-js/core
 # 或
-pnpm add @vte/core
+pnpm add @vte-js/core
 ```
 
 ## API
@@ -17,7 +17,7 @@ pnpm add @vte/core
 定义设计 tokens，返回类型安全的 token 配置。
 
 ```typescript
-import { defineTokens } from "@vte/core";
+import { defineTokens } from "@vte-js/core";
 
 const tokens = defineTokens({
   primitive: {
@@ -39,7 +39,7 @@ const tokens = defineTokens({
 解析 token 文件，返回扁平化的 TokenMap。
 
 ```typescript
-import { parseTokens } from "@vte/core";
+import { parseTokens } from "@vte-js/core";
 
 const tokenMap = await parseTokens("./design-tokens.ts");
 
@@ -53,7 +53,7 @@ const tokenMap = await parseTokens("./design-tokens.ts");
 从 token 定义中提取所有合法路径的联合类型，用于 IDE 自动补全。
 
 ```typescript
-import { type TokenPath } from "@vte/core";
+import { type TokenPath } from "@vte-js/core";
 
 type Paths = TokenPath<typeof tokens>;
 // "primitive" | "primitive.blue" | "primitive.blue.500" | ...
