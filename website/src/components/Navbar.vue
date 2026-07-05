@@ -14,6 +14,7 @@
         <router-link to="/quickstart" class="nav-link">Quick Start</router-link>
         <router-link to="/packages" class="nav-link">Packages</router-link>
         <router-link to="/docs" class="nav-link">Docs</router-link>
+        <router-link to="/configurator" class="nav-link">Configurator</router-link>
       </div>
 
       <div class="nav-actions">

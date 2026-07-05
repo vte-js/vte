@@ -164,7 +164,7 @@ const vueExample = `<template>
 .page-header {
   padding: 80px 24px 60px;
   text-align: center;
-  background: linear-gradient(180deg, rgba(66, 184, 131, 0.1) 0%, transparent 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--vte-primary) 10%, transparent) 0%, transparent 100%);
 }
 
 .container {
@@ -175,16 +175,16 @@ const vueExample = `<template>
 .header-line {
   width: 60px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #42b883, transparent);
+  background: linear-gradient(90deg, transparent, var(--vte-primary), transparent);
   margin: 0 auto 24px;
 }
 
 .section-badge {
   display: inline-block;
   padding: 6px 16px;
-  background: rgba(66, 184, 131, 0.1);
-  border: 1px solid rgba(66, 184, 131, 0.3);
-  color: #42b883;
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 30%, transparent);
+  color: var(--vte-primary);
   border-radius: 100px;
   font-size: 12px;
   font-weight: 600;
@@ -197,13 +197,13 @@ const vueExample = `<template>
   font-size: 56px;
   font-weight: 800;
   margin-bottom: 16px;
-  color: #f1f5f9;
+  color: var(--vte-text);
   letter-spacing: -0.02em;
 }
 
 .page-desc {
   font-size: 20px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
 }
 
 .features-section {
@@ -239,22 +239,22 @@ const vueExample = `<template>
   font-size: 36px;
   font-weight: 800;
   margin-bottom: 16px;
-  color: #f1f5f9;
+  color: var(--vte-text);
 }
 
 .feature-text p {
   font-size: 16px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
   line-height: 1.8;
   margin-bottom: 24px;
 }
 
 .feature-text code {
-  background: rgba(66, 184, 131, 0.15);
+  background: color-mix(in srgb, var(--vte-primary) 15%, transparent);
   padding: 2px 8px;
   border-radius: 4px;
   font-family: 'JetBrains Mono', monospace;
-  color: #42b883;
+  color: var(--vte-primary);
   font-size: 14px;
 }
 
@@ -268,14 +268,14 @@ const vueExample = `<template>
   padding-left: 28px;
   margin-bottom: 12px;
   font-size: 15px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
 }
 
 .feature-list li::before {
   content: "✓";
   position: absolute;
   left: 0;
-  color: #42b883;
+  color: var(--vte-primary);
   font-weight: bold;
 }
 
@@ -286,10 +286,10 @@ const vueExample = `<template>
 }
 
 .code-card {
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(var(--vte-bg-rgb), 0.8);
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(66, 184, 131, 0.2);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 20%, transparent);
 }
 
 .card-header {
@@ -298,7 +298,7 @@ const vueExample = `<template>
   justify-content: space-between;
   padding: 12px 16px;
   background: rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid color-mix(in srgb, var(--vte-text) 5%, transparent);
 }
 
 .card-badge {
@@ -326,7 +326,7 @@ const vueExample = `<template>
 
 .card-title {
   font-size: 13px;
-  color: #64748b;
+  color: var(--vte-text-secondary);
   font-family: 'JetBrains Mono', monospace;
 }
 
@@ -340,10 +340,10 @@ const vueExample = `<template>
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
   line-height: 1.7;
-  color: #e2e8f0;
+  color: var(--vte-text);
 }
 
-.hl-comment { color: #64748b; }
+.hl-comment { color: var(--vte-text-secondary); }
 .hl-error { color: #f87171; text-decoration: line-through; }
 .hl-str { color: #86efac; }
 .hl-tag { color: #7dd3fc; }
@@ -364,8 +364,8 @@ const vueExample = `<template>
   align-items: center;
   gap: 12px;
   padding: 16px;
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid rgba(66, 184, 131, 0.15);
+  background: rgba(var(--vte-bg-alt-rgb), 0.5);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 15%, transparent);
   border-radius: 10px;
 }
 
@@ -375,15 +375,15 @@ const vueExample = `<template>
 
 .platform-name {
   font-weight: 600;
-  color: #f1f5f9;
+  color: var(--vte-text);
   min-width: 100px;
 }
 
 .platform-code {
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
-  color: #42b883;
-  background: rgba(66, 184, 131, 0.1);
+  color: var(--vte-primary);
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
   padding: 4px 8px;
   border-radius: 4px;
 }

@@ -38,7 +38,9 @@ watch(isDark, (val) => {
   --vte-primary-light: #6dd5a0;
   --vte-dark: #35495e;
   --vte-bg: #0f172a;
+  --vte-bg-rgb: 15, 23, 42;
   --vte-bg-alt: #1e293b;
+  --vte-bg-alt-rgb: 30, 41, 59;
   --vte-bg-code: #0a0f1a;
   --vte-text: #f1f5f9;
   --vte-text-secondary: #94a3b8;
@@ -87,7 +89,9 @@ body {
 /* Light mode */
 html:not(.dark) {
   --vte-bg: #ffffff;
+  --vte-bg-rgb: 255, 255, 255;
   --vte-bg-alt: #f8fafc;
+  --vte-bg-alt-rgb: 248, 250, 252;
   --vte-bg-code: #f1f5f9;
   --vte-text: #1e293b;
   --vte-text-secondary: #64748b;

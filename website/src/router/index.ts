@@ -7,6 +7,7 @@ const Packages = () => import("../views/Packages.vue");
 const PackageDetail = () => import("../views/PackageDetail.vue");
 const Docs = () => import("../views/Docs.vue");
 const Playground = () => import("../views/Playground.vue");
+const Configurator = () => import("../views/Configurator.vue");
 
 const router = createRouter({
   history: createWebHistory(),
@@ -18,6 +19,7 @@ const router = createRouter({
     { path: "/packages/:name", name: "package-detail", component: PackageDetail, meta: { title: "包详情 - VTE" } },
     { path: "/docs", name: "docs", component: Docs, meta: { title: "API 文档 - VTE" } },
     { path: "/playground", name: "playground", component: Playground, meta: { title: "Playground - VTE" } },
+    { path: "/configurator", name: "configurator", component: Configurator, meta: { title: "Token Configurator - VTE" } },
     { path: "/:pathMatch(.*)*", name: "not-found", component: () => import("../views/NotFound.vue"), meta: { title: "页面未找到 - VTE" } },
   ],
   scrollBehavior() {

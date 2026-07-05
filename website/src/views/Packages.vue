@@ -31,6 +31,16 @@
             </div>
             <div class="package-install">
               <code>{{ pkg.install }}</code>
+              <button class="copy-btn" @click.prevent="copyInstall(pkg.install)" :aria-label="copied === pkg.install ? '已复制' : '复制'">
+                <svg v-if="copied !== pkg.install" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                <svg v-else viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                {{ copied === pkg.install ? '已复制' : '复制' }}
+              </button>
             </div>
             <div class="package-link">
               查看文档
@@ -44,7 +54,16 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import { packages } from "../data/packages";
+
+const copied = ref<string | null>(null);
+
+function copyInstall(text: string) {
+  navigator.clipboard.writeText(text);
+  copied.value = text;
+  setTimeout(() => { copied.value = null; }, 1500);
+}
 </script>
 
 <style scoped>
@@ -55,7 +74,7 @@ import { packages } from "../data/packages";
 .page-header {
   padding: 80px 24px 60px;
   text-align: center;
-  background: linear-gradient(180deg, rgba(66, 184, 131, 0.1) 0%, transparent 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--vte-primary) 10%, transparent) 0%, transparent 100%);
 }
 
 .container {
@@ -66,16 +85,16 @@ import { packages } from "../data/packages";
 .header-line {
   width: 60px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #42b883, transparent);
+  background: linear-gradient(90deg, transparent, var(--vte-primary), transparent);
   margin: 0 auto 24px;
 }
 
 .section-badge {
   display: inline-block;
   padding: 6px 16px;
-  background: rgba(66, 184, 131, 0.1);
-  border: 1px solid rgba(66, 184, 131, 0.3);
-  color: #42b883;
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 30%, transparent);
+  color: var(--vte-primary);
   border-radius: 100px;
   font-size: 12px;
   font-weight: 600;
@@ -88,13 +107,13 @@ import { packages } from "../data/packages";
   font-size: 56px;
   font-weight: 800;
   margin-bottom: 16px;
-  color: #f1f5f9;
+  color: var(--vte-text);
   letter-spacing: -0.02em;
 }
 
 .page-desc {
   font-size: 20px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
 }
 
 .packages-content {
@@ -108,8 +127,8 @@ import { packages } from "../data/packages";
 }
 
 .package-card {
-  background: rgba(15, 23, 42, 0.5);
-  border: 1px solid rgba(66, 184, 131, 0.15);
+  background: rgba(var(--vte-bg-rgb), 0.5);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 15%, transparent);
   border-radius: 16px;
   padding: 28px;
   text-decoration: none;
@@ -119,7 +138,7 @@ import { packages } from "../data/packages";
 }
 
 .package-card:hover {
-  border-color: rgba(66, 184, 131, 0.4);
+  border-color: color-mix(in srgb, var(--vte-primary) 40%, transparent);
   transform: translateY(-4px);
 }
 
@@ -133,30 +152,30 @@ import { packages } from "../data/packages";
 .package-icon {
   width: 56px;
   height: 56px;
-  background: rgba(66, 184, 131, 0.1);
-  border: 1px solid rgba(66, 184, 131, 0.2);
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 20%, transparent);
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #42b883;
+  color: var(--vte-primary);
 }
 
 .package-info h3 {
   font-size: 18px;
   font-weight: 700;
-  color: #f1f5f9;
+  color: var(--vte-text);
   font-family: 'JetBrains Mono', monospace;
 }
 
 .package-version {
   font-size: 12px;
-  color: #64748b;
+  color: var(--vte-text-secondary);
 }
 
 .package-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
   line-height: 1.7;
   margin-bottom: 16px;
 }
@@ -170,32 +189,56 @@ import { packages } from "../data/packages";
 
 .feature-tag {
   padding: 4px 10px;
-  background: rgba(66, 184, 131, 0.1);
-  border: 1px solid rgba(66, 184, 131, 0.2);
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 20%, transparent);
   border-radius: 6px;
   font-size: 12px;
-  color: #42b883;
+  color: var(--vte-primary);
 }
 
 .package-install {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 12px;
+  background: #0f172a;
+  padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 16px;
   margin-top: auto;
+  border: 1px solid #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .package-install code {
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
-  color: #e2e8f0;
+  color: #4ade80;
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(66, 184, 131, 0.2);
+  border: none;
+  color: #42b883;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.copy-btn:hover {
+  background: rgba(66, 184, 131, 0.3);
 }
 
 .package-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #42b883;
+  color: var(--vte-primary);
   font-size: 14px;
   font-weight: 600;
   transition: all 0.2s;

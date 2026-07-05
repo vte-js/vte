@@ -281,7 +281,7 @@ const vueExample = `<template>
 .page-header {
   padding: 80px 24px 60px;
   text-align: center;
-  background: linear-gradient(180deg, rgba(66, 184, 131, 0.1) 0%, transparent 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--vte-primary) 10%, transparent) 0%, transparent 100%);
 }
 
 .container {
@@ -292,16 +292,16 @@ const vueExample = `<template>
 .header-line {
   width: 60px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #42b883, transparent);
+  background: linear-gradient(90deg, transparent, var(--vte-primary), transparent);
   margin: 0 auto 24px;
 }
 
 .section-badge {
   display: inline-block;
   padding: 6px 16px;
-  background: rgba(66, 184, 131, 0.1);
-  border: 1px solid rgba(66, 184, 131, 0.3);
-  color: #42b883;
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 30%, transparent);
+  color: var(--vte-primary);
   border-radius: 100px;
   font-size: 12px;
   font-weight: 600;
@@ -314,13 +314,13 @@ const vueExample = `<template>
   font-size: 56px;
   font-weight: 800;
   margin-bottom: 16px;
-  color: #f1f5f9;
+  color: var(--vte-text);
   letter-spacing: -0.02em;
 }
 
 .page-desc {
   font-size: 20px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
 }
 
 .quickstart-content {
@@ -330,7 +330,7 @@ const vueExample = `<template>
 .doc-section {
   margin-bottom: 80px;
   padding-bottom: 80px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid color-mix(in srgb, var(--vte-text) 5%, transparent);
 }
 
 .doc-section:last-child {
@@ -347,29 +347,40 @@ const vueExample = `<template>
 .section-num {
   font-size: 48px;
   font-weight: 800;
-  color: rgba(66, 184, 131, 0.3);
+  background: linear-gradient(270deg, #42b883, #35495e, #6366f1, #42b883);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-variant-numeric: tabular-nums;
+  animation: gradient-shift 6s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .section-header h2 {
   font-size: 32px;
   font-weight: 700;
-  color: #f1f5f9;
+  color: var(--vte-text);
 }
 
 .section-body p {
   font-size: 16px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
   line-height: 1.8;
   margin-bottom: 24px;
 }
 
 .section-body code {
-  background: rgba(66, 184, 131, 0.15);
+  background: color-mix(in srgb, var(--vte-primary) 15%, transparent);
   padding: 2px 8px;
   border-radius: 4px;
   font-family: 'JetBrains Mono', monospace;
-  color: #42b883;
+  color: var(--vte-primary);
   font-size: 14px;
 }
 
@@ -387,7 +398,7 @@ const vueExample = `<template>
 
 .install-label {
   font-size: 12px;
-  color: #64748b;
+  color: var(--vte-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   min-width: 80px;
@@ -403,8 +414,8 @@ const vueExample = `<template>
   display: flex;
   gap: 16px;
   padding: 20px;
-  background: rgba(66, 184, 131, 0.1);
-  border: 1px solid rgba(66, 184, 131, 0.2);
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 20%, transparent);
   border-radius: 12px;
   margin-bottom: 24px;
 }
@@ -416,7 +427,7 @@ const vueExample = `<template>
 
 .tip-icon {
   flex-shrink: 0;
-  color: #42b883;
+  color: var(--vte-primary);
 }
 
 .tip-box.warning .tip-icon {
@@ -425,7 +436,7 @@ const vueExample = `<template>
 
 .tip-content strong {
   display: block;
-  color: #f1f5f9;
+  color: var(--vte-text);
   margin-bottom: 4px;
 }
 
@@ -435,7 +446,7 @@ const vueExample = `<template>
 }
 
 .options-table {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid color-mix(in srgb, var(--vte-text) 10%, transparent);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -443,20 +454,20 @@ const vueExample = `<template>
 .table-header {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 2fr;
-  background: rgba(66, 184, 131, 0.1);
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
 }
 
 .th {
   padding: 14px 16px;
   font-size: 13px;
   font-weight: 600;
-  color: #e2e8f0;
+  color: var(--vte-text);
 }
 
 .table-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 2fr;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid color-mix(in srgb, var(--vte-text) 5%, transparent);
 }
 
 .table-row:nth-child(even) {
@@ -466,15 +477,15 @@ const vueExample = `<template>
 .td {
   padding: 14px 16px;
   font-size: 14px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
 }
 
 .td code {
-  background: rgba(66, 184, 131, 0.15);
+  background: color-mix(in srgb, var(--vte-primary) 15%, transparent);
   padding: 2px 6px;
   border-radius: 4px;
   font-family: 'JetBrains Mono', monospace;
-  color: #42b883;
+  color: var(--vte-primary);
   font-size: 13px;
 }
 
@@ -489,20 +500,20 @@ const vueExample = `<template>
   align-items: center;
   gap: 16px;
   padding: 24px;
-  background: rgba(15, 23, 42, 0.5);
-  border: 1px solid rgba(66, 184, 131, 0.15);
+  background: rgba(var(--vte-bg-rgb), 0.5);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 15%, transparent);
   border-radius: 12px;
   text-decoration: none;
   transition: all 0.3s;
 }
 
 .next-step-card:hover {
-  border-color: rgba(66, 184, 131, 0.4);
+  border-color: color-mix(in srgb, var(--vte-primary) 40%, transparent);
   transform: translateX(8px);
 }
 
 .next-icon {
-  color: #42b883;
+  color: var(--vte-primary);
   flex-shrink: 0;
 }
 
@@ -513,18 +524,18 @@ const vueExample = `<template>
 .next-content h4 {
   font-size: 16px;
   font-weight: 600;
-  color: #f1f5f9;
+  color: var(--vte-text);
   margin-bottom: 4px;
 }
 
 .next-content p {
   font-size: 14px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
   margin: 0;
 }
 
 .next-step-card svg {
-  color: #64748b;
+  color: var(--vte-text-secondary);
 }
 
 @media (max-width: 768px) {

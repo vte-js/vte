@@ -489,12 +489,12 @@ onUnmounted(() => {
 
 <style scoped>
 .page-docs { padding-top: 80px; }
-.page-header { padding: 80px 24px 60px; text-align: center; background: linear-gradient(180deg, rgba(66, 184, 131, 0.1) 0%, transparent 100%); }
+.page-header { padding: 80px 24px 60px; text-align: center; background: linear-gradient(180deg, color-mix(in srgb, var(--vte-primary) 10%, transparent) 0%, transparent 100%); }
 .container { max-width: 1200px; margin: 0 auto; }
-.header-line { width: 60px; height: 2px; background: linear-gradient(90deg, transparent, #42b883, transparent); margin: 0 auto 24px; }
-.section-badge { display: inline-block; padding: 6px 16px; background: rgba(66, 184, 131, 0.1); border: 1px solid rgba(66, 184, 131, 0.3); color: #42b883; border-radius: 100px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; }
-.page-title { font-size: 56px; font-weight: 800; margin-bottom: 16px; color: #f1f5f9; letter-spacing: -0.02em; }
-.page-desc { font-size: 20px; color: #94a3b8; }
+.header-line { width: 60px; height: 2px; background: linear-gradient(90deg, transparent, var(--vte-primary), transparent); margin: 0 auto 24px; }
+.section-badge { display: inline-block; padding: 6px 16px; background: color-mix(in srgb, var(--vte-primary) 10%, transparent); border: 1px solid color-mix(in srgb, var(--vte-primary) 30%, transparent); color: var(--vte-primary); border-radius: 100px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; }
+.page-title { font-size: 56px; font-weight: 800; margin-bottom: 16px; color: var(--vte-text); letter-spacing: -0.02em; }
+.page-desc { font-size: 20px; color: var(--vte-text-secondary); }
 .docs-content { padding: 80px 24px; }
 .docs-layout { display: grid; grid-template-columns: 240px 1fr; gap: 48px; }
 .docs-sidebar {
@@ -503,7 +503,7 @@ onUnmounted(() => {
   max-height: calc(100vh - 120px);
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #334155 transparent;
+  scrollbar-color: var(--vte-border) transparent;
 }
 
 .sidebar-nav {
@@ -512,13 +512,13 @@ onUnmounted(() => {
   gap: 24px;
   padding-right: 8px;
 }
-.nav-group h4 { font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
-.nav-item { display: block; padding: 8px 12px; color: #94a3b8; text-decoration: none; font-size: 14px; border-radius: 6px; transition: all 0.2s; }
-.nav-item:hover { background: rgba(66, 184, 131, 0.1); color: #f1f5f9; }
-.nav-item.active { background: rgba(66, 184, 131, 0.15); color: #42b883; }
-.api-group { margin-bottom: 80px; padding-bottom: 60px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-.group-title { font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
-.group-desc { font-size: 15px; color: #94a3b8; margin-bottom: 32px; }
+.nav-group h4 { font-size: 12px; font-weight: 600; color: var(--vte-text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+.nav-item { display: block; padding: 8px 12px; color: var(--vte-text-secondary); text-decoration: none; font-size: 14px; border-radius: 6px; transition: all 0.2s; }
+.nav-item:hover { background: color-mix(in srgb, var(--vte-primary) 10%, transparent); color: var(--vte-text); }
+.nav-item.active { background: color-mix(in srgb, var(--vte-primary) 15%, transparent); color: var(--vte-primary); }
+.api-group { margin-bottom: 80px; padding-bottom: 60px; border-bottom: 1px solid color-mix(in srgb, var(--vte-text) 5%, transparent); }
+.group-title { font-size: 28px; font-weight: 700; color: var(--vte-text); margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+.group-desc { font-size: 15px; color: var(--vte-text-secondary); margin-bottom: 32px; }
 .api-section { margin-bottom: 48px; }
 
 .docs-sidebar::-webkit-scrollbar {
@@ -530,7 +530,7 @@ onUnmounted(() => {
 }
 
 .docs-sidebar::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: var(--vte-border);
   border-radius: 3px;
 }
 

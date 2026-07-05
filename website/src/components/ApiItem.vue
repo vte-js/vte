@@ -76,8 +76,8 @@ const badgeClass = computed(() => {
 
 <style scoped>
 .api-item {
-  background: rgba(15, 23, 42, 0.3);
-  border: 1px solid rgba(66, 184, 131, 0.1);
+  background: var(--vte-bg-alt);
+  border: 1px solid var(--vte-border);
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 24px;
@@ -112,25 +112,25 @@ const badgeClass = computed(() => {
 .api-header h3 {
   font-size: 20px;
   font-weight: 700;
-  color: #f1f5f9;
+  color: var(--vte-text);
 }
 
 .api-signature {
   display: block;
   padding: 10px 14px;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(66, 184, 131, 0.2);
+  background: var(--vte-bg-code);
+  border: 1px solid var(--vte-border);
   border-radius: 8px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 14px;
-  color: #42b883;
+  color: var(--vte-primary);
   margin-bottom: 12px;
   overflow-x: auto;
 }
 
 .api-desc {
   font-size: 15px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
   line-height: 1.7;
   margin-bottom: 16px;
 }
@@ -141,18 +141,18 @@ const badgeClass = computed(() => {
 .api-example h4 {
   font-size: 14px;
   font-weight: 600;
-  color: #f1f5f9;
+  color: var(--vte-text);
   margin: 16px 0 10px;
 }
 
 .api-returns p {
   font-size: 14px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
   margin: 0;
 }
 
 .params-table {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--vte-border);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -162,7 +162,7 @@ const badgeClass = computed(() => {
   grid-template-columns: 120px 140px 1fr;
   gap: 12px;
   padding: 10px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--vte-border);
 }
 
 .params-table .param-row:last-child {
@@ -170,26 +170,26 @@ const badgeClass = computed(() => {
 }
 
 .params-table .param-row.header {
-  background: rgba(66, 184, 131, 0.1);
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
   font-weight: 600;
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
 }
 
 .params-table .param-name {
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
-  color: #f1f5f9;
+  color: var(--vte-text);
 }
 
 .params-table .param-type {
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
-  color: #42b883;
+  color: var(--vte-primary);
 }
 
 .params-table .param-desc {
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
 }
 </style>

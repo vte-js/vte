@@ -37,7 +37,7 @@
               <h2>特性</h2>
               <ul class="feature-list">
                 <li v-for="feature in pkg.highlights" :key="feature">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#42b883" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--vte-primary)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                   {{ feature }}
                 </li>
               </ul>
@@ -154,7 +154,7 @@ const relatedPackages = computed(() => {
 
 .page-header {
   padding: 60px 24px 40px;
-  background: linear-gradient(180deg, rgba(66, 184, 131, 0.1) 0%, transparent 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--vte-primary) 10%, transparent) 0%, transparent 100%);
 }
 
 .container {
@@ -166,7 +166,7 @@ const relatedPackages = computed(() => {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
   text-decoration: none;
   font-size: 14px;
   margin-bottom: 32px;
@@ -174,7 +174,7 @@ const relatedPackages = computed(() => {
 }
 
 .back-link:hover {
-  color: #42b883;
+  color: var(--vte-primary);
 }
 
 .header-content {
@@ -186,26 +186,26 @@ const relatedPackages = computed(() => {
 .package-icon {
   width: 72px;
   height: 72px;
-  background: rgba(66, 184, 131, 0.1);
-  border: 1px solid rgba(66, 184, 131, 0.2);
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 20%, transparent);
   border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #42b883;
+  color: var(--vte-primary);
 }
 
 .header-info h1 {
   font-size: 36px;
   font-weight: 800;
-  color: #f1f5f9;
+  color: var(--vte-text);
   font-family: 'JetBrains Mono', monospace;
   margin-bottom: 8px;
 }
 
 .header-info p {
   font-size: 16px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
 }
 
 .detail-content {
@@ -225,13 +225,13 @@ const relatedPackages = computed(() => {
 .detail-section h2 {
   font-size: 24px;
   font-weight: 700;
-  color: #f1f5f9;
+  color: var(--vte-text);
   margin-bottom: 20px;
 }
 
 .detail-section p {
   font-size: 16px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
   line-height: 1.8;
 }
 
@@ -245,9 +245,9 @@ const relatedPackages = computed(() => {
   align-items: center;
   gap: 12px;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid color-mix(in srgb, var(--vte-text) 5%, transparent);
   font-size: 15px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
 }
 
 .feature-list li:last-child {
@@ -255,8 +255,8 @@ const relatedPackages = computed(() => {
 }
 
 .api-item {
-  background: rgba(15, 23, 42, 0.3);
-  border: 1px solid rgba(66, 184, 131, 0.1);
+  background: rgba(var(--vte-bg-rgb), 0.3);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 10%, transparent);
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 24px;
@@ -282,15 +282,15 @@ const relatedPackages = computed(() => {
 .api-signature {
   font-family: 'JetBrains Mono', monospace;
   font-size: 14px;
-  color: #42b883;
-  background: rgba(66, 184, 131, 0.1);
+  color: var(--vte-primary);
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
   padding: 4px 8px;
   border-radius: 4px;
 }
 
 .api-desc {
   font-size: 15px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
   margin-bottom: 16px;
 }
 
@@ -299,12 +299,12 @@ const relatedPackages = computed(() => {
 .api-example h4 {
   font-size: 14px;
   font-weight: 600;
-  color: #f1f5f9;
+  color: var(--vte-text);
   margin-bottom: 12px;
 }
 
 .params-table {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid color-mix(in srgb, var(--vte-text) 10%, transparent);
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 16px;
@@ -315,7 +315,7 @@ const relatedPackages = computed(() => {
   grid-template-columns: 120px 140px 1fr;
   gap: 12px;
   padding: 10px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid color-mix(in srgb, var(--vte-text) 5%, transparent);
 }
 
 .params-table .param-row:last-child {
@@ -323,32 +323,32 @@ const relatedPackages = computed(() => {
 }
 
 .params-table .param-row.header {
-  background: rgba(66, 184, 131, 0.1);
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
   font-weight: 600;
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
 }
 
 .params-table .param-name {
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
-  color: #f1f5f9;
+  color: var(--vte-text);
 }
 
 .params-table .param-type {
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
-  color: #42b883;
+  color: var(--vte-primary);
 }
 
 .params-table .param-desc {
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
 }
 
 .api-returns p {
   font-size: 14px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
   margin: 0;
 }
 
@@ -359,8 +359,8 @@ const relatedPackages = computed(() => {
 }
 
 .sidebar-card {
-  background: rgba(15, 23, 42, 0.5);
-  border: 1px solid rgba(66, 184, 131, 0.15);
+  background: rgba(var(--vte-bg-rgb), 0.5);
+  border: 1px solid color-mix(in srgb, var(--vte-primary) 15%, transparent);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 16px;
@@ -369,7 +369,7 @@ const relatedPackages = computed(() => {
 .sidebar-card h4 {
   font-size: 14px;
   font-weight: 600;
-  color: #f1f5f9;
+  color: var(--vte-text);
   margin-bottom: 16px;
 }
 
@@ -378,7 +378,7 @@ const relatedPackages = computed(() => {
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
   text-decoration: none;
   font-size: 14px;
   border-radius: 6px;
@@ -387,14 +387,14 @@ const relatedPackages = computed(() => {
 }
 
 .sidebar-link:hover {
-  background: rgba(66, 184, 131, 0.1);
-  color: #f1f5f9;
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
+  color: var(--vte-text);
 }
 
 .related-link {
   display: block;
   padding: 10px 12px;
-  color: #94a3b8;
+  color: var(--vte-text-secondary);
   text-decoration: none;
   font-size: 14px;
   font-family: 'JetBrains Mono', monospace;
@@ -404,8 +404,8 @@ const relatedPackages = computed(() => {
 }
 
 .related-link:hover {
-  background: rgba(66, 184, 131, 0.1);
-  color: #42b883;
+  background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
+  color: var(--vte-primary);
 }
 
 .not-found {
@@ -415,12 +415,12 @@ const relatedPackages = computed(() => {
 
 .not-found h2 {
   font-size: 32px;
-  color: #f1f5f9;
+  color: var(--vte-text);
   margin-bottom: 24px;
 }
 
 .back-btn {
-  color: #42b883;
+  color: var(--vte-primary);
   text-decoration: none;
   font-weight: 600;
 }
