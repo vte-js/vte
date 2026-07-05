@@ -1,11 +1,22 @@
 {
   "name": "@vte-js/cli",
   "version": "1.0.0",
-  "description": "CLI tool for Vue Token Engine",
+  "description": "CLI tool for Vue Token Engine - validate, extract, and generate tokens",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
     "vte": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc",
@@ -20,5 +31,15 @@
     "typescript": "^6.0.3"
   },
   "keywords": ["vue", "design-tokens", "cli"],
-  "license": "ISC"
+  "author": "vte-js",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vte-js/vte.git",
+    "directory": "packages/vte-cli"
+  },
+  "homepage": "https://github.com/vte-js/vte/tree/main/packages/vte-cli",
+  "bugs": {
+    "url": "https://github.com/vte-js/vte/issues"
+  }
 }

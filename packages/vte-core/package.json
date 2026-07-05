@@ -1,9 +1,21 @@
 {
   "name": "@vte-js/core",
   "version": "1.0.0",
-  "description": "",
+  "description": "Core parser and type definitions for Vue Token Engine",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch"
@@ -14,7 +26,16 @@
   "devDependencies": {
     "@types/node": "^26.1.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": ["vue", "design-tokens", "css-variables", "core"],
+  "author": "vte-js",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vte-js/vte.git",
+    "directory": "packages/vte-core"
+  },
+  "homepage": "https://github.com/vte-js/vte/tree/main/packages/vte-core",
+  "bugs": {
+    "url": "https://github.com/vte-js/vte/issues"
+  }
 }
