@@ -97,24 +97,7 @@
         </div>
 
         <div class="code-windows">
-          <div class="code-window">
-            <div class="window-header">
-              <div class="window-dots">
-                <span></span><span></span><span></span>
-              </div>
-              <span class="window-title">Button.vue</span>
-              <span class="window-status">●</span>
-            </div>
-            <div class="window-body">
-              <pre><code><span class="hl-tag">&lt;style token&gt;</span>
-<span class="hl-sel">.btn</span> {
-  <span class="hl-prop">background</span>: <span class="hl-val">$semantic.color.primary</span>;
-  <span class="hl-prop">padding</span>: <span class="hl-val">$semantic.spacing.md</span>;
-  <span class="hl-prop">border-radius</span>: <span class="hl-val">$semantic.borderRadius.md</span>;
-}
-<span class="hl-tag">&lt;/style&gt;</span></code></pre>
-            </div>
-          </div>
+          <CodeBlock label="Button.vue" :code="heroSourceCode" language="css" />
 
           <div class="transform-indicator">
             <div class="indicator-line"></div>
@@ -122,24 +105,7 @@
             <div class="indicator-line"></div>
           </div>
 
-          <div class="code-window output">
-            <div class="window-header">
-              <div class="window-dots">
-                <span></span><span></span><span></span>
-              </div>
-              <span class="window-title">Output</span>
-              <span class="window-status success">✓</span>
-            </div>
-            <div class="window-body">
-              <pre><code><span class="hl-sel">.btn</span> {
-  <span class="hl-prop">background</span>: <span class="hl-var">var(--vte-...)</span>;
-  <span class="hl-prop">padding</span>: <span class="hl-var">var(--vte-...)</span>;
-}
-<span class="hl-sel">:root</span> {
-  <span class="hl-prop">--vte-primary</span>: <span class="hl-num">#3b82f6</span>;
-}</code></pre>
-            </div>
-          </div>
+          <CodeBlock label="Output" :code="heroOutputCode" language="css" />
         </div>
       </div>
     </div>
@@ -148,6 +114,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
+import CodeBlock from "./CodeBlock.vue";
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const copied = ref(false);
@@ -155,6 +122,22 @@ const typedText = ref("");
 const showCursor = ref(true);
 const titleLine1 = ref<HTMLElement | null>(null);
 const titleLine2 = ref<HTMLElement | null>(null);
+
+const heroSourceCode = `<style token>
+.btn {
+  background: $semantic.color.primary;
+  padding: $semantic.spacing.md;
+  border-radius: $semantic.borderRadius.md;
+}
+</style>`;
+
+const heroOutputCode = `.btn {
+  background: var(--vte-...);
+  padding: var(--vte-...);
+}
+:root {
+  --vte-primary: #3b82f6;
+}`;
 
 const fullText = "Design Tokens First";
 let charIndex = 0;

@@ -15,34 +15,8 @@
         <div class="feature-block">
           <div class="feature-visual">
             <div class="code-compare">
-              <div class="code-card bad">
-                <div class="card-header">
-                  <span class="card-badge error">传统方案</span>
-                  <span class="card-title">Tailwind CSS</span>
-                </div>
-                <pre><code><span class="hl-comment">// AI 容易拼错或捏造</span>
-&lt;button class="<span class="hl-error">bg-blue-500</span>"&gt;
-  Click me
-&lt;/button&gt;
-
-<span class="hl-comment">// ❌ AI 可能生成不存在的类名</span>
-class="<span class="hl-error">px-999</span>"
-class="<span class="hl-error">text-red-999</span>"</code></pre>
-              </div>
-              <div class="code-card good">
-                <div class="card-header">
-                  <span class="card-badge success">VTE 方案</span>
-                  <span class="card-title">Design Tokens</span>
-                </div>
-                <pre><code><span class="hl-comment">// 强制引用，编译期检查</span>
-&lt;button class="btn"&gt;
-  Click me
-&lt;/button&gt;
-
-<span class="hl-comment">// ✅ 无效路径立即报错</span>
-<span class="hl-comment">// ✅ 支持拼写建议</span>
-<span class="hl-comment">// ✅ IDE 自动补全</span></code></pre>
-              </div>
+              <CodeBlock label="传统方案 - Tailwind CSS" :code="tailwindBadExample" language="html" />
+              <CodeBlock label="VTE 方案 - Design Tokens" :code="vteGoodExample" language="html" />
             </div>
           </div>
           <div class="feature-text">
@@ -82,19 +56,7 @@ class="<span class="hl-error">text-red-999</span>"</code></pre>
               </div>
             </div>
             <div class="platform-source">
-              <div class="code-card">
-                <div class="card-header">
-                  <span class="card-badge source">统一定义</span>
-                  <span class="card-title">design-tokens.ts</span>
-                </div>
-                <pre><code>export default defineTokens({
-  semantic: {
-    color: {
-      primary: <span class="hl-str">"{primitive.blue.500}"</span>,
-    },
-  },
-});</code></pre>
-              </div>
+              <CodeBlock label="design-tokens.ts" :code="platformExample" language="typescript" />
             </div>
           </div>
           <div class="feature-text">
@@ -116,25 +78,7 @@ class="<span class="hl-error">text-red-999</span>"</code></pre>
         <!-- Vue 原生 -->
         <div class="feature-block">
           <div class="feature-visual">
-            <div class="code-card">
-              <div class="card-header">
-                <span class="card-badge success">Vue SFC</span>
-                <span class="card-title">Button.vue</span>
-              </div>
-              <pre><code><span class="hl-tag">&lt;template&gt;</span>
-  <span class="hl-tag">&lt;button</span> <span class="hl-attr">class</span>=<span class="hl-str">"btn"</span><span class="hl-tag">&gt;</span>
-    Click me
-  <span class="hl-tag">&lt;/button&gt;</span>
-<span class="hl-tag">&lt;/template&gt;</span>
-
-<span class="hl-tag">&lt;style token scoped&gt;</span>
-<span class="hl-sel">.btn</span> {
-  <span class="hl-prop">background</span>: <span class="hl-val">$semantic.color.primary</span>;
-  <span class="hl-prop">padding</span>: <span class="hl-val">$semantic.spacing.md</span>;
-  <span class="hl-prop">border-radius</span>: <span class="hl-val">$semantic.borderRadius.md</span>;
-}
-<span class="hl-tag">&lt;/style&gt;</span></code></pre>
-            </div>
+            <CodeBlock label="Button.vue" :code="vueExample" language="css" />
           </div>
           <div class="feature-text">
             <div class="feature-icon">💚</div>
@@ -155,6 +99,50 @@ class="<span class="hl-error">text-red-999</span>"</code></pre>
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+import CodeBlock from "../components/CodeBlock.vue";
+
+const tailwindBadExample = `// AI 容易拼错或捏造
+<button class="bg-blue-500">
+  Click me
+</button>
+
+// ❌ AI 可能生成不存在的类名
+class="px-999"
+class="text-red-999"`;
+
+const vteGoodExample = `// 强制引用，编译期检查
+<button class="btn">
+  Click me
+</button>
+
+// ✅ 无效路径立即报错
+// ✅ 支持拼写建议
+// ✅ IDE 自动补全`;
+
+const platformExample = `export default defineTokens({
+  semantic: {
+    color: {
+      primary: "{primitive.blue.500}",
+    },
+  },
+});`;
+
+const vueExample = `<template>
+  <button class="btn">
+    Click me
+  </button>
+</template>
+
+<style token scoped>
+.btn {
+  background: $semantic.color.primary;
+  padding: $semantic.spacing.md;
+  border-radius: $semantic.borderRadius.md;
+}
+</style>`;
+</script>
 
 <style scoped>
 .page-features {

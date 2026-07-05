@@ -31,27 +31,7 @@
 
         <div class="demo-visual">
           <div class="transform-flow">
-            <div class="code-card source">
-              <div class="card-header">
-                <div class="card-icon">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                  </svg>
-                </div>
-                <span class="card-badge">Source</span>
-                <span class="card-lang">Vue SFC</span>
-              </div>
-              <pre><code><span class="hl-tag">&lt;style token&gt;</span>
-<span class="hl-sel">.btn</span> {
-  <span class="hl-prop">background</span>: <span class="hl-val">$semantic.color.primary</span>;
-  <span class="hl-prop">padding</span>: <span class="hl-val">$semantic.spacing.md</span>;
-  <span class="hl-prop">border-radius</span>: <span class="hl-val">$semantic.borderRadius.md</span>;
-  <span class="hl-prop">font-size</span>: <span class="hl-val">$semantic.fontSize.base</span>;
-  <span class="hl-prop">color</span>: <span class="hl-val">$semantic.color.text-inverse</span>;
-}
-<span class="hl-tag">&lt;/style&gt;</span></code></pre>
-            </div>
+            <CodeBlock label="Source - Vue SFC" :code="sourceCode" language="css" />
 
             <div class="transform-arrow">
               <div class="arrow-line"></div>
@@ -67,29 +47,7 @@
               </div>
             </div>
 
-            <div class="code-card output">
-              <div class="card-header">
-                <div class="card-icon output-icon">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                </div>
-                <span class="card-badge output-badge">Output</span>
-                <span class="card-lang">CSS</span>
-              </div>
-              <pre><code><span class="hl-sel">.btn</span> {
-  <span class="hl-prop">background</span>: <span class="hl-var">var(--vte-semantic-color-primary)</span>;
-  <span class="hl-prop">padding</span>: <span class="hl-var">var(--vte-semantic-spacing-md)</span>;
-  <span class="hl-prop">border-radius</span>: <span class="hl-var">var(--vte-semantic-borderRadius-md)</span>;
-  <span class="hl-prop">font-size</span>: <span class="hl-var">var(--vte-semantic-fontSize-base)</span>;
-  <span class="hl-prop">color</span>: <span class="hl-var">var(--vte-semantic-color-text-inverse)</span>;
-}
-
-<span class="hl-sel">:root</span> {
-  <span class="hl-prop">--vte-semantic-color-primary</span>: <span class="hl-num">#3b82f6</span>;
-  <span class="hl-prop">--vte-semantic-spacing-md</span>: <span class="hl-num">1rem</span>;
-}</code></pre>
-            </div>
+            <CodeBlock label="Output - CSS" :code="outputCode" language="css" />
           </div>
         </div>
       </div>
@@ -98,11 +56,36 @@
 </template>
 
 <script setup lang="ts">
+import CodeBlock from "./CodeBlock.vue";
+
 const steps = [
   { title: "定义 Token", desc: "在 design-tokens.ts 中定义设计系统" },
   { title: "使用 Token", desc: "在 <style token> 中引用 token" },
   { title: "自动编译", desc: "VTE 编译为 CSS Variables" },
 ];
+
+const sourceCode = `<style token>
+.btn {
+  background: $semantic.color.primary;
+  padding: $semantic.spacing.md;
+  border-radius: $semantic.borderRadius.md;
+  font-size: $semantic.fontSize.base;
+  color: $semantic.color.text-inverse;
+}
+</style>`;
+
+const outputCode = `.btn {
+  background: var(--vte-semantic-color-primary);
+  padding: var(--vte-semantic-spacing-md);
+  border-radius: var(--vte-semantic-borderRadius-md);
+  font-size: var(--vte-semantic-fontSize-base);
+  color: var(--vte-semantic-color-text-inverse);
+}
+
+:root {
+  --vte-semantic-color-primary: #3b82f6;
+  --vte-semantic-spacing-md: 1rem;
+}`;
 </script>
 
 <style scoped>
