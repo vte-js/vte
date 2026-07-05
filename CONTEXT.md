@@ -2,7 +2,7 @@
 
 > **目的**：本文件用于向接续开发的 AI Agent（如 Cursor、Claude Code、ChatGPT）快速同步项目背景、现状及下一步任务
 
-> **版本**：Day 12 - Token Configurator & Light Mode Complete
+> **版本**：Day 13 - Mobile Responsive & Package README Update
 
 > **日期**：2026-07-05
 
@@ -71,6 +71,7 @@ defineTokens({
 | 10 | IDE 架构重构（language-server） | `@vte-js/language-server` |
 | 11 | Playground 可视化调试工具 | `@vte-js/playground` |
 | 12 | VS Code 扩展发布 + Token Configurator | `@vte-js/vscode`, `vte-website` |
+| 13 | 移动端响应式适配 + 包 README 修复 + SVG 图标替换 | `vte-website` |
 
 ### 核心功能验证
 
@@ -84,6 +85,8 @@ defineTokens({
 - ✅ Playground 增强（Watch 模式/搜索过滤/多平台预览/依赖关系图）
 - ✅ Token Configurator（可视化编辑器/模板/导入导出/实时预览）
 - ✅ 网站亮色/暗色模式完整适配
+- ✅ 网站移动端响应式适配（全页面 768px/900px 断点）
+- ✅ Configurator SVG 图标替换（emoji → stroke SVG）
 - ✅ 单元测试覆盖（25 个用例）
 - ✅ Changesets 自动化版本管理
 
@@ -91,14 +94,14 @@ defineTokens({
 
 | 包 | 版本 | 状态 |
 |---|------|------|
-| `@vte-js/core` | 1.0.0 | ✅ 已发布 |
-| `@vte-js/vite-plugin` | 1.0.0 | ✅ 已发布 |
-| `@vte-js/cli` | 1.0.0 | ✅ 已发布 |
-| `@vte-js/compiler` | 1.0.0 | ✅ 已发布 |
-| `@vte-js/react` | 1.0.0 | ✅ 已发布 |
-| `@vte-js/language-server` | 1.0.2 | ✅ 已发布 |
-| `@vte-js/playground` | 1.1.0 | ✅ 已发布 |
-| `@vte-js/vscode` | 1.0.2 | ✅ Marketplace |
+| `@vte-js/core` | 1.0.1 | ✅ 已发布 |
+| `@vte-js/vite-plugin` | 1.0.1 | ✅ 已发布 |
+| `@vte-js/cli` | 1.0.1 | ✅ 已发布 |
+| `@vte-js/compiler` | 1.0.1 | ✅ 已发布 |
+| `@vte-js/react` | 1.0.1 | ✅ 已发布 |
+| `@vte-js/language-server` | 1.0.3 | ✅ 已发布 |
+| `@vte-js/playground` | 1.1.1 | ✅ 已发布 |
+| `@vte-js/vscode` | 1.0.3 | ✅ Marketplace |
 
 ---
 
@@ -131,7 +134,7 @@ pnpm release          # 构建 + 发布所有包
 1. **Token Configurator 完善**
    - 引用选择器显示引用值
    - localStorage 持久化优化
-   - 移动端响应式适配
+   - ✅ 移动端响应式适配（已完成）
 
 2. **VS Code 扩展增强**
    - 引用链可视化
