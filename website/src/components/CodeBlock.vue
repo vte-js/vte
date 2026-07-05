@@ -13,7 +13,7 @@
         {{ copied ? '已复制' : '复制' }}
       </button>
     </div>
-    <pre v-pre><code>{{ code }}</code></pre>
+    <pre><code>{{ code }}</code></pre>
   </div>
 </template>
 
