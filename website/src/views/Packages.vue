@@ -12,7 +12,12 @@
     <section class="packages-content">
       <div class="container">
         <div class="packages-grid">
-          <div v-for="pkg in packages" :key="pkg.name" class="package-card">
+          <router-link
+            v-for="(pkg, key) in packages"
+            :key="key"
+            :to="pkg.url"
+            class="package-card"
+          >
             <div class="package-header">
               <div class="package-icon" v-html="pkg.icon"></div>
               <div class="package-info">
@@ -25,13 +30,13 @@
               <span v-for="feature in pkg.features" :key="feature" class="feature-tag">{{ feature }}</span>
             </div>
             <div class="package-install">
-              <code>pnpm add {{ pkg.name }}</code>
+              <code>{{ pkg.install }}</code>
             </div>
-            <a :href="pkg.url" class="package-link" target="_blank">
+            <div class="package-link">
               查看文档
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </a>
-          </div>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </router-link>
         </div>
       </div>
     </section>
@@ -39,50 +44,7 @@
 </template>
 
 <script setup lang="ts">
-const packages = [
-  {
-    icon: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
-    name: "@vte-js/core",
-    desc: "核心解析器，包含 Token 解析、类型定义、工具函数。是所有其他包的基础依赖。",
-    features: ["Token 解析", "类型推导", "循环引用检测", "多端支持"],
-    url: "https://github.com/vte-js/vte/tree/main/packages/vte-core",
-  },
-  {
-    icon: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
-    name: "@vte-js/vite-plugin",
-    desc: "Vite 插件，提供 <style token> 语法支持，自动编译为 CSS Variables。",
-    features: ["<style token>", "scoped 支持", "多平台输出", "HMR 热更新"],
-    url: "https://github.com/vte-js/vte/tree/main/packages/vte-vite-plugin",
-  },
-  {
-    icon: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
-    name: "@vte-js/cli",
-    desc: "命令行工具，提供 validate、extract、generate 等命令。",
-    features: ["Token 验证", "路径提取", "代码生成", "批量处理"],
-    url: "https://github.com/vte-js/vte/tree/main/packages/vte-cli",
-  },
-  {
-    icon: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`,
-    name: "@vte-js/compiler",
-    desc: "编译器，生成 agent.json 和 tokens.d.ts 类型声明文件。",
-    features: ["agent.json", "tokens.d.ts", "类型推导", "AI 友好"],
-    url: "https://github.com/vte-js/vte/tree/main/packages/vte-compiler",
-  },
-  {
-    icon: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
-    name: "@vte-js/react",
-    desc: "React 绑定，提供 hooks 和 Provider，支持 React 项目使用 VTE。",
-    features: ["useToken", "useTokenValue", "TokenProvider", "跨平台"],
-    url: "https://github.com/vte-js/vte/tree/main/packages/vte-react",
-  },
-  {
-    icon: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M17 12h.01"/><path d="M7 12h.01"/></svg>`,
-    name: "@vte-js/playground",
-    desc: "可视化调试工具，实时预览所有 token 值，支持导出。",
-    features: ["实时预览", "暗黑模式", "代码导出", "Token 搜索"],
-    url: "https://github.com/vte-js/vte/tree/main/packages/vte-playground",
-  },
-];
+import { packages } from "../data/packages";
 </script>
 
 <style scoped>
@@ -150,7 +112,10 @@ const packages = [
   border: 1px solid rgba(66, 184, 131, 0.15);
   border-radius: 16px;
   padding: 28px;
+  text-decoration: none;
   transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
 }
 
 .package-card:hover {
@@ -217,6 +182,7 @@ const packages = [
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 16px;
+  margin-top: auto;
 }
 
 .package-install code {
@@ -230,13 +196,12 @@ const packages = [
   align-items: center;
   gap: 6px;
   color: #42b883;
-  text-decoration: none;
   font-size: 14px;
   font-weight: 600;
   transition: all 0.2s;
 }
 
-.package-link:hover {
+.package-card:hover .package-link {
   color: #6dd5a0;
 }
 
