@@ -20,7 +20,9 @@
             </div>
           </div>
           <div class="feature-text">
-            <div class="feature-icon">🤖</div>
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
             <h2>告别 AI 幻觉</h2>
             <p>
               Tailwind 的字符串类名（如 <code>bg-blue-500</code>）导致 AI 常拼错或凭空捏造不存在的颜色值。
@@ -40,17 +42,23 @@
           <div class="feature-visual">
             <div class="platform-demo">
               <div class="platform-card">
-                <div class="platform-icon">🌐</div>
+                <div class="platform-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
                 <div class="platform-name">Web</div>
                 <div class="platform-code">var(--vte-semantic-color-primary)</div>
               </div>
               <div class="platform-card">
-                <div class="platform-icon">📱</div>
+                <div class="platform-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                </div>
                 <div class="platform-name">小程序</div>
                 <div class="platform-code">#3b82f6</div>
               </div>
               <div class="platform-card">
-                <div class="platform-icon">⚛️</div>
+                <div class="platform-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l4-4 4 4"/><path d="M12 16V8"/></svg>
+                </div>
                 <div class="platform-name">React Native</div>
                 <div class="platform-code">"#3b82f6"</div>
               </div>
@@ -60,7 +68,9 @@
             </div>
           </div>
           <div class="feature-text">
-            <div class="feature-icon">🌐</div>
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
             <h2>真正的跨端</h2>
             <p>
               一套 token 定义，自动输出 Web (CSS Variables)、小程序 (rpx)、React Native (StyleSheet)。
@@ -81,7 +91,9 @@
             <CodeBlock label="Button.vue" :code="vueExample" language="css" />
           </div>
           <div class="feature-text">
-            <div class="feature-icon">💚</div>
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
             <h2>Vue 原生体验</h2>
             <p>
               <code>&lt;style token&gt;</code> 语法完全符合 Vue SFC 直觉，
