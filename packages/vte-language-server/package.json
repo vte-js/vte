@@ -1,6 +1,6 @@
 {
   "name": "@vte-js/language-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "IDE-agnostic language server core for Vue Token Engine",
   "type": "module",
   "main": "dist/index.js",
@@ -12,7 +12,9 @@
       "require": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -27,7 +29,11 @@
     "@types/node": "^26.1.0",
     "typescript": "^6.0.3"
   },
-  "keywords": ["language-server", "ide", "design-tokens"],
+  "keywords": [
+    "language-server",
+    "ide",
+    "design-tokens"
+  ],
   "author": "vte-js",
   "license": "ISC",
   "repository": {

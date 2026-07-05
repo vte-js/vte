@@ -39,6 +39,7 @@ temp/
 *.js.map
 *.d.ts.map
 playground/*.js
+playground/components/
 
 # Playground generated files
 .vte-playground/

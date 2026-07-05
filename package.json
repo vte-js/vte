@@ -20,7 +20,8 @@
     "build:compiler": "pnpm --filter @vte-js/compiler run build",
     "build:react": "pnpm --filter @vte-js/react run build",
     "build:vscode": "pnpm --filter @vte-js/vscode run build",
-    "dev": "pnpm --filter @vte-js/playground run dev",
+    "dev": "pnpm build:core && pnpm build:vite-plugin && pnpm --filter @vte-js/playground run build && node packages/vte-playground/dist/cli.js generate -o .vte-playground playground/design-tokens.ts && cd .vte-playground && npx vite",
+    "dev:playground": "pnpm --filter @vte-js/playground run dev",
     "dev:demo": "pnpm --filter vte-demo-project run dev",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -37,10 +38,13 @@
     "release:react": "pnpm --filter @vte-js/react run build && pnpm --filter @vte-js/react publish --no-git-checks",
     "release:playground": "pnpm --filter @vte-js/playground run build && pnpm --filter @vte-js/playground publish --no-git-checks",
     "release:language-server": "pnpm --filter @vte-js/language-server run build && pnpm --filter @vte-js/language-server publish --no-git-checks",
-    "release:vscode": "pnpm --filter @vte-js/vscode run build && cd packages/vte-vscode && npx vsce publish",
+    "release:vscode": "pnpm --filter @vte-js/vscode run build && pnpm --filter @vte-js/vscode publish --no-git-checks",
     "version:patch": "pnpm -r version patch --no-git-tag-version",
     "version:minor": "pnpm -r version minor --no-git-tag-version",
-    "version:major": "pnpm -r version major --no-git-tag-version"
+    "version:major": "pnpm -r version major --no-git-tag-version",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm run build && pnpm -r publish --no-git-checks --access public"
   },
   "keywords": [
     "vue",
@@ -58,6 +62,7 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.31.0",
     "@types/node": "^26.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3",

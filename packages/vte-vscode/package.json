@@ -1,5 +1,5 @@
 {
-  "name": "vte-vscode",
+  "name": "@vte-js/vscode",
   "displayName": "VTE - Vue Token Engine",
   "description": "IDE support for Vue Token Engine <style token> blocks",
   "version": "1.0.2",
@@ -13,7 +13,9 @@
   "engines": {
     "vscode": "^1.80.0"
   },
-  "categories": ["Programming Languages"],
+  "categories": [
+    "Programming Languages"
+  ],
   "activationEvents": [
     "onLanguage:vue"
   ],
@@ -36,7 +38,10 @@
     "languages": [
       {
         "id": "vte-css",
-        "aliases": ["VTE CSS", "vte-css"],
+        "aliases": [
+          "VTE CSS",
+          "vte-css"
+        ],
         "configuration": "./language-configuration.json"
       }
     ],

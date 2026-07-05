@@ -3,3 +3,4 @@ packages:
   - "playground"
   - "demo-project"
   - "website"
+  - ".vte-playground"

@@ -80,14 +80,30 @@ export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: strin
       </a>
     </nav>
 
+    <div class="search-bar">
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input v-model="searchQuery" class="search-input" placeholder="Search tokens..." />
+        <span v-if="searchQuery" class="search-clear" @click="searchQuery = ''">✕</span>
+      </div>
+      <div class="filter-chips">
+        <button v-for="cat in categories" :key="cat.id"
+                :class="['chip', { active: activeCategory === cat.id }]"
+                @click="activeCategory = cat.id">
+          {{ cat.icon }} {{ cat.name }}
+          <span v-if="cat.id !== 'all'" class="chip-count">{{ getCategoryCount(cat.id) }}</span>
+        </button>
+      </div>
+    </div>
+
     <main class="main">
       ${colors.length > 0 ? `
       <!-- 颜色系统 -->
-      <section id="colors" class="section">
+      <section id="colors" class="section" v-show="hasFilteredTokens('color')">
         <h2 class="section-title">🎨 颜色</h2>
         <div class="color-grid">
           ${colors.map(path => `
-          <div class="color-card" :style="{ background: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\`, color: getContrastColor(tokenValues['${path}']) }">
+          <div v-show="matchesFilter('${path}')" class="color-card" :style="{ background: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\`, color: getContrastColor(tokenValues['${path}']) }">
             <span class="color-name">${path.split('.').pop()}</span>
             <span class="color-value">{{ getVarValue('${path}') }}</span>
           </div>`).join('')}
@@ -96,11 +112,11 @@ export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: strin
 
       ${spacings.length > 0 ? `
       <!-- 间距 -->
-      <section id="spacing" class="section">
+      <section id="spacing" class="section" v-show="hasFilteredTokens('spacing')">
         <h2 class="section-title">📐 间距</h2>
         <div class="spacing-grid">
           ${spacings.map(path => `
-          <div class="spacing-card">
+          <div v-show="matchesFilter('${path}')" class="spacing-card">
             <div class="spacing-bar" :style="{ width: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\` }"></div>
             <div class="spacing-info">
               <span class="spacing-name">${path.split('.').pop()}</span>
@@ -112,11 +128,11 @@ export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: strin
 
       ${fontSizes.length > 0 ? `
       <!-- 字号 -->
-      <section id="fontSize" class="section">
+      <section id="fontSize" class="section" v-show="hasFilteredTokens('fontSize')">
         <h2 class="section-title">📝 字号</h2>
         <div class="typography-list">
           ${fontSizes.map(path => `
-          <div class="typography-card">
+          <div v-show="matchesFilter('${path}')" class="typography-card">
             <p :style="{ fontSize: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\` }" class="typography-preview">
               The quick brown fox jumps over the lazy dog
             </p>
@@ -130,11 +146,11 @@ export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: strin
 
       ${borderRadii.length > 0 ? `
       <!-- 圆角 -->
-      <section id="borderRadius" class="section">
+      <section id="borderRadius" class="section" v-show="hasFilteredTokens('borderRadius')">
         <h2 class="section-title">🔲 圆角</h2>
         <div class="radius-grid">
           ${borderRadii.map(path => `
-          <div class="radius-card" :style="{ borderRadius: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\` }">
+          <div v-show="matchesFilter('${path}')" class="radius-card" :style="{ borderRadius: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\` }">
             <span class="radius-name">${path.split('.').pop()}</span>
           </div>`).join('')}
         </div>
@@ -142,11 +158,11 @@ export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: strin
 
       ${shadows.length > 0 ? `
       <!-- 阴影 -->
-      <section id="shadow" class="section">
+      <section id="shadow" class="section" v-show="hasFilteredTokens('shadow')">
         <h2 class="section-title">🌫️ 阴影</h2>
         <div class="shadow-grid">
           ${shadows.map(path => `
-          <div class="shadow-card" :style="{ boxShadow: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\` }">
+          <div v-show="matchesFilter('${path}')" class="shadow-card" :style="{ boxShadow: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\` }">
             <span class="shadow-name">${path.split('.').pop()}</span>
           </div>`).join('')}
         </div>
@@ -154,16 +170,77 @@ export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: strin
 
       ${others.length > 0 ? `
       <!-- 其他 -->
-      <section id="others" class="section">
+      <section id="others" class="section" v-show="hasFilteredTokens('other')">
         <h2 class="section-title">📦 其他 Tokens</h2>
         <div class="token-list">
           ${others.map(path => `
-          <div class="token-item">
+          <div v-show="matchesFilter('${path}')" class="token-item">
             <span class="token-path">${path}</span>
             <code class="token-value">{{ getVarValue('${path}') }}</code>
           </div>`).join('')}
         </div>
       </section>` : ''}
+
+      <!-- 依赖关系图 -->
+      <section id="graph" class="section">
+        <h2 class="section-title">🔗 依赖关系图</h2>
+        <p class="section-desc">点击节点查看完整引用链</p>
+        <div class="graph-container">
+          <svg :width="graphWidth" :height="graphHeight" class="graph-svg">
+            <defs>
+              <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="#94a3b8" />
+              </marker>
+              <marker id="arrowhead-hl" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="#3b82f6" />
+              </marker>
+            </defs>
+            <path v-for="(edge, i) in graphEdges" :key="'edge-'+i"
+                  :d="getEdgePath(edge)"
+                  :class="['graph-edge', { highlighted: isEdgeHighlighted(edge) }]"
+                  fill="none" stroke-width="2"
+                  :marker-end="isEdgeHighlighted(edge) ? 'url(#arrowhead-hl)' : 'url(#arrowhead)'" />
+            <g v-for="node in graphNodes" :key="node.id"
+               :transform="\`translate(\${node.x}, \${node.y})\`"
+               :class="['graph-node', { highlighted: highlightedChain.includes(node.id) }]"
+               @click="highlightChain(node.id)">
+              <circle r="24" :class="['node-circle', \`level-\${node.level}\`]" />
+              <text dy="4" text-anchor="middle" class="node-label">{{ node.label }}</text>
+              <title>{{ node.id }}: {{ getVarValue(node.id) }}</title>
+            </g>
+          </svg>
+        </div>
+        <div v-if="highlightedChain.length" class="chain-info">
+          <span class="chain-label">引用链:</span>
+          <span class="chain-path">{{ highlightedChain.join(' → ') }}</span>
+          <button class="chain-clear" @click="highlightedChain = []">清除</button>
+        </div>
+      </section>
+
+      <!-- 多平台预览 -->
+      <section id="platform" class="section">
+        <h2 class="section-title">📱 多平台预览</h2>
+        <div class="platform-table-wrapper">
+          <table class="platform-table">
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Web</th>
+                <th>小程序</th>
+                <th>React Native</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(entry, path) in tokenPlatformValues" :key="path">
+                <td class="token-path-cell">{{ path }}</td>
+                <td><code class="platform-code">{{ entry.web }}</code></td>
+                <td><code class="platform-code">{{ entry.mp }}</code></td>
+                <td><code class="platform-code">{{ entry.rn }}</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <!-- Token 编辑器 -->
       <section id="editor" class="section">
@@ -195,6 +272,13 @@ export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: strin
           <div v-if="tokenInput && tokenValue !== 'N/A'" class="editor-result">
             <div class="result-header">
               <span class="result-title">Preview</span>
+              <div class="platform-tabs">
+                <button v-for="p in platforms" :key="p.id"
+                        :class="['platform-tab', { active: activePlatform === p.id }]"
+                        @click="activePlatform = p.id">
+                  {{ p.icon }} {{ p.name }}
+                </button>
+              </div>
             </div>
             <div class="result-row">
               <span class="result-label">Token Path</span>
@@ -211,10 +295,10 @@ export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: strin
               </button>
             </div>
             <div class="result-row">
-              <span class="result-label">Value</span>
-              <code class="result-code" @click="copyToClipboard(tokenValue, 'value')">{{ tokenValue }}</code>
-              <button class="copy-btn" @click="copyToClipboard(tokenValue, 'value')" :class="{ copied: copiedField === 'value' }">
-                {{ copiedField === 'value' ? '✓' : '📋' }}
+              <span class="result-label">{{ activePlatformLabel }}</span>
+              <code class="result-code" @click="copyToClipboard(platformValue, 'platform')">{{ platformValue }}</code>
+              <button class="copy-btn" @click="copyToClipboard(platformValue, 'platform')" :class="{ copied: copiedField === 'platform' }">
+                {{ copiedField === 'platform' ? '✓' : '📋' }}
               </button>
             </div>
             <div v-if="isValidColor" class="result-row">
@@ -267,6 +351,8 @@ ${spacings.length > 0 ? `  { id: "spacing", name: "间距", icon: "📐" },` : '
 ${fontSizes.length > 0 ? `  { id: "fontSize", name: "字号", icon: "📝" },` : ''}
 ${borderRadii.length > 0 ? `  { id: "borderRadius", name: "圆角", icon: "🔲" },` : ''}
 ${shadows.length > 0 ? `  { id: "shadow", name: "阴影", icon: "🌫️" },` : ''}
+  { id: "graph", name: "依赖图", icon: "🔗" },
+  { id: "platform", name: "平台预览", icon: "📱" },
   { id: "editor", name: "编辑器", icon: "🔧" },
   { id: "export", name: "导出", icon: "📤" },
 ];
@@ -275,6 +361,41 @@ const tokenInput = ref("semantic.color.primary");
 const showDropdown = ref(false);
 const copiedField = ref<string | null>(null);
 const isDark = ref(false);
+const searchQuery = ref("");
+const activeCategory = ref("all");
+
+const categories = [
+  { id: "all", name: "全部", icon: "📋" },
+  { id: "color", name: "颜色", icon: "🎨" },
+  { id: "spacing", name: "间距", icon: "📐" },
+  { id: "fontSize", name: "字号", icon: "📝" },
+  { id: "borderRadius", name: "圆角", icon: "🔲" },
+  { id: "shadow", name: "阴影", icon: "🌫️" },
+  { id: "other", name: "其他", icon: "📦" },
+];
+
+function getCategory(path: string): string {
+  if (path.includes("color")) return "color";
+  if (path.includes("spacing")) return "spacing";
+  if (path.includes("fontSize")) return "fontSize";
+  if (path.includes("borderRadius")) return "borderRadius";
+  if (path.includes("shadow")) return "shadow";
+  return "other";
+}
+
+function matchesFilter(path: string): boolean {
+  const matchesSearch = !searchQuery.value || path.toLowerCase().includes(searchQuery.value.toLowerCase());
+  const matchesCat = activeCategory.value === "all" || getCategory(path) === activeCategory.value;
+  return matchesSearch && matchesCat;
+}
+
+function getCategoryCount(catId: string): number {
+  return allTokens.filter(t => getCategory(t) === catId).length;
+}
+
+function hasFilteredTokens(catId: string): boolean {
+  return allTokens.some(t => getCategory(t) === catId && matchesFilter(t));
+}
 
 function toggleTheme() {
   isDark.value = !isDark.value;
@@ -288,6 +409,118 @@ ${Array.from(tokenMap.keys()).map(key => `  "${key}",`).join('\n')}
 const tokenValues: Record<string, string> = {
 ${Array.from(tokenMap.entries()).map(([path, token]) => `  "${path}": "${token.value}",`).join('\n')}
 };
+
+// 多平台数据
+const activePlatform = ref("web");
+const platforms = [
+  { id: "web", name: "Web", icon: "🌐" },
+  { id: "mp", name: "小程序", icon: "📱" },
+  { id: "rn", name: "RN", icon: "⚛️" },
+];
+const activePlatformLabel = computed(() => platforms.find(p => p.id === activePlatform.value)?.name || "Web");
+
+const tokenPlatformValues: Record<string, { web: string; mp: string; rn: string }> = {
+${Array.from(tokenMap.entries()).map(([path, token]) => {
+  const webVal = `var(--${cssPrefix}-${path.replace(/\./g, '-')})`;
+  const pxMatch = token.value.match(/^(\d+(?:\.\d+)?)px$/);
+  const remMatch = token.value.match(/^(\d+(?:\.\d+)?)rem$/);
+  const mpVal = pxMatch ? `${parseFloat(pxMatch[1]) * 2}rpx` : remMatch ? `${parseFloat(remMatch[1]) * 32}rpx` : token.value;
+  const rnVal = pxMatch ? parseFloat(pxMatch[1]) : /^\d+(?:\.\d+)?$/.test(token.value) ? Number(token.value) : token.value;
+  const rnStr = typeof rnVal === 'number' ? String(rnVal) : `"${rnVal}"`;
+  return `  "${path}": { web: "${webVal}", mp: "${mpVal}", rn: ${rnStr} },`;
+}).join('\n')}
+};
+
+const platformValue = computed(() => {
+  const entry = tokenPlatformValues[tokenInput.value];
+  if (!entry) return "N/A";
+  const val = entry[activePlatform.value as keyof typeof entry];
+  return typeof val === "undefined" ? "N/A" : String(val);
+});
+
+// 依赖关系图数据
+const tokenRefs: Record<string, string> = {
+${Array.from(tokenMap.entries())
+  .filter(([, token]) => token.refs.length > 0)
+  .map(([path, token]) => `  "${path}": "${token.refs[0]}",`)
+  .join('\n')}
+};
+
+const graphNodes = computed(() => {
+  const nodes: { id: string; x: number; y: number; level: number; label: string }[] = [];
+  const layers: Record<string, string[]> = { primitive: [], semantic: [], component: [], other: [] };
+
+  for (const path of allTokens) {
+    if (path.startsWith("primitive.")) layers.primitive.push(path);
+    else if (path.startsWith("semantic.")) layers.semantic.push(path);
+    else if (path.startsWith("component.")) layers.component.push(path);
+    else layers.other.push(path);
+  }
+
+  const levelOrder = ["primitive", "semantic", "component", "other"];
+  let yOffset = 0;
+
+  for (const level of levelOrder) {
+    const tokens = layers[level];
+    if (tokens.length === 0) continue;
+
+    tokens.forEach((path, i) => {
+      nodes.push({
+        id: path,
+        x: 60 + i * 120,
+        y: 40 + yOffset * 90,
+        level: levelOrder.indexOf(level),
+        label: path.split(".").pop()!,
+      });
+    });
+    yOffset++;
+  }
+
+  return nodes;
+});
+
+const graphEdges = computed(() => {
+  const edges: { from: string; to: string }[] = [];
+  for (const [path, ref] of Object.entries(tokenRefs)) {
+    edges.push({ from: ref, to: path });
+  }
+  return edges;
+});
+
+const graphWidth = computed(() => {
+  const layers = [0, 1, 2, 3];
+  const maxInLayer = Math.max(...layers.map(l => graphNodes.value.filter(n => n.level === l).length), 1);
+  return Math.max(400, maxInLayer * 120 + 120);
+});
+
+const graphHeight = computed(() => {
+  const levels = new Set(graphNodes.value.map(n => n.level));
+  return levels.size * 90 + 80;
+});
+
+const highlightedChain = ref<string[]>([]);
+
+function highlightChain(tokenPath: string) {
+  const chain: string[] = [tokenPath];
+  let current = tokenPath;
+  while (tokenRefs[current]) {
+    current = tokenRefs[current];
+    chain.push(current);
+  }
+  highlightedChain.value = chain;
+}
+
+function getEdgePath(edge: { from: string; to: string }): string {
+  const fromNode = graphNodes.value.find(n => n.id === edge.from);
+  const toNode = graphNodes.value.find(n => n.id === edge.to);
+  if (!fromNode || !toNode) return "";
+  const midY = (fromNode.y + toNode.y) / 2;
+  return "M" + fromNode.x + "," + (fromNode.y + 24) + " C" + fromNode.x + "," + midY + " " + toNode.x + "," + midY + " " + toNode.x + "," + (toNode.y - 24);
+}
+
+function isEdgeHighlighted(edge: { from: string; to: string }): boolean {
+  return highlightedChain.value.includes(edge.from) && highlightedChain.value.includes(edge.to);
+}
 
 const filteredTokens = ref<string[]>(allTokens);
 
@@ -740,6 +973,56 @@ function downloadExport() {
 
 .footer { background: $semantic.color.background-secondary; padding: $semantic.spacing.xl $semantic.spacing.xl; text-align: center; color: $semantic.color.text-tertiary; border-top: 1px solid $semantic.color.border; margin-left: 180px; font-size: $semantic.fontSize.sm; }
 
+/* 搜索栏 */
+.search-bar { position: sticky; top: 72px; z-index: 80; background: $semantic.color.background; padding: $semantic.spacing.md $semantic.spacing.xl; border-bottom: 1px solid $semantic.color.border; margin-left: 180px; }
+.search-input-wrapper { position: relative; max-width: 600px; }
+.search-icon { position: absolute; left: $semantic.spacing.md; top: 50%; transform: translateY(-50%); font-size: $semantic.fontSize.sm; color: $semantic.color.text-tertiary; pointer-events: none; }
+.search-input { width: 100%; padding: $semantic.spacing.sm $semantic.spacing.xl; padding-left: $semantic.spacing.xl; border: 1px solid $semantic.color.border; border-radius: $semantic.borderRadius.full; font-size: $semantic.fontSize.sm; background: $semantic.color.background-secondary; transition: all 0.2s; box-sizing: border-box; }
+.search-input:focus { outline: none; border-color: $semantic.color.primary; box-shadow: 0 0 0 3px rgba(66, 184, 131, 0.1); background: $semantic.color.background; }
+.search-clear { position: absolute; right: $semantic.spacing.md; top: 50%; transform: translateY(-50%); cursor: pointer; color: $semantic.color.text-tertiary; font-size: $semantic.fontSize.xs; padding: 2px 6px; border-radius: 50%; }
+.search-clear:hover { background: $semantic.color.background-secondary; color: $semantic.color.text; }
+.filter-chips { display: flex; gap: $semantic.spacing.xs; margin-top: $semantic.spacing.sm; flex-wrap: wrap; }
+.chip { padding: 4px 12px; border: 1px solid $semantic.color.border; border-radius: $semantic.borderRadius.full; background: transparent; cursor: pointer; font-size: $semantic.fontSize.xs; color: $semantic.color.text-secondary; transition: all 0.15s; display: flex; align-items: center; gap: 4px; }
+.chip:hover { background: $semantic.color.background-secondary; border-color: $semantic.color.primary; }
+.chip.active { background: $semantic.color.primary; color: $semantic.color.text-inverse; border-color: $semantic.color.primary; }
+.chip-count { font-size: 10px; opacity: 0.7; }
+
+.section-desc { color: $semantic.color.text-tertiary; font-size: $semantic.fontSize.sm; margin-top: -8px; margin-bottom: $semantic.spacing.lg; }
+
+/* 依赖关系图 */
+.graph-container { overflow-x: auto; padding: $semantic.spacing.md; background: $semantic.color.background-secondary; border-radius: $semantic.borderRadius.lg; border: 1px solid $semantic.color.border; }
+.graph-svg { display: block; margin: 0 auto; }
+.graph-edge { stroke: $semantic.color.border; transition: stroke 0.2s; }
+.graph-edge.highlighted { stroke: #3b82f6; stroke-width: 3; }
+.graph-node { cursor: pointer; }
+.node-circle { fill: $semantic.color.background; stroke: $semantic.color.border; stroke-width: 2; transition: all 0.2s; }
+.node-circle.level-0 { fill: #dbeafe; stroke: #3b82f6; }
+.node-circle.level-1 { fill: #dcfce7; stroke: #22c55e; }
+.node-circle.level-2 { fill: #fef3c7; stroke: #eab308; }
+.node-circle.level-3 { fill: #f3e8ff; stroke: #9333ea; }
+.graph-node:hover .node-circle { transform: scale(1.15); stroke-width: 3; }
+.graph-node.highlighted .node-circle { stroke: #3b82f6; stroke-width: 3; filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.4)); }
+.node-label { font-size: 10px; font-family: monospace; pointer-events: none; fill: $semantic.color.text; }
+.chain-info { margin-top: $semantic.spacing.md; padding: $semantic.spacing.md; background: $semantic.color.background-secondary; border-radius: $semantic.borderRadius.md; border: 1px solid $semantic.color.border; display: flex; align-items: center; gap: $semantic.spacing.sm; }
+.chain-label { font-weight: $semantic.fontWeight.semibold; font-size: $semantic.fontSize.sm; }
+.chain-path { font-family: monospace; color: #3b82f6; font-size: $semantic.fontSize.sm; }
+.chain-clear { padding: 2px 8px; border: 1px solid $semantic.color.border; border-radius: $semantic.borderRadius.sm; background: transparent; cursor: pointer; font-size: $semantic.fontSize.xs; margin-left: auto; }
+.chain-clear:hover { background: $semantic.color.background-secondary; }
+
+/* 多平台预览 */
+.platform-table-wrapper { overflow-x: auto; }
+.platform-table { width: 100%; border-collapse: collapse; font-size: $semantic.fontSize.sm; }
+.platform-table th { text-align: left; padding: $semantic.spacing.sm $semantic.spacing.md; border-bottom: 2px solid $semantic.color.border; color: $semantic.color.text-secondary; font-weight: $semantic.fontWeight.semibold; font-size: $semantic.fontSize.xs; text-transform: uppercase; letter-spacing: 0.05em; }
+.platform-table td { padding: $semantic.spacing.sm $semantic.spacing.md; border-bottom: 1px solid $semantic.color.border; }
+.platform-table tr:hover { background: $semantic.color.background-secondary; }
+.token-path-cell { font-family: monospace; font-weight: $semantic.fontWeight.medium; white-space: nowrap; }
+.platform-code { font-size: $semantic.fontSize.xs; font-family: monospace; background: $semantic.color.background-secondary; padding: 2px 8px; border-radius: $semantic.borderRadius.sm; border: 1px solid $semantic.color.border; white-space: nowrap; }
+.platform-tabs { display: flex; gap: $semantic.spacing.xs; }
+.platform-tab { padding: 4px 10px; border: 1px solid $semantic.color.border; border-radius: $semantic.borderRadius.sm; background: transparent; cursor: pointer; font-size: $semantic.fontSize.xs; color: $semantic.color.text-secondary; transition: all 0.15s; }
+.platform-tab:hover { background: $semantic.color.background-secondary; }
+.platform-tab.active { background: $semantic.color.primary; color: $semantic.color.text-inverse; border-color: $semantic.color.primary; }
+.result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: $semantic.spacing.md; padding-bottom: $semantic.spacing.sm; border-bottom: 1px solid $semantic.color.border; }
+
 /* 暗黑模式 */
 .dark {
   background: #0f172a;
@@ -830,6 +1113,40 @@ function downloadExport() {
 .dark .badge.success { background: rgba(34, 197, 94, 0.2); }
 .dark .badge.info { background: rgba(59, 130, 246, 0.2); }
 
+/* 暗黑模式 - 搜索栏 */
+.dark .search-bar { background: #1e293b; border-color: #334155; }
+.dark .search-input { background: #0f172a; border-color: #334155; color: #e2e8f0; }
+.dark .search-input:focus { border-color: $semantic.color.primary; background: #0f172a; }
+.dark .search-clear { color: #64748b; }
+.dark .search-clear:hover { background: #334155; color: #e2e8f0; }
+.dark .chip { border-color: #334155; color: #94a3b8; }
+.dark .chip:hover { background: #334155; border-color: $semantic.color.primary; }
+.dark .chip.active { background: $semantic.color.primary; color: white; border-color: $semantic.color.primary; }
+
+/* 暗黑模式 - 依赖图 */
+.dark .graph-container { background: #0f172a; border-color: #334155; }
+.dark .graph-edge { stroke: #475569; }
+.dark .graph-edge.highlighted { stroke: #60a5fa; }
+.dark .node-circle.level-0 { fill: #1e3a5f; stroke: #60a5fa; }
+.dark .node-circle.level-1 { fill: #14532d; stroke: #4ade80; }
+.dark .node-circle.level-2 { fill: #451a03; stroke: #fbbf24; }
+.dark .node-circle.level-3 { fill: #3b0764; stroke: #c084fc; }
+.dark .graph-node.highlighted .node-circle { stroke: #60a5fa; filter: drop-shadow(0 0 6px rgba(96, 165, 250, 0.4)); }
+.dark .node-label { fill: #e2e8f0; }
+.dark .chain-info { background: #0f172a; border-color: #334155; }
+.dark .chain-path { color: #60a5fa; }
+.dark .chain-clear { border-color: #334155; color: #94a3b8; }
+.dark .chain-clear:hover { background: #334155; }
+
+/* 暗黑模式 - 多平台 */
+.dark .platform-table th { color: #94a3b8; border-color: #334155; }
+.dark .platform-table td { border-color: #334155; }
+.dark .platform-table tr:hover { background: #334155; }
+.dark .platform-code { background: #0f172a; border-color: #334155; color: #e2e8f0; }
+.dark .platform-tab { border-color: #334155; color: #94a3b8; }
+.dark .platform-tab:hover { background: #334155; }
+.dark .platform-tab.active { background: $semantic.color.primary; color: white; }
+
 .dark .hl-key { color: #c084fc; }
 .dark .hl-string { color: #4ade80; }
 .dark .hl-number { color: #fbbf24; }
@@ -879,12 +1196,10 @@ export function generatePlaygroundHtml(): string {
 /**
  * 生成 playground vite.config.ts
  */
-export function generateViteConfig(projectRoot: string, cssPrefix: string = "vte"): string {
+export function generateViteConfig(projectRoot: string, tokenFile: string, cssPrefix: string = "vte"): string {
   // 计算相对路径
-  const tokenPath = path.relative(
-    path.join(projectRoot, ".vte-playground"),
-    path.join(projectRoot, "design-tokens.ts")
-  );
+  const outputDir = path.join(projectRoot, ".vte-playground");
+  const tokenPath = path.relative(outputDir, tokenFile);
 
   return `import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";

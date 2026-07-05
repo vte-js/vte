@@ -20,12 +20,30 @@ program
   .description("Generate and launch VTE playground for visual debugging")
   .version("1.0.0");
 
+async function generate(tokenFile: string, outputDir: string, cssPrefix: string): Promise<number> {
+  clearCache(tokenFile);
+  const tokenMap = await parseTokens(tokenFile);
+  const vueContent = generatePlaygroundComponent(tokenMap, cssPrefix);
+  setCacheResult(tokenFile, tokenMap, vueContent);
+
+  fs.mkdirSync(outputDir, { recursive: true });
+
+  fs.writeFileSync(path.join(outputDir, "Playground.vue"), vueContent);
+  fs.writeFileSync(path.join(outputDir, "main.ts"), generatePlaygroundEntry());
+  fs.writeFileSync(path.join(outputDir, "index.html"), generatePlaygroundHtml());
+  fs.writeFileSync(path.join(outputDir, "vite.config.ts"), generateViteConfig(process.cwd(), tokenFile, cssPrefix));
+  fs.writeFileSync(path.join(outputDir, "package.json"), generatePackageJson(path.basename(process.cwd())));
+
+  return tokenMap.size;
+}
+
 program
   .command("start")
   .description("Generate and start playground")
   .argument("[file]", "Token file path", "design-tokens.ts")
   .option("-o, --output <dir>", "Output directory", ".vte-playground")
   .option("-p, --prefix <prefix>", "CSS variable prefix", "vte")
+  .option("-w, --watch", "Watch token file for changes and auto-regenerate")
   .action(async (file, options) => {
     const tokenFile = path.resolve(process.cwd(), file);
     const outputDir = path.resolve(process.cwd(), options.output);
@@ -36,60 +54,28 @@ program
     console.log(`Output dir: ${outputDir}`);
     console.log(`CSS prefix: ${cssPrefix}\n`);
 
-    // 1. 读取 token 文件
     try {
       console.log("📖 Reading tokens...");
-      const cached = getCachedResult(tokenFile);
-      let tokenMap, vueContent;
+      const count = await generate(tokenFile, outputDir, cssPrefix);
+      console.log(`   Found ${count} tokens\n`);
+      console.log(`✅ Playground generated at ${outputDir}\n`);
 
-      if (cached) {
-        console.log("   Using cached tokens");
-        tokenMap = cached.tokenMap;
-        vueContent = generatePlaygroundComponent(tokenMap, cssPrefix);
+      if (options.watch) {
+        const { startWatcher } = await import("./watcher.js");
+        startWatcher({
+          file: tokenFile,
+          onChange: async () => {
+            const newCount = await generate(tokenFile, outputDir, cssPrefix);
+            console.log(`   ${newCount} tokens`);
+          },
+        });
+        await new Promise<void>(() => {});
       } else {
-        tokenMap = await parseTokens(tokenFile);
-        vueContent = generatePlaygroundComponent(tokenMap, cssPrefix);
-        setCacheResult(tokenFile, tokenMap, vueContent);
+        console.log("To start:");
+        console.log(`  cd ${options.output}`);
+        console.log("  pnpm install");
+        console.log("  pnpm dev\n");
       }
-      console.log(`   Found ${tokenMap.size} tokens\n`);
-
-      // 2. 创建输出目录
-      fs.mkdirSync(outputDir, { recursive: true });
-
-      // 3. 生成文件
-      console.log("📝 Generating files...");
-
-      // Playground.vue
-      fs.writeFileSync(path.join(outputDir, "Playground.vue"), vueContent);
-      console.log("   ✅ Playground.vue");
-
-      // main.ts
-      const mainContent = generatePlaygroundEntry();
-      fs.writeFileSync(path.join(outputDir, "main.ts"), mainContent);
-      console.log("   ✅ main.ts");
-
-      // index.html
-      const htmlContent = generatePlaygroundHtml();
-      fs.writeFileSync(path.join(outputDir, "index.html"), htmlContent);
-      console.log("   ✅ index.html");
-
-      // vite.config.ts
-      const viteConfig = generateViteConfig(process.cwd(), cssPrefix);
-      fs.writeFileSync(path.join(outputDir, "vite.config.ts"), viteConfig);
-      console.log("   ✅ vite.config.ts");
-
-      // package.json
-      const projectName = path.basename(process.cwd());
-      const packageJson = generatePackageJson(projectName);
-      fs.writeFileSync(path.join(outputDir, "package.json"), packageJson);
-      console.log("   ✅ package.json");
-
-      console.log(`\n✅ Playground generated at ${outputDir}\n`);
-      console.log("To start:");
-      console.log(`  cd ${options.output}`);
-      console.log("  pnpm install");
-      console.log("  pnpm dev\n");
-
     } catch (e) {
       console.error(`\n❌ Error: ${(e as Error).message}\n`);
       process.exit(1);
@@ -110,27 +96,8 @@ program
     console.log(`\n📝 Generating VTE Playground...\n`);
 
     try {
-      const cached = getCachedResult(tokenFile);
-      let tokenMap, vueContent;
-
-      if (cached) {
-        tokenMap = cached.tokenMap;
-        vueContent = generatePlaygroundComponent(tokenMap, cssPrefix);
-      } else {
-        tokenMap = await parseTokens(tokenFile);
-        vueContent = generatePlaygroundComponent(tokenMap, cssPrefix);
-        setCacheResult(tokenFile, tokenMap, vueContent);
-      }
-
-      fs.mkdirSync(outputDir, { recursive: true });
-
-      fs.writeFileSync(path.join(outputDir, "Playground.vue"), vueContent);
-      fs.writeFileSync(path.join(outputDir, "main.ts"), generatePlaygroundEntry());
-      fs.writeFileSync(path.join(outputDir, "index.html"), generatePlaygroundHtml());
-      fs.writeFileSync(path.join(outputDir, "vite.config.ts"), generateViteConfig(process.cwd(), cssPrefix));
-      fs.writeFileSync(path.join(outputDir, "package.json"), generatePackageJson(path.basename(process.cwd())));
-
-      console.log(`✅ Generated ${tokenMap.size} tokens → ${outputDir}/`);
+      const count = await generate(tokenFile, outputDir, cssPrefix);
+      console.log(`✅ Generated ${count} tokens → ${outputDir}/`);
     } catch (e) {
       console.error(`\n❌ Error: ${(e as Error).message}\n`);
       process.exit(1);
