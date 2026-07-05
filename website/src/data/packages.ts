@@ -181,6 +181,50 @@ vte extract design-tokens.ts
 vte generate design-tokens.ts --platform web
 vte generate design-tokens.ts --platform mp
 vte generate design-tokens.ts --platform rn`,
+    apiItems: [
+      {
+        name: "validate",
+        signature: "vte validate <file>",
+        description: "验证 Token 定义文件，检查语法和引用是否正确",
+        params: [
+          { name: "file", type: "string", desc: "token 文件路径" }
+        ],
+        returns: "验证通过返回 0，失败返回 1",
+        example: `vte validate design-tokens.ts
+# ✅ Token validation passed!
+#    Total tokens: 75
+#    References: 23
+#    Primitives: 52`
+      },
+      {
+        name: "extract",
+        signature: "vte extract <file> [--json]",
+        description: "提取所有 Token 路径，支持列表或 JSON 格式输出",
+        params: [
+          { name: "file", type: "string", desc: "token 文件路径" },
+          { name: "--json", type: "flag", desc: "输出 JSON 格式" }
+        ],
+        returns: "Token 路径列表或 JSON 对象",
+        example: `vte extract design-tokens.ts
+# 📋 Token paths (75 total):
+#   semantic/
+#     color.primary = #3b82f6
+#     spacing.md = 1rem`
+      },
+      {
+        name: "generate",
+        signature: "vte generate <file> --platform <platform> [--output <file>]",
+        description: "生成多端代码",
+        params: [
+          { name: "file", type: "string", desc: "token 文件路径" },
+          { name: "--platform", type: '"web" | "mp" | "rn"', desc: "目标平台" },
+          { name: "--output", type: "string", desc: "输出文件路径（可选）" }
+        ],
+        returns: "生成的代码或写入文件",
+        example: `vte generate design-tokens.ts --platform web
+vte generate design-tokens.ts --platform mp --output tokens.wxss`
+      }
+    ],
   },
   compiler: {
     name: "@vte-js/compiler",
@@ -209,6 +253,49 @@ const result = await compile({
 
 console.log(result.agentJsonPath);  // ./dist/tokens.agent.json
 console.log(result.tokensDtsPath);  // ./dist/tokens.d.ts`,
+    apiItems: [
+      {
+        name: "compile",
+        signature: "compile(options: CompilerOptions): Promise<CompileResult>",
+        description: "编译 design-tokens.ts，生成 agent.json 和 tokens.d.ts",
+        params: [
+          { name: "tokenFile", type: "string", desc: "token 文件路径（必填）" },
+          { name: "outputDir", type: "string", desc: "输出目录（必填）" },
+          { name: "prefix", type: "string", desc: "输出文件名前缀（默认 'tokens'）" },
+          { name: "cssPrefix", type: "string", desc: "CSS 变量前缀（默认 'vte'）" }
+        ],
+        returns: "CompileResult - 包含生成的文件路径",
+        example: `const result = await compile({
+  tokenFile: "./design-tokens.ts",
+  outputDir: "./dist",
+  prefix: "tokens",
+});
+// result.agentJsonPath: "./dist/tokens.agent.json"
+// result.tokensDtsPath: "./dist/tokens.d.ts"`
+      },
+      {
+        name: "CompilerOptions",
+        signature: "interface CompilerOptions",
+        description: "编译器配置选项",
+        params: [
+          { name: "tokenFile", type: "string", desc: "token 文件路径" },
+          { name: "outputDir", type: "string", desc: "输出目录" },
+          { name: "prefix", type: "string", desc: "输出文件名前缀" },
+          { name: "cssPrefix", type: "string", desc: "CSS 变量前缀" }
+        ]
+      },
+      {
+        name: "CompileResult",
+        signature: "interface CompileResult",
+        description: "编译结果，包含生成的文件路径",
+        params: [
+          { name: "agentJson", type: "AgentJson", desc: "agent.json 内容" },
+          { name: "tokensDts", type: "string", desc: "tokens.d.ts 内容" },
+          { name: "agentJsonPath", type: "string", desc: "agent.json 文件路径" },
+          { name: "tokensDtsPath", type: "string", desc: "tokens.d.ts 文件路径" }
+        ]
+      }
+    ],
   },
   react: {
     name: "@vte-js/react",
@@ -241,6 +328,59 @@ function MyComponent() {
   const color = useTokenValue("semantic.color.primary");
   return <div style={{ color }}>Hello</div>;
 }`,
+    apiItems: [
+      {
+        name: "TokenProvider",
+        signature: "<TokenProvider tokenMap={map} platform=\"web\">",
+        description: "React 组件，提供 token 上下文给子组件",
+        params: [
+          { name: "tokenMap", type: "TokenMap", desc: "token 映射对象（必填）" },
+          { name: "platform", type: '"web" | "mp" | "rn"', desc: "目标平台（默认 'web'）" }
+        ],
+        example: `<TokenProvider tokenMap={tokenMap} platform="web">
+  <App />
+</TokenProvider>`
+      },
+      {
+        name: "useToken",
+        signature: "useToken(): TokenContextValue",
+        description: "获取完整的 token 上下文，包括 tokenMap、platform、getToken、getTokenValue",
+        returns: "TokenContextValue - token 上下文对象",
+        example: `const { tokenMap, getTokenValue } = useToken();
+const color = getTokenValue("semantic.color.primary");`
+      },
+      {
+        name: "useTokenValue",
+        signature: "useTokenValue(path: string, platform?: string): string | number | undefined",
+        description: "获取单个 token 的值",
+        params: [
+          { name: "path", type: "string", desc: "token 路径" },
+          { name: "platform", type: "string", desc: "目标平台（可选）" }
+        ],
+        returns: "string | number | undefined - token 的值",
+        example: `const color = useTokenValue("semantic.color.primary");
+const spacing = useTokenValue("semantic.spacing.md", "mp");`
+      },
+      {
+        name: "useTokenMap",
+        signature: "useTokenMap(): TokenMap",
+        description: "获取完整的 token 映射",
+        returns: "TokenMap - token 映射对象"
+      },
+      {
+        name: "useTokenStyle",
+        signature: "useTokenStyle<T>(styles: T): { [K in keyof T]: string | number }",
+        description: "根据 token 路径生成样式对象",
+        params: [
+          { name: "styles", type: "T", desc: "样式映射，值为 token 路径" }
+        ],
+        returns: "样式对象",
+        example: `const style = useTokenStyle({
+  color: "semantic.color.primary",
+  padding: "semantic.spacing.md",
+});`
+      }
+    ],
   },
   playground: {
     name: "@vte-js/playground",
@@ -267,6 +407,32 @@ npx @vte-js/playground start ./design-tokens.ts
 
 # 仅生成文件
 npx @vte-js/playground generate`,
+    apiItems: [
+      {
+        name: "start",
+        signature: "vte-playground start [file] [--output <dir>] [--prefix <prefix>]",
+        description: "生成并启动 Playground",
+        params: [
+          { name: "file", type: "string", desc: "token 文件路径（默认 'design-tokens.ts'）" },
+          { name: "--output", type: "string", desc: "输出目录（默认 '.vte-playground'）" },
+          { name: "--prefix", type: "string", desc: "CSS 变量前缀（默认 'vte'）" }
+        ],
+        example: `vte-playground start
+vte-playground start ./my-tokens.ts -p my-app`
+      },
+      {
+        name: "generate",
+        signature: "vte-playground generate [file] [--output <dir>] [--prefix <prefix>]",
+        description: "仅生成 Playground 文件，不启动服务",
+        params: [
+          { name: "file", type: "string", desc: "token 文件路径（默认 'design-tokens.ts'）" },
+          { name: "--output", type: "string", desc: "输出目录（默认 '.vte-playground'）" },
+          { name: "--prefix", type: "string", desc: "CSS 变量前缀（默认 'vte'）" }
+        ],
+        example: `vte-playground generate
+vte-playground generate ./my-tokens.ts -o ./playground`
+      }
+    ],
   },
   "language-server": {
     name: "@vte-js/language-server",
@@ -293,5 +459,77 @@ const manager = new TokenManager({
 
 const hover = new TokenHoverProvider(manager);
 const result = hover.provideHover(document, position);`,
+    apiItems: [
+      {
+        name: "TokenManager",
+        signature: "new TokenManager(config: TokenManagerConfig)",
+        description: "Token 管理器，负责 token 的解析、缓存和查询",
+        params: [
+          { name: "tokenFile", type: "string", desc: "token 文件路径" },
+          { name: "cacheTtl", type: "number", desc: "缓存有效期（毫秒，默认 30000）" }
+        ],
+        example: `const manager = new TokenManager({
+  tokenFile: "design-tokens.ts",
+  cacheTtl: 60000,
+});`
+      },
+      {
+        name: "TokenManager.getTokenMap",
+        signature: "getTokenMap(): Map<string, TokenInfo> | null",
+        description: "获取所有 token 的映射",
+        returns: "Map<string, TokenInfo> | null"
+      },
+      {
+        name: "TokenManager.getToken",
+        signature: "getToken(path: string): TokenInfo | undefined",
+        description: "获取单个 token",
+        params: [
+          { name: "path", type: "string", desc: "token 路径" }
+        ],
+        returns: "TokenInfo | undefined"
+      },
+      {
+        name: "TokenManager.getTokenPaths",
+        signature: "getTokenPaths(): string[]",
+        description: "获取所有 token 路径",
+        returns: "string[] - token 路径数组"
+      },
+      {
+        name: "TokenManager.findSimilarTokens",
+        signature: "findSimilarTokens(target: string, maxResults?: number): string[]",
+        description: "查找与目标相似的 token（用于拼写建议）",
+        params: [
+          { name: "target", type: "string", desc: "目标路径" },
+          { name: "maxResults", type: "number", desc: "最大返回数量（默认 3）" }
+        ],
+        returns: "string[] - 相似的 token 路径"
+      },
+      {
+        name: "TokenHoverProvider",
+        signature: "new TokenHoverProvider(manager: TokenManager)",
+        description: "悬停预览提供器，鼠标悬停时显示 token 信息",
+        params: [
+          { name: "manager", type: "TokenManager", desc: "token 管理器实例" }
+        ],
+        example: `const hover = new TokenHoverProvider(manager);
+const result = hover.provideHover(document, position);`
+      },
+      {
+        name: "TokenCompletionProvider",
+        signature: "new TokenCompletionProvider(manager: TokenManager)",
+        description: "自动补全提供器，输入 $ 时触发补全",
+        params: [
+          { name: "manager", type: "TokenManager", desc: "token 管理器实例" }
+        ]
+      },
+      {
+        name: "TokenDefinitionProvider",
+        signature: "new TokenDefinitionProvider(manager: TokenManager)",
+        definition: "定义跳转提供器，支持跳转到 token 定义位置",
+        params: [
+          { name: "manager", type: "TokenManager", desc: "token 管理器实例" }
+        ]
+      }
+    ],
   },
 };
