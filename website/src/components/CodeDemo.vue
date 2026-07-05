@@ -3,6 +3,8 @@
     <div class="bg-effects">
       <div class="bg-grid"></div>
       <div class="bg-glow"></div>
+      <div class="floating-orb orb-1"></div>
+      <div class="floating-orb orb-2"></div>
     </div>
 
     <div class="container">
@@ -17,7 +19,7 @@
           </p>
 
           <div class="demo-steps">
-            <div class="step" v-for="(step, i) in steps" :key="i">
+            <div class="step" v-for="(step, i) in steps" :key="i" :style="{ animationDelay: `${i * 0.15}s` }">
               <div class="step-num">{{ i + 1 }}</div>
               <div class="step-text">
                 <strong>{{ step.title }}</strong>
@@ -60,6 +62,9 @@
               </div>
               <div class="arrow-line"></div>
               <div class="arrow-label">VTE Compiler</div>
+              <div class="arrow-particles">
+                <span v-for="i in 5" :key="i" class="arrow-particle"></span>
+              </div>
             </div>
 
             <div class="code-card output">
@@ -103,7 +108,7 @@ const steps = [
 <style scoped>
 .code-demo {
   padding: 140px 24px;
-  background: #0f172a;
+  background: #0a0f1a;
   position: relative;
   overflow: hidden;
 }
@@ -120,7 +125,7 @@ const steps = [
   background-image:
     linear-gradient(rgba(66, 184, 131, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(66, 184, 131, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-size: 50px 50px;
 }
 
 .bg-glow {
@@ -131,6 +136,35 @@ const steps = [
   width: 800px;
   height: 800px;
   background: radial-gradient(circle, rgba(66, 184, 131, 0.08) 0%, transparent 60%);
+}
+
+.floating-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: float 12s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 300px;
+  height: 300px;
+  background: rgba(66, 184, 131, 0.1);
+  top: 20%;
+  right: 10%;
+}
+
+.orb-2 {
+  width: 200px;
+  height: 200px;
+  background: rgba(34, 211, 238, 0.08);
+  bottom: 20%;
+  left: 10%;
+  animation-delay: -6s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, -30px); }
 }
 
 .container {
@@ -208,11 +242,18 @@ const steps = [
   border: 1px solid rgba(66, 184, 131, 0.15);
   border-radius: 12px;
   transition: all 0.3s;
+  animation: fadeInUp 0.6s ease-out backwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .step:hover {
   border-color: rgba(66, 184, 131, 0.4);
   transform: translateX(8px);
+  box-shadow: 0 10px 30px rgba(66, 184, 131, 0.1);
 }
 
 .step-num {
@@ -256,7 +297,7 @@ const steps = [
 }
 
 .code-card {
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(10, 15, 26, 0.8);
   border: 1px solid rgba(66, 184, 131, 0.2);
   border-radius: 12px;
   overflow: hidden;
@@ -268,7 +309,7 @@ const steps = [
   align-items: center;
   gap: 10px;
   padding: 12px 16px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -328,7 +369,7 @@ const steps = [
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 0;
+  padding: 20px 0;
   position: relative;
 }
 
@@ -339,22 +380,22 @@ const steps = [
 }
 
 .arrow-icon {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #42b883, #35495e);
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #42b883, #22d3ee);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   margin: 0 12px;
-  box-shadow: 0 0 20px rgba(66, 184, 131, 0.4);
+  box-shadow: 0 0 30px rgba(66, 184, 131, 0.5);
   animation: pulse-arrow 2s ease-in-out infinite;
 }
 
 @keyframes pulse-arrow {
-  0%, 100% { box-shadow: 0 0 20px rgba(66, 184, 131, 0.4); }
-  50% { box-shadow: 0 0 30px rgba(66, 184, 131, 0.6); }
+  0%, 100% { box-shadow: 0 0 30px rgba(66, 184, 131, 0.5); transform: scale(1); }
+  50% { box-shadow: 0 0 40px rgba(66, 184, 131, 0.7); transform: scale(1.05); }
 }
 
 .arrow-label {
@@ -365,8 +406,33 @@ const steps = [
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  background: #0f172a;
+  background: #0a0f1a;
   padding: 2px 10px;
+}
+
+.arrow-particles {
+  position: absolute;
+  inset: 0;
+}
+
+.arrow-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #42b883;
+  border-radius: 50%;
+  animation: particle-fly 2s ease-in-out infinite;
+}
+
+.arrow-particle:nth-child(1) { top: 20%; left: 30%; animation-delay: 0s; }
+.arrow-particle:nth-child(2) { top: 80%; left: 20%; animation-delay: 0.4s; }
+.arrow-particle:nth-child(3) { top: 30%; right: 20%; animation-delay: 0.8s; }
+.arrow-particle:nth-child(4) { top: 70%; right: 30%; animation-delay: 1.2s; }
+.arrow-particle:nth-child(5) { top: 50%; left: 50%; animation-delay: 1.6s; }
+
+@keyframes particle-fly {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
 }
 
 .hl-tag { color: #7dd3fc; }

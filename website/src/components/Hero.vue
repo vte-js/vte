@@ -4,28 +4,25 @@
       <div class="grid-bg"></div>
       <div class="glow glow-1"></div>
       <div class="glow glow-2"></div>
-      <div class="glow glow-3"></div>
       <div class="scan-line"></div>
-      <div class="particles">
-        <span v-for="i in 20" :key="i" class="particle" :style="particleStyle(i)"></span>
-      </div>
+      <canvas ref="canvasRef" class="particles-canvas"></canvas>
     </div>
 
     <div class="container">
       <div class="hero-content">
         <div class="hero-badge">
           <span class="badge-pulse"></span>
-          <span class="badge-text">v1.0.0 — Now Available</span>
+          <span>v1.0.0 — Now Available</span>
         </div>
 
         <h1 class="hero-title">
-          <span class="title-line">Vue</span>
-          <span class="title-line gradient">Token Engine</span>
+          <span class="title-line" ref="titleLine1">Vue</span>
+          <span class="title-line gradient" ref="titleLine2">Token Engine</span>
         </h1>
 
         <p class="hero-subtitle">
-          <span class="typing-text">Design Tokens First</span>
-          <span class="cursor">|</span>
+          <span class="typing-text">{{ typedText }}</span>
+          <span class="cursor" :class="{ hide: !showCursor }">|</span>
         </p>
 
         <p class="hero-desc">
@@ -67,6 +64,23 @@
             </svg>
           </button>
         </div>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-num">6</span>
+            <span class="stat-label">Packages</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-num">3</span>
+            <span class="stat-label">Platforms</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-num">25+</span>
+            <span class="stat-label">Tests</span>
+          </div>
+        </div>
       </div>
 
       <div class="hero-visual">
@@ -75,7 +89,7 @@
           <div class="holo-ring ring-2"></div>
           <div class="holo-ring ring-3"></div>
           <div class="holo-center">
-            <svg viewBox="0 0 128 128" width="80" height="80">
+            <svg viewBox="0 0 128 128" width="80" height="80" class="logo-spin">
               <path fill="#42b883" d="M12,10 L44,10 L64,72 L84,10 L116,10 L88,104 Q64,124 40,104 Z"/>
               <path fill="#35495e" d="M32,10 L52,10 L64,32 L76,10 L96,10 L80,76 Q64,84 48,76 L32,10 Z"/>
             </svg>
@@ -133,9 +147,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
+const canvasRef = ref<HTMLCanvasElement | null>(null);
 const copied = ref(false);
+const typedText = ref("");
+const showCursor = ref(true);
+const titleLine1 = ref<HTMLElement | null>(null);
+const titleLine2 = ref<HTMLElement | null>(null);
+
+const fullText = "Design Tokens First";
+let charIndex = 0;
+let typingInterval: ReturnType<typeof setTimeout>;
+
+function typeText() {
+  if (charIndex < fullText.length) {
+    typedText.value += fullText[charIndex];
+    charIndex++;
+    typingInterval = setTimeout(typeText, 80 + Math.random() * 40);
+  } else {
+    setTimeout(() => {
+      showCursor.value = false;
+    }, 2000);
+  }
+}
 
 function copyInstall() {
   navigator.clipboard.writeText("pnpm add @vte-js/core @vte-js/vite-plugin");
@@ -143,19 +178,87 @@ function copyInstall() {
   setTimeout(() => { copied.value = false; }, 2000);
 }
 
-function particleStyle(i: number) {
-  const x = Math.random() * 100;
-  const y = Math.random() * 100;
-  const delay = Math.random() * 5;
-  const size = Math.random() * 3 + 1;
-  return {
-    left: `${x}%`,
-    top: `${y}%`,
-    width: `${size}px`,
-    height: `${size}px`,
-    animationDelay: `${delay}s`,
-  };
+// Particle system
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  alpha: number;
 }
+
+let particles: Particle[] = [];
+let animationId: number;
+
+function initCanvas() {
+  const canvas = canvasRef.value;
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+
+  particles = Array.from({ length: 50 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.5,
+    vy: (Math.random() - 0.5) * 0.5,
+    size: Math.random() * 2 + 0.5,
+    alpha: Math.random() * 0.5 + 0.2,
+  }));
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(66, 184, 131, ${p.alpha})`;
+      ctx.fill();
+    });
+
+    // Draw connections
+    particles.forEach((p1, i) => {
+      particles.slice(i + 1).forEach((p2) => {
+        const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = `rgba(66, 184, 131, ${0.15 * (1 - dist / 120)})`;
+          ctx.stroke();
+        }
+      });
+    });
+
+    animationId = requestAnimationFrame(animate);
+  }
+
+  animate();
+}
+
+onMounted(() => {
+  typeText();
+  initCanvas();
+  window.addEventListener("resize", initCanvas);
+});
+
+onUnmounted(() => {
+  clearTimeout(typingInterval);
+  cancelAnimationFrame(animationId);
+  window.removeEventListener("resize", initCanvas);
+});
 </script>
 
 <style scoped>
@@ -166,56 +269,46 @@ function particleStyle(i: number) {
   align-items: center;
   padding: 120px 24px 80px;
   overflow: hidden;
-  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  background: linear-gradient(180deg, #0a0f1a 0%, #0f172a 50%, #1e293b 100%);
 }
 
 .hero-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
-  overflow: hidden;
 }
 
 .grid-bg {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(66, 184, 131, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(66, 184, 131, 0.07) 1px, transparent 1px);
-  background-size: 50px 50px;
-  mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+    linear-gradient(rgba(66, 184, 131, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(66, 184, 131, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
 }
 
 .glow {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  animation: float 8s ease-in-out infinite;
+  filter: blur(100px);
+  animation: float 10s ease-in-out infinite;
 }
 
 .glow-1 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(66, 184, 131, 0.3) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(66, 184, 131, 0.25) 0%, transparent 70%);
   top: -20%;
-  right: 10%;
+  right: 5%;
 }
 
 .glow-2 {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(53, 73, 94, 0.4) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 70%);
   bottom: 10%;
-  left: 5%;
-  animation-delay: -3s;
-}
-
-.glow-3 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(66, 184, 131, 0.2) 0%, transparent 70%);
-  top: 40%;
-  left: 40%;
+  left: 10%;
   animation-delay: -5s;
 }
 
@@ -231,27 +324,23 @@ function particleStyle(i: number) {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(66, 184, 131, 0.5), transparent);
-  animation: scan 4s linear infinite;
+  background: linear-gradient(90deg, transparent, rgba(66, 184, 131, 0.6), transparent);
+  animation: scan 5s linear infinite;
+  box-shadow: 0 0 20px rgba(66, 184, 131, 0.5);
 }
 
 @keyframes scan {
-  0% { top: 0; opacity: 0; }
+  0% { top: -5%; opacity: 0; }
   10% { opacity: 1; }
   90% { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
+  100% { top: 105%; opacity: 0; }
 }
 
-.particles span {
+.particles-canvas {
   position: absolute;
-  background: rgba(66, 184, 131, 0.6);
-  border-radius: 50%;
-  animation: particle-float 6s ease-in-out infinite;
-}
-
-@keyframes particle-float {
-  0%, 100% { opacity: 0; transform: translateY(0); }
-  50% { opacity: 1; transform: translateY(-20px); }
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .container {
@@ -282,6 +371,7 @@ function particleStyle(i: number) {
   color: #42b883;
   margin-bottom: 32px;
   backdrop-filter: blur(10px);
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .badge-pulse {
@@ -297,6 +387,11 @@ function particleStyle(i: number) {
   50% { box-shadow: 0 0 0 8px rgba(66, 184, 131, 0); }
 }
 
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .hero-title {
   font-size: 72px;
   font-weight: 800;
@@ -308,7 +403,11 @@ function particleStyle(i: number) {
 .title-line {
   display: block;
   color: #f1f5f9;
+  animation: fadeInUp 0.8s ease-out backwards;
 }
+
+.title-line:nth-child(1) { animation-delay: 0.1s; }
+.title-line:nth-child(2) { animation-delay: 0.2s; }
 
 .title-line.gradient {
   background: linear-gradient(135deg, #42b883 0%, #22d3ee 50%, #42b883 100%);
@@ -316,7 +415,8 @@ function particleStyle(i: number) {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-shift 3s ease-in-out infinite;
+  animation: fadeInUp 0.8s ease-out backwards, gradient-shift 4s ease-in-out infinite;
+  animation-delay: 0.2s, 1s;
 }
 
 @keyframes gradient-shift {
@@ -329,15 +429,22 @@ function particleStyle(i: number) {
   color: #94a3b8;
   margin-bottom: 24px;
   font-weight: 500;
+  animation: fadeInUp 0.8s ease-out 0.3s backwards;
 }
 
 .typing-text {
   font-family: 'SF Mono', Monaco, monospace;
+  color: #e2e8f0;
 }
 
 .cursor {
-  animation: blink 1s step-end infinite;
   color: #42b883;
+  animation: blink 1s step-end infinite;
+}
+
+.cursor.hide {
+  animation: none;
+  opacity: 0;
 }
 
 @keyframes blink {
@@ -349,6 +456,7 @@ function particleStyle(i: number) {
   color: #94a3b8;
   line-height: 1.8;
   margin-bottom: 36px;
+  animation: fadeInUp 0.8s ease-out 0.4s backwards;
 }
 
 .highlight {
@@ -361,6 +469,7 @@ function particleStyle(i: number) {
   display: flex;
   gap: 16px;
   margin-bottom: 36px;
+  animation: fadeInUp 0.8s ease-out 0.5s backwards;
 }
 
 .btn {
@@ -426,6 +535,7 @@ function particleStyle(i: number) {
   border-radius: 10px;
   border: 1px solid rgba(66, 184, 131, 0.2);
   backdrop-filter: blur(10px);
+  animation: fadeInUp 0.8s ease-out 0.6s backwards;
 }
 
 .install-icon {
@@ -469,6 +579,42 @@ function particleStyle(i: number) {
   color: white;
 }
 
+.hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeInUp 0.8s ease-out 0.7s backwards;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-num {
+  font-size: 28px;
+  font-weight: 800;
+  color: #42b883;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .hero-visual {
   position: relative;
   display: flex;
@@ -495,19 +641,20 @@ function particleStyle(i: number) {
   width: 100%;
   height: 100%;
   animation: rotate 20s linear infinite;
+  border-style: dashed;
 }
 
 .ring-2 {
-  width: 80%;
-  height: 80%;
-  border-style: dashed;
+  width: 75%;
+  height: 75%;
   animation: rotate 15s linear infinite reverse;
 }
 
 .ring-3 {
-  width: 60%;
-  height: 60%;
+  width: 50%;
+  height: 50%;
   animation: rotate 10s linear infinite;
+  border-color: rgba(34, 211, 238, 0.3);
 }
 
 @keyframes rotate {
@@ -518,8 +665,11 @@ function particleStyle(i: number) {
 .holo-center {
   position: relative;
   z-index: 2;
+  filter: drop-shadow(0 0 40px rgba(66, 184, 131, 0.6));
+}
+
+.logo-spin {
   animation: float 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 30px rgba(66, 184, 131, 0.5));
 }
 
 .code-windows {
@@ -529,12 +679,12 @@ function particleStyle(i: number) {
 }
 
 .code-window {
-  background: rgba(15, 23, 42, 0.9);
+  background: rgba(10, 15, 26, 0.9);
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid rgba(66, 184, 131, 0.2);
   backdrop-filter: blur(20px);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
 }
 
 .window-header {
@@ -542,7 +692,7 @@ function particleStyle(i: number) {
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -571,6 +721,12 @@ function particleStyle(i: number) {
 .window-status {
   color: #42b883;
   font-size: 12px;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 .window-status.success {
@@ -611,7 +767,7 @@ function particleStyle(i: number) {
   height: 8px;
   background: #42b883;
   border-radius: 50%;
-  box-shadow: 0 0 10px #42b883;
+  box-shadow: 0 0 15px #42b883;
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -634,6 +790,10 @@ function particleStyle(i: number) {
 
   .hero-visual {
     display: none;
+  }
+
+  .hero-stats {
+    justify-content: center;
   }
 }
 </style>

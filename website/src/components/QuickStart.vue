@@ -10,7 +10,7 @@
 
       <div class="steps-timeline">
         <div class="timeline-line"></div>
-        <div v-for="(step, i) in steps" :key="i" class="step-item">
+        <div v-for="(step, i) in steps" :key="i" class="step-item" :style="{ animationDelay: `${i * 0.15}s` }">
           <div class="step-marker">
             <div class="marker-ring"></div>
             <div class="marker-dot"></div>
@@ -84,7 +84,7 @@ const steps = [
 <style scoped>
 .quickstart {
   padding: 140px 24px;
-  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  background: linear-gradient(180deg, #0a0f1a 0%, #0f172a 100%);
   position: relative;
 }
 
@@ -141,7 +141,7 @@ const steps = [
   top: 0;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(180deg, #42b883, rgba(66, 184, 131, 0.2));
+  background: linear-gradient(180deg, #42b883, rgba(66, 184, 131, 0.1));
 }
 
 .step-item {
@@ -149,6 +149,12 @@ const steps = [
   gap: 32px;
   margin-bottom: 32px;
   position: relative;
+  animation: fadeInUp 0.6s ease-out backwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .step-marker {
@@ -163,18 +169,7 @@ const steps = [
   border: 2px solid rgba(66, 184, 131, 0.3);
   border-radius: 50%;
   animation: rotate 10s linear infinite;
-}
-
-.marker-dot {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 12px;
-  height: 12px;
-  background: #42b883;
-  border-radius: 50%;
-  box-shadow: 0 0 15px rgba(66, 184, 131, 0.6);
+  border-style: dashed;
 }
 
 @keyframes rotate {
@@ -182,9 +177,27 @@ const steps = [
   to { transform: rotate(360deg); }
 }
 
+.marker-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background: #42b883;
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(66, 184, 131, 0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(66, 184, 131, 0.6); }
+  50% { box-shadow: 0 0 30px rgba(66, 184, 131, 0.8); }
+}
+
 .step-card {
   flex: 1;
-  background: rgba(30, 41, 59, 0.5);
+  background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(66, 184, 131, 0.15);
   border-radius: 16px;
   padding: 28px;
@@ -194,6 +207,7 @@ const steps = [
 .step-card:hover {
   border-color: rgba(66, 184, 131, 0.4);
   transform: translateX(8px);
+  box-shadow: 0 10px 30px rgba(66, 184, 131, 0.1);
 }
 
 .step-header {
@@ -229,7 +243,7 @@ const steps = [
 }
 
 .step-code {
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(10, 15, 26, 0.8);
   border: 1px solid rgba(66, 184, 131, 0.1);
   border-radius: 10px;
   overflow: hidden;
@@ -237,7 +251,7 @@ const steps = [
 
 .code-label {
   padding: 10px 16px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4);
   font-size: 12px;
   color: #64748b;
   font-family: 'SF Mono', Monaco, monospace;

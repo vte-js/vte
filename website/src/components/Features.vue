@@ -6,16 +6,17 @@
         <span class="section-badge">Features</span>
         <h2 class="section-title">为什么选择 VTE？</h2>
         <p class="section-desc">解决现代前端样式方案的三大痛点</p>
-        <div class="header-line"></div>
       </div>
 
       <div class="features-grid">
-        <div class="feature-card" v-for="(feature, i) in features" :key="i">
+        <div class="feature-card" v-for="(feature, i) in features" :key="i" :style="{ animationDelay: `${i * 0.1}s` }">
+          <div class="card-border"></div>
           <div class="card-glow"></div>
           <div class="card-content">
             <div class="feature-icon-wrap">
               <span class="feature-icon">{{ feature.icon }}</span>
               <div class="icon-ring"></div>
+              <div class="icon-ring ring-2"></div>
             </div>
             <h3>{{ feature.title }}</h3>
             <p>{{ feature.desc }}</p>
@@ -37,7 +38,7 @@
       </div>
 
       <div class="highlights">
-        <div class="highlight-item" v-for="(item, i) in highlights" :key="i">
+        <div class="highlight-item" v-for="(item, i) in highlights" :key="i" :style="{ animationDelay: `${i * 0.1 + 0.3}s` }">
           <div class="highlight-icon">{{ item.icon }}</div>
           <h4>{{ item.title }}</h4>
           <p>{{ item.desc }}</p>
@@ -58,7 +59,7 @@
             <div class="th">UnoCSS</div>
             <div class="th highlight">VTE</div>
           </div>
-          <div class="table-row" v-for="row in comparison" :key="row.feature">
+          <div class="table-row" v-for="(row, i) in comparison" :key="i">
             <div class="td feature">{{ row.feature }}</div>
             <div class="td old">{{ row.tailwind }}</div>
             <div class="td old">{{ row.unocss }}</div>
@@ -114,7 +115,7 @@ const comparison = [
 <style scoped>
 .features {
   padding: 140px 24px;
-  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  background: linear-gradient(180deg, #0f172a 0%, #0a0f1a 100%);
   position: relative;
   overflow: hidden;
 }
@@ -127,7 +128,6 @@ const comparison = [
 .section-header {
   text-align: center;
   margin-bottom: 80px;
-  position: relative;
 }
 
 .header-line {
@@ -135,10 +135,6 @@ const comparison = [
   height: 2px;
   background: linear-gradient(90deg, transparent, #42b883, transparent);
   margin: 0 auto 24px;
-}
-
-.header-line:last-child {
-  margin: 24px auto 0;
 }
 
 .section-badge {
@@ -177,20 +173,45 @@ const comparison = [
 
 .feature-card {
   position: relative;
-  background: rgba(30, 41, 59, 0.5);
+  background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(66, 184, 131, 0.15);
   border-radius: 20px;
   overflow: hidden;
   transition: all 0.4s ease;
+  animation: fadeInUp 0.6s ease-out backwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .feature-card:hover {
-  border-color: rgba(66, 184, 131, 0.4);
+  border-color: rgba(66, 184, 131, 0.5);
   transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(66, 184, 131, 0.15);
 }
 
 .feature-card:hover .card-glow {
   opacity: 1;
+}
+
+.feature-card:hover .card-border {
+  opacity: 1;
+}
+
+.card-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(66, 184, 131, 0.5), transparent, rgba(34, 211, 238, 0.5));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s;
 }
 
 .card-glow {
@@ -225,10 +246,16 @@ const comparison = [
 
 .icon-ring {
   position: absolute;
-  inset: 0;
-  border: 2px solid rgba(66, 184, 131, 0.3);
+  inset: -4px;
+  border: 1px solid rgba(66, 184, 131, 0.3);
   border-radius: 16px;
   animation: rotate 8s linear infinite;
+}
+
+.icon-ring.ring-2 {
+  inset: -8px;
+  border-style: dashed;
+  animation: rotate 12s linear infinite reverse;
 }
 
 @keyframes rotate {
@@ -253,8 +280,8 @@ const comparison = [
 .feature-tag {
   padding: 10px 16px;
   background: rgba(66, 184, 131, 0.1);
-  border-radius: 8px;
   border: 1px solid rgba(66, 184, 131, 0.2);
+  border-radius: 8px;
 }
 
 .feature-tag code {
@@ -299,12 +326,12 @@ const comparison = [
 }
 
 .compare-item.bad .compare-icon {
-  background: rgba(248, 113, 113, 0.1);
+  background: rgba(248, 113, 113, 0.15);
   color: #f87171;
 }
 
 .compare-item.good .compare-icon {
-  background: rgba(74, 222, 128, 0.1);
+  background: rgba(74, 222, 128, 0.15);
   color: #4ade80;
 }
 
@@ -318,15 +345,17 @@ const comparison = [
 .highlight-item {
   text-align: center;
   padding: 32px 20px;
-  background: rgba(30, 41, 59, 0.3);
+  background: rgba(15, 23, 42, 0.4);
   border: 1px solid rgba(66, 184, 131, 0.1);
   border-radius: 16px;
   transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out backwards;
 }
 
 .highlight-item:hover {
   border-color: rgba(66, 184, 131, 0.4);
   transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(66, 184, 131, 0.1);
 }
 
 .highlight-icon {
@@ -385,8 +414,8 @@ const comparison = [
 .header-decoration span:nth-child(3) { animation-delay: 0.4s; }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
 }
 
 .comparison-table {
@@ -417,6 +446,11 @@ const comparison = [
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s;
+}
+
+.table-row:hover {
+  background: rgba(66, 184, 131, 0.05);
 }
 
 .table-row:nth-child(even) {

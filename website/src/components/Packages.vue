@@ -9,7 +9,8 @@
       </div>
 
       <div class="packages-grid">
-        <a v-for="pkg in packages" :key="pkg.name" :href="pkg.url" class="package-card" target="_blank">
+        <a v-for="(pkg, i) in packages" :key="pkg.name" :href="pkg.url" class="package-card" target="_blank" :style="{ animationDelay: `${i * 0.1}s` }">
+          <div class="card-border"></div>
           <div class="card-glow"></div>
           <div class="card-content">
             <div class="package-icon">{{ pkg.icon }}</div>
@@ -43,7 +44,7 @@ const packages = [
 <style scoped>
 .packages {
   padding: 140px 24px;
-  background: #1e293b;
+  background: #0f172a;
   position: relative;
 }
 
@@ -98,29 +99,54 @@ const packages = [
 
 .package-card {
   position: relative;
-  background: rgba(30, 41, 59, 0.5);
+  background: rgba(15, 23, 42, 0.5);
   border: 1px solid rgba(66, 184, 131, 0.15);
   border-radius: 16px;
   text-decoration: none;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
+  animation: fadeInUp 0.6s ease-out backwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .package-card:hover {
-  border-color: rgba(66, 184, 131, 0.4);
-  transform: translateY(-4px);
+  border-color: rgba(66, 184, 131, 0.5);
+  transform: translateY(-6px);
+  box-shadow: 0 15px 40px rgba(66, 184, 131, 0.15);
 }
 
 .package-card:hover .card-glow {
   opacity: 1;
 }
 
+.package-card:hover .card-border {
+  opacity: 1;
+}
+
+.card-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(66, 184, 131, 0.5), transparent, rgba(34, 211, 238, 0.5));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
 .card-glow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(66, 184, 131, 0.1) 0%, transparent 60%);
+  background: radial-gradient(circle at 50% 0%, rgba(66, 184, 131, 0.12) 0%, transparent 60%);
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.4s;
 }
 
 .card-content {
@@ -133,16 +159,23 @@ const packages = [
 }
 
 .package-icon {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   background: rgba(66, 184, 131, 0.1);
   border: 1px solid rgba(66, 184, 131, 0.2);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 24px;
   flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.package-card:hover .package-icon {
+  background: rgba(66, 184, 131, 0.2);
+  border-color: rgba(66, 184, 131, 0.4);
+  transform: scale(1.1);
 }
 
 .package-info {
@@ -174,7 +207,7 @@ const packages = [
 
 .package-card:hover .package-arrow {
   color: #42b883;
-  transform: translateX(4px);
+  transform: translateX(6px);
 }
 
 @media (max-width: 600px) {

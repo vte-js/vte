@@ -1,6 +1,7 @@
 <template>
   <footer class="footer">
     <div class="footer-border"></div>
+    <div class="footer-glow"></div>
     <div class="container">
       <div class="footer-top">
         <div class="footer-brand">
@@ -59,9 +60,10 @@ const currentYear = new Date().getFullYear();
 
 <style scoped>
 .footer {
-  background: #0f172a;
+  background: #050810;
   padding: 80px 24px 32px;
   position: relative;
+  overflow: hidden;
 }
 
 .footer-border {
@@ -70,12 +72,24 @@ const currentYear = new Date().getFullYear();
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #42b883, transparent);
+  background: linear-gradient(90deg, transparent, #42b883, #22d3ee, #42b883, transparent);
+}
+
+.footer-glow {
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(66, 184, 131, 0.08) 0%, transparent 70%);
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .footer-top {
@@ -136,11 +150,12 @@ const currentYear = new Date().getFullYear();
   text-decoration: none;
   font-size: 14px;
   margin-bottom: 12px;
-  transition: color 0.2s;
+  transition: all 0.2s;
 }
 
 .footer-group a:hover {
   color: #42b883;
+  transform: translateX(4px);
 }
 
 .footer-bottom {
