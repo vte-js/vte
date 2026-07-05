@@ -1,6 +1,6 @@
 {
   "name": "@vte-js/vite-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vite plugin for Vue Token Engine - compile <style token> to CSS Variables",
   "type": "module",
   "main": "dist/index.js",
@@ -12,7 +12,9 @@
       "require": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -35,7 +37,12 @@
     "vite": ">=5.0.0",
     "vue": ">=3.0.0"
   },
-  "keywords": ["vite", "vue", "design-tokens", "css-variables"],
+  "keywords": [
+    "vite",
+    "vue",
+    "design-tokens",
+    "css-variables"
+  ],
   "author": "vte-js",
   "license": "ISC",
   "repository": {

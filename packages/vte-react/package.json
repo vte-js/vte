@@ -1,6 +1,6 @@
 {
   "name": "@vte-js/react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React bindings for Vue Token Engine - hooks and Provider",
   "type": "module",
   "main": "dist/index.js",
@@ -12,7 +12,9 @@
       "require": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -31,7 +33,11 @@
     "react": "^18.0.0",
     "typescript": "^6.0.3"
   },
-  "keywords": ["react", "design-tokens", "hooks"],
+  "keywords": [
+    "react",
+    "design-tokens",
+    "hooks"
+  ],
   "author": "vte-js",
   "license": "ISC",
   "repository": {

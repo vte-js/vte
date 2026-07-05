@@ -1,5 +1,14 @@
 # @vte-js/playground
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [6c4244f]
+  - @vte-js/compiler@1.0.1
+  - @vte-js/core@1.0.1
+  - @vte-js/vite-plugin@1.0.1
+
 ## 0.3.0
 
 ### Minor Changes

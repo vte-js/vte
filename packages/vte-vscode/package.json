@@ -2,7 +2,7 @@
   "name": "@vte-js/vscode",
   "displayName": "VTE - Vue Token Engine",
   "description": "IDE support for Vue Token Engine <style token> blocks",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publisher": "vte-js",
   "license": "ISC",
   "icon": "icon.png",

@@ -1,6 +1,6 @@
 {
   "name": "@vte-js/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Core parser and type definitions for Vue Token Engine",
   "type": "module",
   "main": "dist/index.js",
@@ -12,7 +12,9 @@
       "require": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -26,7 +28,12 @@
   "devDependencies": {
     "@types/node": "^26.1.0"
   },
-  "keywords": ["vue", "design-tokens", "css-variables", "core"],
+  "keywords": [
+    "vue",
+    "design-tokens",
+    "css-variables",
+    "core"
+  ],
   "author": "vte-js",
   "license": "ISC",
   "repository": {

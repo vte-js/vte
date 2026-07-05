@@ -1,6 +1,6 @@
 {
   "name": "@vte-js/language-server",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "IDE-agnostic language server core for Vue Token Engine",
   "type": "module",
   "main": "dist/index.js",
