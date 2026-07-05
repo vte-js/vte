@@ -13,92 +13,43 @@
         {{ copied ? '已复制' : '复制' }}
       </button>
     </div>
-    <pre class="code-content"><code v-html="highlightedCode"></code></pre>
+    <pre class="code-content"><code ref="codeRef" :class="`language-${language}`">{{ code }}</code></pre>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, onMounted, watch, nextTick } from "vue";
+import Prism from "prismjs";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-bash";
+import "prismjs/components/prism-json";
+import "prismjs/components/prism-css";
 
 const props = defineProps<{
   label: string;
   code: string;
+  language?: string;
 }>();
 
 const copied = ref(false);
+const codeRef = ref<HTMLElement | null>(null);
 
-const highlightedCode = computed(() => highlightCode(props.code));
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+function highlight() {
+  nextTick(() => {
+    if (codeRef.value) {
+      Prism.highlightElement(codeRef.value);
+    }
+  });
 }
 
-function highlightCode(code: string): string {
-  const lines = code.split('\n');
-  return lines.map(line => highlightLine(line)).join('\n');
-}
+onMounted(() => {
+  highlight();
+});
 
-function highlightLine(line: string): string {
-  // Check for comment
-  const commentMatch = line.match(/^(\s*)(\/\/.*)$/);
-  if (commentMatch) {
-    return commentMatch[1] + '<span class="hl-comment">' + escapeHtml(commentMatch[2]) + '</span>';
-  }
-
-  // Check for import/export statement
-  const importMatch = line.match(/^(\s*)(import|export)\s+(.*?)\s+from\s+('.*?'|".*?")/);
-  if (importMatch) {
-    return importMatch[1] + 
-           '<span class="hl-keyword">' + importMatch[2] + '</span> ' +
-           escapeHtml(importMatch[3]) + ' ' +
-           '<span class="hl-keyword">from</span> ' +
-           '<span class="hl-string">' + escapeHtml(importMatch[4]) + '</span>';
-  }
-
-  // Check for const/let/var declaration
-  const declMatch = line.match(/^(\s*)(const|let|var)\s+(\w+)\s*=\s*(.*)$/);
-  if (declMatch) {
-    return declMatch[1] + 
-           '<span class="hl-keyword">' + declMatch[2] + '</span> ' +
-           '<span class="hl-var">' + escapeHtml(declMatch[3]) + '</span> = ' +
-           highlightExpression(declMatch[4]);
-  }
-
-  // Check for function declaration
-  const fnMatch = line.match(/^(\s*)(function)\s+(\w+)\s*\((.*?)\)/);
-  if (fnMatch) {
-    return fnMatch[1] + 
-           '<span class="hl-keyword">' + fnMatch[2] + '</span> ' +
-           '<span class="hl-fn">' + escapeHtml(fnMatch[3]) + '</span>(' +
-           escapeHtml(fnMatch[4]) + ')';
-  }
-
-  // Check for return statement
-  const returnMatch = line.match(/^(\s*)(return)\s+(.*)$/);
-  if (returnMatch) {
-    return returnMatch[1] + '<span class="hl-keyword">return</span> ' + highlightExpression(returnMatch[2]);
-  }
-
-  // Default: just escape HTML
-  return escapeHtml(line);
-}
-
-function highlightExpression(expr: string): string {
-  // Highlight strings
-  let result = expr.replace(/('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`)/g, 
-    '<span class="hl-string">$1</span>');
-  
-  // Highlight numbers
-  result = result.replace(/\b(\d+\.?\d*)\b/g, '<span class="hl-number">$1</span>');
-  
-  // Highlight function calls
-  result = result.replace(/\b([a-zA-Z_]\w*)\s*\(/g, '<span class="hl-fn">$1</span>(');
-  
-  return result;
-}
+watch(() => props.code, () => {
+  highlight();
+});
 
 function copyCode() {
   navigator.clipboard.writeText(props.code);
@@ -155,15 +106,92 @@ function copyCode() {
   font-family: 'JetBrains Mono', monospace;
   font-size: 14px;
   line-height: 1.7;
-  color: #e2e8f0;
+  margin: 0;
 }
 
-.hl-keyword { color: #c084fc; }
-.hl-string { color: #86efac; }
-.hl-number { color: #fbbf24; }
-.hl-comment { color: #64748b; font-style: italic; }
-.hl-fn { color: #60a5fa; }
-.hl-var { color: #e2e8f0; }
-.hl-tag { color: #7dd3fc; }
-.hl-prop { color: #93c5fd; }
+/* Prism.js Dark Theme */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #e2e8f0;
+  background: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.7;
+  tab-size: 4;
+  hyphens: none;
+}
+
+pre[class*="language-"] {
+  padding: 16px;
+  overflow: auto;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #64748b;
+}
+
+.token.punctuation {
+  color: #94a3b8;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #fbbf24;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #86efac;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #f472b6;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #c084fc;
+}
+
+.token.function,
+.token.class-name {
+  color: #60a5fa;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #fb923c;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
 </style>
