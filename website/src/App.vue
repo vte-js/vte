@@ -4,11 +4,7 @@
     <ScanLines />
     <FloatingOrbs />
     <Navbar :is-dark="isDark" @toggle-theme="isDark = !isDark" />
-    <Hero />
-    <Features />
-    <CodeDemo />
-    <QuickStart />
-    <Packages />
+    <router-view />
     <Footer />
   </div>
 </template>
@@ -19,17 +15,11 @@ import MouseGlow from "./components/MouseGlow.vue";
 import ScanLines from "./components/ScanLines.vue";
 import FloatingOrbs from "./components/FloatingOrbs.vue";
 import Navbar from "./components/Navbar.vue";
-import Hero from "./components/Hero.vue";
-import Features from "./components/Features.vue";
-import CodeDemo from "./components/CodeDemo.vue";
-import QuickStart from "./components/QuickStart.vue";
-import Packages from "./components/Packages.vue";
 import Footer from "./components/Footer.vue";
 
 const isDark = ref(true);
 
 onMounted(() => {
-  // Always dark mode for sci-fi theme
   document.documentElement.classList.add("dark");
 });
 </script>

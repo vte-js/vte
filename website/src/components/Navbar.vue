@@ -1,18 +1,19 @@
 <template>
   <nav class="navbar" :class="{ scrolled: isScrolled }">
     <div class="container">
-      <a href="/" class="nav-brand">
+      <router-link to="/" class="nav-brand">
         <svg viewBox="0 0 128 128" width="28" height="28">
           <path fill="#42b883" d="M12,10 L44,10 L64,72 L84,10 L116,10 L88,104 Q64,124 40,104 Z"/>
           <path :fill="isDark ? '#546e7a' : '#35495e'" d="M32,10 L52,10 L64,32 L76,10 L96,10 L80,76 Q64,84 48,76 L32,10 Z"/>
         </svg>
         <span>VTE</span>
-      </a>
+      </router-link>
 
       <div class="nav-links">
-        <a href="#features" class="nav-link">Features</a>
-        <a href="#quickstart" class="nav-link">Docs</a>
-        <a href="#packages" class="nav-link">Packages</a>
+        <router-link to="/features" class="nav-link">Features</router-link>
+        <router-link to="/quickstart" class="nav-link">Quick Start</router-link>
+        <router-link to="/packages" class="nav-link">Packages</router-link>
+        <router-link to="/docs" class="nav-link">Docs</router-link>
       </div>
 
       <div class="nav-actions">
@@ -109,7 +110,8 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
   transition: color 0.2s;
 }
 
-.nav-link:hover {
+.nav-link:hover,
+.nav-link.router-link-active {
   color: var(--vte-primary);
 }
 
