@@ -2,7 +2,7 @@
   <div class="editor">
     <div class="editor-header">
       <h3 class="editor-title">{{ path }}</h3>
-      <button class="editor-delete" @click="$emit('remove')">🗑️ 删除</button>
+      <button class="editor-delete" @click="$emit('remove')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> 删除</button>
     </div>
 
     <div class="editor-fields">
@@ -162,6 +162,9 @@ function getRefValue(path: string): string {
 }
 
 .editor-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   padding: 6px 12px;
   border: 1px solid #ef4444;
   border-radius: 6px;
@@ -315,5 +318,46 @@ function getRefValue(path: string): string {
   height: 24px;
   border-radius: 6px;
   border: 1px solid var(--vte-border);
+}
+
+@media (max-width: 768px) {
+  .editor {
+    padding: 14px;
+    border-radius: 10px;
+  }
+
+  .editor-header {
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+  }
+
+  .editor-title {
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .editor-delete {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-height: 36px;
+    flex-shrink: 0;
+  }
+
+  .field-input {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .resolved-value {
+    padding: 8px 12px;
+  }
+
+  .resolved-value code {
+    font-size: 13px;
+    word-break: break-all;
+  }
 }
 </style>

@@ -111,4 +111,31 @@
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(66, 184, 131, 0.5);
 }
+
+@media (max-width: 768px) {
+  .cta {
+    padding: 60px 16px;
+  }
+
+  .cta-content h2 {
+    font-size: 28px;
+  }
+
+  .cta-content p {
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+
+  .cta-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+}
 </style>

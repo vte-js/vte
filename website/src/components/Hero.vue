@@ -181,10 +181,14 @@ function initCanvas() {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
+  const isMobile = window.innerWidth <= 768;
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
 
-  particles = Array.from({ length: 50 }, () => ({
+  const count = isMobile ? 15 : 50;
+  const drawConnections = !isMobile;
+
+  particles = Array.from({ length: count }, () => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
     vx: (Math.random() - 0.5) * 0.5,
@@ -211,19 +215,20 @@ function initCanvas() {
       ctx.fill();
     });
 
-    // Draw connections
-    particles.forEach((p1, i) => {
-      particles.slice(i + 1).forEach((p2) => {
-        const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-        if (dist < 120) {
-          ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = `rgba(66, 184, 131, ${0.15 * (1 - dist / 120)})`;
-          ctx.stroke();
-        }
+    if (drawConnections) {
+      particles.forEach((p1, i) => {
+        particles.slice(i + 1).forEach((p2) => {
+          const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(66, 184, 131, ${0.15 * (1 - dist / 120)})`;
+            ctx.stroke();
+          }
+        });
       });
-    });
+    }
 
     animationId = requestAnimationFrame(animate);
   }
@@ -785,6 +790,89 @@ onUnmounted(() => {
 
   .hero-stats {
     justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 100px 16px 48px;
+  }
+
+  .container {
+    gap: 32px;
+  }
+
+  .hero-content {
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .hero-badge {
+    font-size: 12px;
+    padding: 6px 14px;
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-size: 32px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-subtitle {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  .hero-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .btn {
+    padding: 14px 20px;
+    justify-content: center;
+    min-height: 48px;
+    width: 100%;
+  }
+
+  .hero-install {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .hero-install code {
+    font-size: 12px;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hero-stats {
+    gap: 16px;
+    margin-top: 24px;
+    padding-top: 20px;
+  }
+
+  .stat-num {
+    font-size: 20px;
+  }
+
+  .stat-label {
+    font-size: 11px;
   }
 }
 </style>

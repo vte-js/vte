@@ -3,7 +3,7 @@
     <div class="modal">
       <div class="modal-header">
         <h3>导出 Tokens</h3>
-        <button class="close-btn" @click="$emit('close')">×</button>
+        <button class="close-btn" @click="$emit('close')"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
       <div class="modal-body">
         <div class="format-tabs">
@@ -17,8 +17,8 @@
         <pre class="code-output"><code>{{ output }}</code></pre>
       </div>
       <div class="modal-footer">
-        <button class="btn secondary" @click="handleDownload">💾 下载</button>
-        <button class="btn primary" @click="handleCopy">{{ copied ? '✓ 已复制' : '📋 复制' }}</button>
+        <button class="btn secondary" @click="handleDownload"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 下载</button>
+        <button class="btn primary" @click="handleCopy"><svg v-if="!copied" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg v-else viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> {{ copied ? '已复制' : '复制' }}</button>
       </div>
     </div>
   </div>
@@ -86,7 +86,7 @@ function handleDownload() {
 }
 
 .modal-header h3 { margin: 0; color: var(--vte-text); }
-.close-btn { border: none; background: none; font-size: 24px; cursor: pointer; color: var(--vte-text-secondary); }
+.close-btn { display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; color: var(--vte-text-secondary); padding: 4px; }
 
 .modal-body {
   padding: 20px;
@@ -136,6 +136,9 @@ function handleDownload() {
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 8px 20px;
   border-radius: 8px;
   font-size: 14px;

@@ -3,7 +3,7 @@
     <div class="modal">
       <div class="modal-header">
         <h3>导入 Tokens</h3>
-        <button class="close-btn" @click="$emit('close')">×</button>
+        <button class="close-btn" @click="$emit('close')"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
       <div class="modal-body">
         <p class="hint">支持 JSON、TypeScript (defineTokens)、CSS Variables 格式</p>
@@ -73,7 +73,7 @@ function handleImport() {
 }
 
 .modal-header h3 { margin: 0; color: var(--vte-text); }
-.close-btn { border: none; background: none; font-size: 24px; cursor: pointer; color: var(--vte-text-secondary); }
+.close-btn { display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; color: var(--vte-text-secondary); padding: 4px; }
 
 .modal-body {
   padding: 20px;
@@ -121,6 +121,9 @@ function handleImport() {
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 8px 20px;
   border-radius: 8px;
   font-size: 14px;

@@ -435,4 +435,57 @@ const outputCode = `.btn {
     font-size: 32px;
   }
 }
+
+@media (max-width: 768px) {
+  .code-demo {
+    padding: 60px 16px;
+  }
+
+  .demo-content {
+    gap: 32px;
+  }
+
+  .section-title {
+    font-size: 26px;
+  }
+
+  .section-desc {
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+
+  .step {
+    padding: 14px 16px;
+    gap: 12px;
+    border-radius: 10px;
+  }
+
+  .step-num {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+
+  .step-text strong {
+    font-size: 14px;
+  }
+
+  .step-text span {
+    font-size: 12px;
+  }
+
+  .demo-visual {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .transform-flow {
+    min-width: 0;
+  }
+
+  .transform-arrow {
+    padding: 14px 0;
+  }
+}
 </style>

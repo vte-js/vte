@@ -150,6 +150,7 @@ const relatedPackages = computed(() => {
 <style scoped>
 .page-package-detail {
   padding-top: 80px;
+  overflow-x: hidden;
 }
 
 .page-header {
@@ -220,6 +221,7 @@ const relatedPackages = computed(() => {
 
 .detail-section {
   margin-bottom: 48px;
+  min-width: 0;
 }
 
 .detail-section h2 {
@@ -260,6 +262,8 @@ const relatedPackages = computed(() => {
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 24px;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .api-item .api-header {
@@ -308,6 +312,7 @@ const relatedPackages = computed(() => {
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 16px;
+  min-width: 0;
 }
 
 .params-table .param-row {
@@ -432,6 +437,110 @@ const relatedPackages = computed(() => {
 
   .detail-sidebar {
     position: static;
+  }
+
+  .detail-main {
+    min-width: 0;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 40px 16px 28px;
+  }
+
+  .header-content {
+    gap: 16px;
+  }
+
+  .package-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+  }
+
+  .package-icon :deep(svg) {
+    width: 28px;
+    height: 28px;
+  }
+
+  .header-info h1 {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+
+  .header-info p {
+    font-size: 14px;
+  }
+
+  .detail-content {
+    padding: 40px 16px;
+  }
+
+  .detail-section {
+    margin-bottom: 36px;
+  }
+
+  .detail-section h2 {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .detail-section p {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .feature-list li {
+    font-size: 14px;
+    padding: 10px 0;
+    gap: 10px;
+  }
+
+  .api-item {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+  }
+
+  .api-item .api-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .api-signature {
+    font-size: 12px;
+    word-break: break-all;
+  }
+
+  .api-desc {
+    font-size: 14px;
+  }
+
+  .params-table .param-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .params-table .param-row.header {
+    display: none;
+  }
+
+  .sidebar-card {
+    padding: 16px;
+  }
+
+  .sidebar-link,
+  .related-link {
+    padding: 12px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .related-link {
+    font-size: 13px;
   }
 }
 </style>

@@ -67,6 +67,8 @@ function copyCode() {
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 24px;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .code-header {
@@ -109,6 +111,15 @@ function copyCode() {
   font-size: 14px;
   line-height: 1.7;
   margin: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .code-content {
+    padding: 12px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
 }
 
 /* Prism.js Dark Theme */

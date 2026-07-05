@@ -1,6 +1,8 @@
 <template>
-  <div class="mouse-glow" ref="glowRef"></div>
-  <div class="cursor-trail" ref="trailRef"></div>
+  <template v-if="enabled">
+    <div class="mouse-glow" ref="glowRef"></div>
+    <div class="cursor-trail" ref="trailRef"></div>
+  </template>
 </template>
 
 <script setup lang="ts">
@@ -8,6 +10,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 
 const glowRef = ref<HTMLElement | null>(null);
 const trailRef = ref<HTMLElement | null>(null);
+const enabled = ref(false);
 
 let mouseX = 0;
 let mouseY = 0;
@@ -23,11 +26,8 @@ function handleMouseMove(e: MouseEvent) {
 }
 
 function animate() {
-  // Smooth follow for glow
   currentX += (mouseX - currentX) * 0.1;
   currentY += (mouseY - currentY) * 0.1;
-
-  // Slower follow for trail
   trailX += (mouseX - trailX) * 0.05;
   trailY += (mouseY - trailY) * 0.05;
 
@@ -43,8 +43,11 @@ function animate() {
 }
 
 onMounted(() => {
-  window.addEventListener("mousemove", handleMouseMove);
-  animate();
+  if (window.matchMedia('(hover: hover)').matches) {
+    enabled.value = true;
+    window.addEventListener("mousemove", handleMouseMove);
+    animate();
+  }
 });
 
 onUnmounted(() => {

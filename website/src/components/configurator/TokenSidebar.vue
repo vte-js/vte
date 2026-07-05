@@ -2,8 +2,15 @@
   <aside class="sidebar">
     <div v-for="layer in layers" :key="layer.id" class="layer-section">
       <div class="layer-header" @click="toggleLayer(layer.id)">
-        <span class="layer-icon">{{ expanded[layer.id] ? '▼' : '▶' }}</span>
-        <span class="layer-name">{{ layer.icon }} {{ layer.name }}</span>
+        <span class="layer-icon">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" :style="{ transform: expanded[layer.id] ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+        <span class="layer-name">
+          <svg v-if="layer.icon === 'droplet'" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          <svg v-else-if="layer.icon === 'layers'" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          <svg v-else-if="layer.icon === 'box'" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          {{ layer.name }}
+        </span>
         <span class="layer-count">{{ getLayerCount(layer.id) }}</span>
       </div>
       <div v-if="expanded[layer.id]" class="layer-content">
@@ -14,7 +21,7 @@
           >
             <span class="token-name">{{ key }}</span>
             <span v-if="isLeaf(node)" class="token-val">{{ node.value || '—' }}</span>
-            <button v-if="isLeaf(node)" class="token-del" @click.stop="$emit('removeToken', layer.id, `${layer.id}.${key}`)">×</button>
+            <button v-if="isLeaf(node)" class="token-del" @click.stop="$emit('removeToken', layer.id, `${layer.id}.${key}`)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           </div>
           <div v-if="!isLeaf(node)" class="token-children">
             <div v-for="(child, childKey) in node.children" :key="childKey">
@@ -24,7 +31,7 @@
               >
                 <span class="token-name">{{ childKey }}</span>
                 <span class="token-val">{{ child.value || '—' }}</span>
-                <button class="token-del" @click.stop="$emit('removeToken', layer.id, `${layer.id}.${key}.${childKey}`)">×</button>
+                <button class="token-del" @click.stop="$emit('removeToken', layer.id, `${layer.id}.${key}.${childKey}`)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
               </div>
             </div>
           </div>
@@ -61,9 +68,9 @@ const emit = defineEmits<{
 }>();
 
 const layers = [
-  { id: "primitive", name: "原始值", icon: "🎨" },
-  { id: "semantic", name: "语义层", icon: "📐" },
-  { id: "component", name: "组件层", icon: "🧩" },
+  { id: "primitive", name: "原始值", icon: "droplet" },
+  { id: "semantic", name: "语义层", icon: "layers" },
+  { id: "component", name: "组件层", icon: "box" },
 ];
 
 const expanded = reactive<Record<string, boolean>>({ primitive: true, semantic: true, component: true });
@@ -127,6 +134,17 @@ function handleAdd(layer: string) {
   font-weight: 600;
   color: var(--vte-text);
   transition: background 0.15s;
+}
+
+.layer-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.layer-name svg {
+  color: var(--vte-primary);
+  flex-shrink: 0;
 }
 
 .layer-header:hover {

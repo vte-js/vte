@@ -88,7 +88,7 @@
         <!-- Vue 原生 -->
         <div class="feature-block">
           <div class="feature-visual">
-            <CodeBlock label="Button.vue" :code="vueExample" language="css" />
+            <CodeBlock label="Button.vue" :code="vueExample" language="html" />
           </div>
           <div class="feature-text">
             <div class="feature-icon">
@@ -159,6 +159,7 @@ const vueExample = `<template>
 <style scoped>
 .page-features {
   padding-top: 80px;
+  overflow-x: clip;
 }
 
 .page-header {
@@ -396,6 +397,65 @@ const vueExample = `<template>
 
   .feature-block.reverse {
     direction: ltr;
+  }
+
+  .feature-text {
+    order: -1;
+  }
+
+  .feature-visual {
+    order: 0;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .code-compare {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 60px 16px 40px;
+  }
+
+  .features-section {
+    padding: 60px 16px;
+  }
+
+  .feature-block {
+    gap: 28px;
+    margin-bottom: 80px;
+  }
+
+  .feature-text h2 {
+    font-size: 28px;
+  }
+
+  .feature-text p {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .feature-list li {
+    font-size: 14px;
+  }
+
+  .platform-card {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .platform-name {
+    min-width: auto;
+    font-size: 14px;
+  }
+
+  .platform-code {
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>

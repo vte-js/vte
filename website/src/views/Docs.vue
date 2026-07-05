@@ -42,6 +42,52 @@
             </nav>
           </aside>
 
+          <!-- 移动端 TOC 浮动按钮 -->
+          <button class="toc-fab" @click="showToc = true" aria-label="Table of contents">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+
+          <!-- 移动端 TOC 弹窗 -->
+          <div class="toc-modal" :class="{ open: showToc }">
+            <div class="toc-overlay" @click="showToc = false"></div>
+            <div class="toc-drawer">
+              <div class="toc-header">
+                <h3>导航</h3>
+                <button class="toc-close" @click="showToc = false" aria-label="Close">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
+              <nav class="toc-nav">
+                <div class="nav-group">
+                  <h4>@vte-js/core</h4>
+                  <a v-for="item in coreApi" :key="item.name" :href="`#${item.name}`" class="nav-item" :class="{ active: activeSection === item.name }" @click.prevent="scrollTo(item.name); showToc = false">{{ item.name }}</a>
+                </div>
+                <div class="nav-group">
+                  <h4>@vte-js/vite-plugin</h4>
+                  <a v-for="item in vitePluginApi" :key="item.name" :href="`#${item.name}`" class="nav-item" :class="{ active: activeSection === item.name }" @click.prevent="scrollTo(item.name); showToc = false">{{ item.name }}</a>
+                </div>
+                <div class="nav-group">
+                  <h4>@vte-js/compiler</h4>
+                  <a v-for="item in compilerApi" :key="item.name" :href="`#${item.name}`" class="nav-item" :class="{ active: activeSection === item.name }" @click.prevent="scrollTo(item.name); showToc = false">{{ item.name }}</a>
+                </div>
+                <div class="nav-group">
+                  <h4>@vte-js/react</h4>
+                  <a v-for="item in reactApi" :key="item.name" :href="`#${item.name}`" class="nav-item" :class="{ active: activeSection === item.name }" @click.prevent="scrollTo(item.name); showToc = false">{{ item.name }}</a>
+                </div>
+                <div class="nav-group">
+                  <h4>@vte-js/cli</h4>
+                  <a v-for="item in cliApi" :key="item.name" :href="`#${item.name}`" class="nav-item" :class="{ active: activeSection === item.name }" @click.prevent="scrollTo(item.name); showToc = false">{{ item.name }}</a>
+                </div>
+                <div class="nav-group">
+                  <h4>@vte-js/language-server</h4>
+                  <a v-for="item in languageServerApi" :key="item.name" :href="`#${item.name}`" class="nav-item" :class="{ active: activeSection === item.name }" @click.prevent="scrollTo(item.name); showToc = false">{{ item.name }}</a>
+                </div>
+              </nav>
+            </div>
+          </div>
+
           <!-- 主要内容 -->
           <main class="docs-main">
             <!-- @vte-js/core -->
@@ -105,10 +151,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import ApiItem from "../components/ApiItem.vue";
 
 const activeSection = ref("defineTokens");
+const showToc = ref(false);
+
+watch(showToc, (open) => {
+  document.body.style.overflow = open ? 'hidden' : '';
+});
 
 // Core API
 const coreApi = [
@@ -488,7 +539,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.page-docs { padding-top: 80px; }
+.page-docs { padding-top: 80px; overflow-x: hidden; }
 .page-header { padding: 80px 24px 60px; text-align: center; background: linear-gradient(180deg, color-mix(in srgb, var(--vte-primary) 10%, transparent) 0%, transparent 100%); }
 .container { max-width: 1200px; margin: 0 auto; }
 .header-line { width: 60px; height: 2px; background: linear-gradient(90deg, transparent, var(--vte-primary), transparent); margin: 0 auto 24px; }
@@ -497,6 +548,7 @@ onUnmounted(() => {
 .page-desc { font-size: 20px; color: var(--vte-text-secondary); }
 .docs-content { padding: 80px 24px; }
 .docs-layout { display: grid; grid-template-columns: 240px 1fr; gap: 48px; }
+.docs-main { min-width: 0; overflow: hidden; }
 .docs-sidebar {
   position: sticky;
   top: 100px;
@@ -516,10 +568,10 @@ onUnmounted(() => {
 .nav-item { display: block; padding: 8px 12px; color: var(--vte-text-secondary); text-decoration: none; font-size: 14px; border-radius: 6px; transition: all 0.2s; }
 .nav-item:hover { background: color-mix(in srgb, var(--vte-primary) 10%, transparent); color: var(--vte-text); }
 .nav-item.active { background: color-mix(in srgb, var(--vte-primary) 15%, transparent); color: var(--vte-primary); }
-.api-group { margin-bottom: 80px; padding-bottom: 60px; border-bottom: 1px solid color-mix(in srgb, var(--vte-text) 5%, transparent); }
+.api-group { margin-bottom: 80px; padding-bottom: 60px; border-bottom: 1px solid color-mix(in srgb, var(--vte-text) 5%, transparent); min-width: 0; }
 .group-title { font-size: 28px; font-weight: 700; color: var(--vte-text); margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
 .group-desc { font-size: 15px; color: var(--vte-text-secondary); margin-bottom: 32px; }
-.api-section { margin-bottom: 48px; }
+.api-section { margin-bottom: 48px; min-width: 0; }
 
 .docs-sidebar::-webkit-scrollbar {
   width: 6px;
@@ -538,8 +590,182 @@ onUnmounted(() => {
   background: #475569;
 }
 
+.toc-fab {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(66, 184, 131, 0.4);
+  background: linear-gradient(135deg, rgba(66, 184, 131, 0.15) 0%, rgba(34, 211, 238, 0.1) 100%);
+  backdrop-filter: blur(12px);
+  color: #42b883;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 20px rgba(66, 184, 131, 0.2),
+    0 0 40px rgba(66, 184, 131, 0.1),
+    inset 0 0 12px rgba(66, 184, 131, 0.1);
+  z-index: 100;
+  transition: all 0.3s ease;
+  animation: fab-glow 3s ease-in-out infinite;
+}
+
+.toc-fab:hover {
+  transform: scale(1.1);
+  border-color: rgba(66, 184, 131, 0.8);
+  box-shadow:
+    0 0 30px rgba(66, 184, 131, 0.4),
+    0 0 60px rgba(66, 184, 131, 0.2),
+    inset 0 0 16px rgba(66, 184, 131, 0.15);
+  background: linear-gradient(135deg, rgba(66, 184, 131, 0.25) 0%, rgba(34, 211, 238, 0.15) 100%);
+}
+
+.toc-fab:active {
+  transform: scale(0.95);
+}
+
+@keyframes fab-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(66, 184, 131, 0.2),
+      0 0 40px rgba(66, 184, 131, 0.1),
+      inset 0 0 12px rgba(66, 184, 131, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 28px rgba(66, 184, 131, 0.35),
+      0 0 50px rgba(66, 184, 131, 0.15),
+      inset 0 0 14px rgba(66, 184, 131, 0.12);
+  }
+}
+
+.toc-modal {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .docs-layout { grid-template-columns: 1fr; }
   .docs-sidebar { position: static; display: none; }
+  .toc-fab { display: flex; }
+
+  .toc-modal {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    pointer-events: none;
+  }
+
+  .toc-modal.open {
+    pointer-events: auto;
+  }
+
+  .toc-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .toc-modal.open .toc-overlay {
+    opacity: 1;
+  }
+
+  .toc-drawer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 70vh;
+    background: var(--vte-bg);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 0;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .toc-modal.open .toc-drawer {
+    transform: translateY(0);
+  }
+
+  .toc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--vte-border);
+    flex-shrink: 0;
+  }
+
+  .toc-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--vte-text);
+    margin: 0;
+  }
+
+  .toc-close {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: none;
+    color: var(--vte-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+  }
+
+  .toc-close:hover {
+    background: color-mix(in srgb, var(--vte-text) 5%, transparent);
+  }
+
+  .toc-nav {
+    overflow-y: auto;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .toc-nav .nav-group h4 {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--vte-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .toc-nav .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 14px;
+    color: var(--vte-text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    min-height: 44px;
+  }
+
+  .toc-nav .nav-item:hover,
+  .toc-nav .nav-item.active {
+    background: color-mix(in srgb, var(--vte-primary) 10%, transparent);
+    color: var(--vte-primary);
+  }
 }
 </style>
