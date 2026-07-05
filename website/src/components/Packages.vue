@@ -68,6 +68,12 @@ const packages = [
     desc: "可视化调试工具",
     url: "https://www.npmjs.com/package/@vte-js/playground",
   },
+  {
+    icon: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
+    name: "@vte-js/language-server",
+    desc: "IDE 语言服务器核心",
+    url: "https://www.npmjs.com/package/@vte-js/language-server",
+  },
 ];
 </script>
 

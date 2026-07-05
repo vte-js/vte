@@ -1,26 +1,32 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
-import Features from "../views/Features.vue";
-import QuickStart from "../views/QuickStart.vue";
-import Packages from "../views/Packages.vue";
-import PackageDetail from "../views/PackageDetail.vue";
-import Docs from "../views/Docs.vue";
-import Playground from "../views/Playground.vue";
+
+const Home = () => import("../views/Home.vue");
+const Features = () => import("../views/Features.vue");
+const QuickStart = () => import("../views/QuickStart.vue");
+const Packages = () => import("../views/Packages.vue");
+const PackageDetail = () => import("../views/PackageDetail.vue");
+const Docs = () => import("../views/Docs.vue");
+const Playground = () => import("../views/Playground.vue");
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", name: "home", component: Home },
-    { path: "/features", name: "features", component: Features },
-    { path: "/quickstart", name: "quickstart", component: QuickStart },
-    { path: "/packages", name: "packages", component: Packages },
-    { path: "/packages/:name", name: "package-detail", component: PackageDetail },
-    { path: "/docs", name: "docs", component: Docs },
-    { path: "/playground", name: "playground", component: Playground },
+    { path: "/", name: "home", component: Home, meta: { title: "VTE - Vue Token Engine" } },
+    { path: "/features", name: "features", component: Features, meta: { title: "Features - VTE" } },
+    { path: "/quickstart", name: "quickstart", component: QuickStart, meta: { title: "快速开始 - VTE" } },
+    { path: "/packages", name: "packages", component: Packages, meta: { title: "包结构 - VTE" } },
+    { path: "/packages/:name", name: "package-detail", component: PackageDetail, meta: { title: "包详情 - VTE" } },
+    { path: "/docs", name: "docs", component: Docs, meta: { title: "API 文档 - VTE" } },
+    { path: "/playground", name: "playground", component: Playground, meta: { title: "Playground - VTE" } },
+    { path: "/:pathMatch(.*)*", name: "not-found", component: () => import("../views/NotFound.vue"), meta: { title: "页面未找到 - VTE" } },
   ],
   scrollBehavior() {
     return { top: 0 };
   },
+});
+
+router.afterEach((to) => {
+  document.title = (to.meta.title as string) || "VTE - Vue Token Engine";
 });
 
 export default router;

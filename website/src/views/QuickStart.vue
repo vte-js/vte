@@ -19,18 +19,18 @@
           </div>
           <div class="section-body">
             <p>VTE 支持多种包管理器，选择你常用的即可：</p>
-            <div class="install-options">
-              <div class="install-card">
-                <div class="install-label">pnpm (推荐)</div>
-                <CodeBlock label="Terminal" :code="installPnpm" language="bash" />
+            <div class="install-tabs">
+              <div class="install-item">
+                <span class="install-label">pnpm (推荐)</span>
+                <CodeBlock :code="installPnpm" language="bash" />
               </div>
-              <div class="install-card">
-                <div class="install-label">npm</div>
-                <CodeBlock label="Terminal" :code="installNpm" language="bash" />
+              <div class="install-item">
+                <span class="install-label">npm</span>
+                <CodeBlock :code="installNpm" language="bash" />
               </div>
-              <div class="install-card">
-                <div class="install-label">yarn</div>
-                <CodeBlock label="Terminal" :code="installYarn" language="bash" />
+              <div class="install-item">
+                <span class="install-label">yarn</span>
+                <CodeBlock :code="installYarn" language="bash" />
               </div>
             </div>
           </div>
@@ -48,7 +48,13 @@
             </p>
             <CodeBlock label="design-tokens.ts" :code="designTokensExample" language="typescript" />
             <div class="tip-box">
-              <div class="tip-icon">💡</div>
+              <div class="tip-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 18h6"/>
+                  <path d="M10 22h4"/>
+                  <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0018 8 6 6 0 006 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 018.91 14"/>
+                </svg>
+              </div>
               <div class="tip-content">
                 <strong>Token 引用语法</strong>
                 <p>使用 <code>{path.to.token}</code> 格式引用其他 token，支持链式引用。</p>
@@ -111,7 +117,13 @@
             <p>使用 <code>&lt;style token&gt;</code> 语法引用 token：</p>
             <CodeBlock label="Button.vue" :code="vueExample" language="css" />
             <div class="tip-box warning">
-              <div class="tip-icon">⚠️</div>
+              <div class="tip-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              </div>
               <div class="tip-content">
                 <strong>VS Code 配置</strong>
                 <p>需要禁用内置 CSS 验证，在 <code>.vscode/settings.json</code> 中添加：</p>
@@ -130,7 +142,12 @@
           <div class="section-body">
             <div class="next-steps">
               <router-link to="/features" class="next-step-card">
-                <div class="next-icon">📖</div>
+                <div class="next-icon">
+                  <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
+                    <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
+                  </svg>
+                </div>
                 <div class="next-content">
                   <h4>深入了解 Features</h4>
                   <p>了解 VTE 的核心特性和设计理念</p>
@@ -138,7 +155,13 @@
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
               </router-link>
               <router-link to="/packages" class="next-step-card">
-                <div class="next-icon">📦</div>
+                <div class="next-icon">
+                  <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0022 16z"/>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                  </svg>
+                </div>
                 <div class="next-content">
                   <h4>浏览所有包</h4>
                   <p>查看 VTE 的包结构和各包功能</p>
@@ -146,7 +169,12 @@
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
               </router-link>
               <a href="https://github.com/vte-js/vte" class="next-step-card" target="_blank">
-                <div class="next-icon">💻</div>
+                <div class="next-icon">
+                  <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="16 18 22 12 16 6"/>
+                    <polyline points="8 6 2 12 8 18"/>
+                  </svg>
+                </div>
                 <div class="next-content">
                   <h4>查看源码</h4>
                   <p>在 GitHub 上查看完整实现</p>
@@ -345,18 +373,16 @@ const vueExample = `<template>
   font-size: 14px;
 }
 
-.install-options {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
+.install-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.install-card {
-  background: rgba(15, 23, 42, 0.5);
-  border: 1px solid rgba(66, 184, 131, 0.15);
-  border-radius: 12px;
-  padding: 16px;
+.install-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .install-label {
@@ -364,7 +390,13 @@ const vueExample = `<template>
   color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 8px;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.install-item :deep(.code-block) {
+  flex: 1;
+  margin: 0;
 }
 
 .tip-box {
@@ -383,8 +415,12 @@ const vueExample = `<template>
 }
 
 .tip-icon {
-  font-size: 20px;
   flex-shrink: 0;
+  color: #42b883;
+}
+
+.tip-box.warning .tip-icon {
+  color: #eab308;
 }
 
 .tip-content strong {
@@ -466,7 +502,8 @@ const vueExample = `<template>
 }
 
 .next-icon {
-  font-size: 28px;
+  color: #42b883;
+  flex-shrink: 0;
 }
 
 .next-content {
@@ -491,10 +528,6 @@ const vueExample = `<template>
 }
 
 @media (max-width: 768px) {
-  .install-options {
-    grid-template-columns: 1fr;
-  }
-
   .table-header,
   .table-row {
     grid-template-columns: 1fr 1fr;

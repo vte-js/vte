@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import MouseGlow from "./components/MouseGlow.vue";
 import ScanLines from "./components/ScanLines.vue";
 import FloatingOrbs from "./components/FloatingOrbs.vue";
@@ -19,9 +19,9 @@ import Footer from "./components/Footer.vue";
 
 const isDark = ref(true);
 
-onMounted(() => {
-  document.documentElement.classList.add("dark");
-});
+watch(isDark, (val) => {
+  document.documentElement.classList.toggle("dark", val);
+}, { immediate: true });
 </script>
 
 <style>
@@ -81,7 +81,17 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--vte-primary);
+  color: var(--vte-primary);
+}
+
+/* Light mode */
+html:not(.dark) {
+  --vte-bg: #ffffff;
+  --vte-bg-alt: #f8fafc;
+  --vte-bg-code: #f1f5f9;
+  --vte-text: #1e293b;
+  --vte-text-secondary: #64748b;
+  --vte-border: #e2e8f0;
 }
 
 code, pre {

@@ -26,10 +26,10 @@
         <div class="footer-links">
           <div class="footer-group">
             <h4>产品</h4>
-            <a href="#features">Features</a>
-            <a href="#quickstart">Quick Start</a>
-            <a href="#packages">Packages</a>
-            <a href="/playground">Playground</a>
+            <router-link to="/features">Features</router-link>
+            <router-link to="/quickstart">Quick Start</router-link>
+            <router-link to="/packages">Packages</router-link>
+            <router-link to="/playground">Playground</router-link>
           </div>
           <div class="footer-group">
             <h4>资源</h4>
@@ -42,6 +42,10 @@
             <a href="https://www.npmjs.com/package/@vte-js/core" target="_blank">@vte-js/core</a>
             <a href="https://www.npmjs.com/package/@vte-js/vite-plugin" target="_blank">@vte-js/vite-plugin</a>
             <a href="https://www.npmjs.com/package/@vte-js/cli" target="_blank">@vte-js/cli</a>
+            <a href="https://www.npmjs.com/package/@vte-js/compiler" target="_blank">@vte-js/compiler</a>
+            <a href="https://www.npmjs.com/package/@vte-js/react" target="_blank">@vte-js/react</a>
+            <a href="https://www.npmjs.com/package/@vte-js/playground" target="_blank">@vte-js/playground</a>
+            <a href="https://www.npmjs.com/package/@vte-js/language-server" target="_blank">@vte-js/language-server</a>
           </div>
         </div>
       </div>
