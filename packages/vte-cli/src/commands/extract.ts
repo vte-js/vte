@@ -1,5 +1,5 @@
 import path from "path";
-import { parseTokens } from "@vte/core";
+import { parseTokens } from "@vte-js/core";
 
 interface ExtractOptions {
   json?: boolean;

@@ -9,8 +9,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@vte/core": path.resolve(__dirname, "packages/vte-core/src/index.ts"),
-      "@vte/vite-plugin": path.resolve(
+      "@vte-js/core": path.resolve(__dirname, "packages/vte-core/src/index.ts"),
+      "@vte-js/vite-plugin": path.resolve(
         __dirname,
         "packages/vte-vite-plugin/src/index.ts",
       ),

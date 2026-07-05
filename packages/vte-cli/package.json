@@ -1,5 +1,5 @@
 {
-  "name": "@vte/cli",
+  "name": "@vte-js/cli",
   "version": "1.0.0",
   "description": "CLI tool for Vue Token Engine",
   "type": "module",
@@ -12,7 +12,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@vte/core": "workspace:*",
+    "@vte-js/core": "workspace:*",
     "commander": "^12.0.0"
   },
   "devDependencies": {

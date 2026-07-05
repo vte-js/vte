@@ -1,5 +1,5 @@
 {
-  "name": "@vte/playground",
+  "name": "@vte-js/playground",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -8,9 +8,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vte/core": "workspace:*",
-    "@vte/compiler": "workspace:*",
-    "@vte/vite-plugin": "workspace:*",
+    "@vte-js/core": "workspace:*",
+    "@vte-js/compiler": "workspace:*",
+    "@vte-js/vite-plugin": "workspace:*",
     "vue": "^3.5.0"
   },
   "devDependencies": {

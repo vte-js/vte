@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import vte from "@vte/vite-plugin";
+import vte from "@vte-js/vite-plugin";
 
 export default defineConfig({
   plugins: [
@@ -20,8 +20,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@vte/core": "/Volumes/data1/work/office/ai/vte/packages/vte-core/src/index.ts",
-      "@vte/vite-plugin": "/Volumes/data1/work/office/ai/vte/packages/vte-vite-plugin/src/index.ts",
+      "@vte-js/core": "/Volumes/data1/work/office/ai/vte/packages/vte-core/src/index.ts",
+      "@vte-js/vite-plugin": "/Volumes/data1/work/office/ai/vte/packages/vte-vite-plugin/src/index.ts",
     },
   },
 });

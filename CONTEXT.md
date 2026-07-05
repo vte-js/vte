@@ -25,14 +25,14 @@
 ## 2. 核心架构
 
 ```
-@vte/core              核心解析器
-@vte/vite-plugin       Vite 插件（<style token> 语法）
-@vte/cli               命令行工具
-@vte/compiler          编译器（agent.json + tokens.d.ts）
-@vte/react             React 绑定（hooks + Provider）
-@vte/playground        可视化调试工具
-@vte/language-server   IDE 无关的语言服务器核心
-vte-vscode             VS Code 扩展
+@vte-js/core              核心解析器
+@vte-js/vite-plugin       Vite 插件（<style token> 语法）
+@vte-js/cli               命令行工具
+@vte-js/compiler          编译器（agent.json + tokens.d.ts）
+@vte-js/react             React 绑定（hooks + Provider）
+@vte-js/playground        可视化调试工具
+@vte-js/language-server   IDE 无关的语言服务器核心
+@vte-js/vscode             VS Code 扩展
 ```
 
 ### Token 三层结构
@@ -83,11 +83,9 @@ defineTokens({
 
 ---
 
-## 4. 已知技术债
+## 4. 已知限制
 
-- **AST 解析**：`parseTokens` 使用 `require()` 执行 TS 文件，生产级应使用 `@swc/core`
-- **Token 前缀**：当前使用 `--vte-{path}` 格式，可支持自定义前缀
-- **VS Code 扩展**：CSS 语言服务器不识别 `$token` 语法，需配置禁用验证
+- **CSS 语言服务器**：VS Code 内置 CSS 语言服务器不识别 `$token` 语法，需在 `.vscode/settings.json` 配置 `"css.validate": false` 禁用验证。这是 CSS-in-JS 方案的通病，Tailwind/UnoCSS 也采用同样策略。
 
 ---
 
@@ -95,12 +93,12 @@ defineTokens({
 
 ### 短期（1-2 周）
 
-1. **性能优化**
+1. **性能优化** ✅
    - Playground 生成增加缓存机制
    - Vite 插件 token 文件监听优化
    - 语言服务器 token 加载异步化
 
-2. **功能增强**
+2. **功能增强** ✅
    - 支持 `<style token module>` (CSS Modules)
    - 支持 token 分组和折叠
    - Playground 增加 token 导出功能

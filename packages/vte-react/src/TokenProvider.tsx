@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import type { TokenMap } from "@vte/core";
+import type { TokenMap } from "@vte-js/core";
 import { TokenContext, type TokenContextValue } from "./context.js";
 
 /**

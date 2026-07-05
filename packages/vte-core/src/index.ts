@@ -1,4 +1,4 @@
-export { parseTokens, defineTokens } from "./parser.js";
+export { parseTokens, defineTokens, toCssVarName } from "./parser.js";
 export type { TokenValue, TokenMap } from "./parser.js";
 export type {
   DeepReadonly,

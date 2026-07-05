@@ -1,6 +1,6 @@
 // playground/test-types.ts
 // 验证 TokenPath 类型推导
-import { defineTokens, type TokenPath } from "@vte/core";
+import { defineTokens, type TokenPath } from "@vte-js/core";
 
 const tokens = defineTokens({
   primitive: {

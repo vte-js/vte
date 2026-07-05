@@ -1,3 +1,7 @@
+import { transformFile } from "@swc/core";
+import vm from "vm";
+import fs from "fs";
+import path from "path";
 import type { TokenDefinition, TokenConfig } from "./types.js";
 
 export interface TokenValue {
@@ -9,9 +13,81 @@ export interface TokenValue {
 
 export type TokenMap = Map<string, TokenValue>;
 
+/**
+ * Convert a token path to a CSS variable name.
+ * @example toCssVarName("semantic.color.primary") => "--vte-semantic-color-primary"
+ * @example toCssVarName("semantic.color.primary", "my") => "--my-semantic-color-primary"
+ */
+export function toCssVarName(tokenPath: string, prefix: string = "vte"): string {
+  return `--${prefix}-${tokenPath.replace(/\./g, "-")}`;
+}
+
+/**
+ * Load and evaluate a token file using @swc/core for AST transformation.
+ * This replaces the unsafe require() approach with proper TS parsing.
+ */
+async function loadTokenFile(sourceFile: string): Promise<any> {
+  const resolvedPath = path.resolve(sourceFile);
+
+  const result = await transformFile(resolvedPath, {
+    jsc: {
+      parser: {
+        syntax: "typescript",
+        decorators: true,
+      },
+      target: "es2020",
+    },
+    module: {
+      type: "commonjs",
+    },
+    isModule: true,
+  });
+
+  const transpiledCode = result.code;
+
+  // Create a sandboxed context with require and module exports
+  const moduleExports: any = {};
+  const moduleObj = { exports: moduleExports };
+
+  const sandbox = {
+    require: (id: string) => {
+      // Allow @vte-js/core for defineTokens
+      if (id === "@vte-js/core" || id.endsWith("/vte-core/dist/index.js")) {
+        return {
+          defineTokens: (tokens: any) => tokens,
+        };
+      }
+      // Allow node built-in modules
+      if (id === "path" || id === "fs" || id === "os") {
+        return require(id);
+      }
+      throw new Error(`[VTE] Cannot require "${id}" in token files`);
+    },
+    module: moduleObj,
+    exports: moduleExports,
+    console,
+    setTimeout,
+    setInterval,
+    clearTimeout,
+    clearInterval,
+  };
+
+  // Execute the transpiled code in sandbox
+  const script = new vm.Script(transpiledCode, {
+    filename: resolvedPath,
+  });
+
+  const context = vm.createContext(sandbox);
+  script.runInContext(context);
+
+  // Get the exported value (handle both default and named exports)
+  const rawTokens = moduleObj.exports.default ?? moduleObj.exports;
+
+  return rawTokens;
+}
+
 export async function parseTokens(sourceFile: string): Promise<TokenMap> {
-  const sourceCode = require(sourceFile);
-  const rawTokens = sourceCode.default ?? sourceCode;
+  const rawTokens = await loadTokenFile(sourceFile);
 
   const tokenMap: TokenMap = new Map();
   const refGraph: Record<string, string[]> = {};

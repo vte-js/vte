@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { TokenMap, TokenValue } from "@vte/core";
+import type { TokenMap, TokenValue } from "@vte-js/core";
 
 /**
  * Token 上下文的值

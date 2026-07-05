@@ -3,7 +3,7 @@
 import { Command } from "commander";
 import path from "path";
 import fs from "fs";
-import { parseTokens } from "@vte/core";
+import { parseTokens } from "@vte-js/core";
 import {
   generatePlaygroundComponent,
   generatePlaygroundEntry,
@@ -11,6 +11,7 @@ import {
   generateViteConfig,
   generatePackageJson,
 } from "./generator.js";
+import { getCachedResult, setCacheResult, clearCache } from "./cache.js";
 
 const program = new Command();
 
@@ -24,18 +25,32 @@ program
   .description("Generate and start playground")
   .argument("[file]", "Token file path", "design-tokens.ts")
   .option("-o, --output <dir>", "Output directory", ".vte-playground")
+  .option("-p, --prefix <prefix>", "CSS variable prefix", "vte")
   .action(async (file, options) => {
     const tokenFile = path.resolve(process.cwd(), file);
     const outputDir = path.resolve(process.cwd(), options.output);
+    const cssPrefix = options.prefix;
 
     console.log(`\n🔧 VTE Playground Generator\n`);
     console.log(`Token file: ${tokenFile}`);
-    console.log(`Output dir: ${outputDir}\n`);
+    console.log(`Output dir: ${outputDir}`);
+    console.log(`CSS prefix: ${cssPrefix}\n`);
 
     // 1. 读取 token 文件
     try {
       console.log("📖 Reading tokens...");
-      const tokenMap = await parseTokens(tokenFile);
+      const cached = getCachedResult(tokenFile);
+      let tokenMap, vueContent;
+
+      if (cached) {
+        console.log("   Using cached tokens");
+        tokenMap = cached.tokenMap;
+        vueContent = generatePlaygroundComponent(tokenMap, cssPrefix);
+      } else {
+        tokenMap = await parseTokens(tokenFile);
+        vueContent = generatePlaygroundComponent(tokenMap, cssPrefix);
+        setCacheResult(tokenFile, tokenMap, vueContent);
+      }
       console.log(`   Found ${tokenMap.size} tokens\n`);
 
       // 2. 创建输出目录
@@ -45,7 +60,6 @@ program
       console.log("📝 Generating files...");
 
       // Playground.vue
-      const vueContent = generatePlaygroundComponent(tokenMap);
       fs.writeFileSync(path.join(outputDir, "Playground.vue"), vueContent);
       console.log("   ✅ Playground.vue");
 
@@ -60,7 +74,7 @@ program
       console.log("   ✅ index.html");
 
       // vite.config.ts
-      const viteConfig = generateViteConfig(process.cwd());
+      const viteConfig = generateViteConfig(process.cwd(), cssPrefix);
       fs.writeFileSync(path.join(outputDir, "vite.config.ts"), viteConfig);
       console.log("   ✅ vite.config.ts");
 
@@ -87,20 +101,33 @@ program
   .description("Generate playground files without starting")
   .argument("[file]", "Token file path", "design-tokens.ts")
   .option("-o, --output <dir>", "Output directory", ".vte-playground")
+  .option("-p, --prefix <prefix>", "CSS variable prefix", "vte")
   .action(async (file, options) => {
     const tokenFile = path.resolve(process.cwd(), file);
     const outputDir = path.resolve(process.cwd(), options.output);
+    const cssPrefix = options.prefix;
 
     console.log(`\n📝 Generating VTE Playground...\n`);
 
     try {
-      const tokenMap = await parseTokens(tokenFile);
+      const cached = getCachedResult(tokenFile);
+      let tokenMap, vueContent;
+
+      if (cached) {
+        tokenMap = cached.tokenMap;
+        vueContent = generatePlaygroundComponent(tokenMap, cssPrefix);
+      } else {
+        tokenMap = await parseTokens(tokenFile);
+        vueContent = generatePlaygroundComponent(tokenMap, cssPrefix);
+        setCacheResult(tokenFile, tokenMap, vueContent);
+      }
+
       fs.mkdirSync(outputDir, { recursive: true });
 
-      fs.writeFileSync(path.join(outputDir, "Playground.vue"), generatePlaygroundComponent(tokenMap));
+      fs.writeFileSync(path.join(outputDir, "Playground.vue"), vueContent);
       fs.writeFileSync(path.join(outputDir, "main.ts"), generatePlaygroundEntry());
       fs.writeFileSync(path.join(outputDir, "index.html"), generatePlaygroundHtml());
-      fs.writeFileSync(path.join(outputDir, "vite.config.ts"), generateViteConfig(process.cwd()));
+      fs.writeFileSync(path.join(outputDir, "vite.config.ts"), generateViteConfig(process.cwd(), cssPrefix));
       fs.writeFileSync(path.join(outputDir, "package.json"), generatePackageJson(path.basename(process.cwd())));
 
       console.log(`✅ Generated ${tokenMap.size} tokens → ${outputDir}/`);

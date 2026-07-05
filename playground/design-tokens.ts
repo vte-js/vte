@@ -1,5 +1,5 @@
 // playground/design-tokens.ts
-import { defineTokens } from "@vte/core";
+import { defineTokens } from "@vte-js/core";
 
 export default defineTokens({
   primitive: {

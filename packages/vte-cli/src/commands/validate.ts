@@ -1,5 +1,5 @@
 import path from "path";
-import { parseTokens } from "@vte/core";
+import { parseTokens } from "@vte-js/core";
 
 export async function validateCommand(file: string) {
   const filePath = path.resolve(process.cwd(), file);

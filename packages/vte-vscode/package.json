@@ -1,9 +1,9 @@
 {
-  "name": "vte-vscode",
+  "name": "@vte-js/vscode",
   "displayName": "VTE - Vue Token Engine",
   "description": "IDE support for Vue Token Engine <style token> blocks",
   "version": "1.0.0",
-  "publisher": "vte",
+  "publisher": "vte-js",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -64,7 +64,7 @@
     "watch": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch"
   },
   "dependencies": {
-    "@vte/language-server": "workspace:*"
+    "@vte-js/language-server": "workspace:*"
   },
   "devDependencies": {
     "@types/vscode": "^1.80.0",

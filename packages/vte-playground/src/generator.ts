@@ -1,10 +1,11 @@
-import { parseTokens, type TokenMap } from "@vte/core";
+import { parseTokens, type TokenMap } from "@vte-js/core";
 import path from "path";
+import { getCachedResult, setCacheResult } from "./cache.js";
 
 /**
  * 根据 tokenMap 生成 playground 组件代码
  */
-export function generatePlaygroundComponent(tokenMap: TokenMap): string {
+export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: string = "vte"): string {
   // 按类别分组
   const colors: string[] = [];
   const spacings: string[] = [];
@@ -61,7 +62,7 @@ export function generatePlaygroundComponent(tokenMap: TokenMap): string {
         <h2 class="section-title">🎨 颜色</h2>
         <div class="color-grid">
           ${colors.map(path => `
-          <div class="color-card" :style="{ background: \`var(--vte-${path.replace(/\./g, '-')})\` }">
+          <div class="color-card" :style="{ background: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\` }">
             <span class="color-name">${path.split('.').pop()}</span>
             <span class="color-value">{{ getVarValue('${path}') }}</span>
           </div>`).join('')}
@@ -75,7 +76,7 @@ export function generatePlaygroundComponent(tokenMap: TokenMap): string {
         <div class="spacing-grid">
           ${spacings.map(path => `
           <div class="spacing-card">
-            <div class="spacing-bar" :style="{ width: \`var(--vte-${path.replace(/\./g, '-')})\` }"></div>
+            <div class="spacing-bar" :style="{ width: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\` }"></div>
             <div class="spacing-info">
               <span class="spacing-name">${path.split('.').pop()}</span>
               <span class="spacing-value">{{ getVarValue('${path}') }}</span>
@@ -91,7 +92,7 @@ export function generatePlaygroundComponent(tokenMap: TokenMap): string {
         <div class="typography-list">
           ${fontSizes.map(path => `
           <div class="typography-card">
-            <p :style="{ fontSize: \`var(--vte-${path.replace(/\./g, '-')})\` }" class="typography-preview">
+            <p :style="{ fontSize: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\` }" class="typography-preview">
               The quick brown fox jumps over the lazy dog
             </p>
             <div class="typography-info">
@@ -108,7 +109,7 @@ export function generatePlaygroundComponent(tokenMap: TokenMap): string {
         <h2 class="section-title">🔲 圆角</h2>
         <div class="radius-grid">
           ${borderRadii.map(path => `
-          <div class="radius-card" :style="{ borderRadius: \`var(--vte-${path.replace(/\./g, '-')})\` }">
+          <div class="radius-card" :style="{ borderRadius: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\` }">
             <span class="radius-name">${path.split('.').pop()}</span>
           </div>`).join('')}
         </div>
@@ -120,7 +121,7 @@ export function generatePlaygroundComponent(tokenMap: TokenMap): string {
         <h2 class="section-title">🌫️ 阴影</h2>
         <div class="shadow-grid">
           ${shadows.map(path => `
-          <div class="shadow-card" :style="{ boxShadow: \`var(--vte-${path.replace(/\./g, '-')})\` }">
+          <div class="shadow-card" :style="{ boxShadow: \`var(--${cssPrefix}-${path.replace(/\./g, '-')})\` }">
             <span class="shadow-name">${path.split('.').pop()}</span>
           </div>`).join('')}
         </div>
@@ -198,6 +199,31 @@ export function generatePlaygroundComponent(tokenMap: TokenMap): string {
           </div>
         </div>
       </section>
+
+      <!-- Token 导出 -->
+      <section id="export" class="section">
+        <h2 class="section-title">📤 导出 Tokens</h2>
+        <div class="export-container">
+          <div class="export-tabs">
+            <button v-for="format in exportFormats" :key="format.id"
+                    :class="['export-tab', { active: activeExportFormat === format.id }]"
+                    @click="activeExportFormat = format.id">
+              {{ format.name }}
+            </button>
+          </div>
+          <div class="export-preview">
+            <pre class="export-code">{{ exportContent }}</pre>
+          </div>
+          <div class="export-actions">
+            <button class="export-btn" @click="copyExport">
+              {{ copiedExport ? '✓ Copied!' : '📋 Copy to Clipboard' }}
+            </button>
+            <button class="export-btn secondary" @click="downloadExport">
+              💾 Download File
+            </button>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="footer">
@@ -217,6 +243,7 @@ ${fontSizes.length > 0 ? `  { id: "fontSize", name: "字号", icon: "📝" },` :
 ${borderRadii.length > 0 ? `  { id: "borderRadius", name: "圆角", icon: "🔲" },` : ''}
 ${shadows.length > 0 ? `  { id: "shadow", name: "阴影", icon: "🌫️" },` : ''}
   { id: "editor", name: "编辑器", icon: "🔧" },
+  { id: "export", name: "导出", icon: "📤" },
 ];
 
 const tokenInput = ref("semantic.color.primary");
@@ -239,7 +266,8 @@ ${Array.from(tokenMap.entries()).map(([path, token]) => `  "${path}": "${token.v
 
 const filteredTokens = ref<string[]>(allTokens);
 
-const cssVariable = computed(() => \`var(--vte-\${tokenInput.value.replace(/\\./g, '-')})\`);
+const cssPrefix = "${cssPrefix}";
+const cssVariable = computed(() => \`var(--\${cssPrefix}-\${tokenInput.value.replace(/\\./g, '-')})\`);
 const tokenValue = computed(() => tokenValues[tokenInput.value] || "N/A");
 const isValidColor = computed(() => tokenValue.value && (tokenValue.value.startsWith("#") || tokenValue.value.startsWith("rgb")));
 
@@ -275,6 +303,58 @@ function scrollTo(id: string) {
     const top = el.getBoundingClientRect().top + window.pageYOffset - headerHeight - 40;
     window.scrollTo({ top, behavior: "smooth" });
   }
+}
+
+// Export functionality
+const activeExportFormat = ref("json");
+const copiedExport = ref(false);
+
+const exportFormats = [
+  { id: "json", name: "JSON" },
+  { id: "css", name: "CSS Variables" },
+  { id: "scss", name: "SCSS Variables" },
+  { id: "js", name: "JavaScript" },
+];
+
+const exportContent = computed(() => {
+  switch (activeExportFormat.value) {
+    case "json":
+      return JSON.stringify(tokenValues, null, 2);
+    case "css":
+      return \`:root {
+\${Object.entries(tokenValues).map(([path, value]) => \`  --\${cssPrefix}-\${path.replace(/\\./g, "-")}: \${value};\`).join("\\n")}
+}\`;
+    case "scss":
+      return Object.entries(tokenValues)
+        .map(([path, value]) => \`$\${cssPrefix}-\${path.replace(/\\./g, "-")}: \${value};\`)
+        .join("\\n");
+    case "js":
+      return \`export const tokens = \${JSON.stringify(tokenValues, null, 2)};\`;
+    default:
+      return "";
+  }
+});
+
+function copyExport() {
+  navigator.clipboard.writeText(exportContent.value);
+  copiedExport.value = true;
+  setTimeout(() => { copiedExport.value = false; }, 1500);
+}
+
+function downloadExport() {
+  const extensions: Record<string, string> = {
+    json: "json",
+    css: "css",
+    scss: "scss",
+    js: "js",
+  };
+  const blob = new Blob([exportContent.value], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = \`design-tokens.\${extensions[activeExportFormat.value]}\`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 </script>
 
@@ -515,6 +595,18 @@ function scrollTo(id: string) {
 
 .color-preview { width: 48px; height: 48px; border-radius: $semantic.borderRadius.md; border: 2px solid $semantic.color.border; box-shadow: $semantic.shadow.sm; }
 
+.export-container { display: flex; flex-direction: column; gap: $semantic.spacing.lg; }
+.export-tabs { display: flex; gap: $semantic.spacing.sm; border-bottom: 1px solid $semantic.color.border; padding-bottom: $semantic.spacing.sm; }
+.export-tab { padding: $semantic.spacing.sm $semantic.spacing.md; border: none; background: transparent; cursor: pointer; font-size: $semantic.fontSize.sm; color: $semantic.color.text-secondary; border-radius: $semantic.borderRadius.sm; transition: all 0.2s ease; }
+.export-tab:hover { background: $semantic.color.background-secondary; }
+.export-tab.active { background: $semantic.color.primary; color: $semantic.color.text-inverse; }
+.export-preview { background: $semantic.color.background-secondary; border: 1px solid $semantic.color.border; border-radius: $semantic.borderRadius.md; padding: $semantic.spacing.lg; max-height: 400px; overflow: auto; }
+.export-code { margin: 0; font-family: monospace; font-size: $semantic.fontSize.sm; white-space: pre-wrap; word-break: break-all; line-height: 1.6; }
+.export-actions { display: flex; gap: $semantic.spacing.md; }
+.export-btn { padding: $semantic.spacing.sm $semantic.spacing.lg; border: 1px solid $semantic.color.border; border-radius: $semantic.borderRadius.md; cursor: pointer; font-size: $semantic.fontSize.sm; transition: all 0.2s ease; display: flex; align-items: center; gap: $semantic.spacing.sm; }
+.export-btn:hover { background: $semantic.color.background-secondary; border-color: $semantic.color.primary; }
+.export-btn.secondary { background: transparent; }
+
 .footer { background: $semantic.color.background-secondary; padding: $semantic.spacing.xl $semantic.spacing.xl; text-align: center; color: $semantic.color.text-tertiary; border-top: 1px solid $semantic.color.border; margin-left: 180px; font-size: $semantic.fontSize.sm; }
 
 /* 暗黑模式 */
@@ -640,7 +732,7 @@ export function generatePlaygroundHtml(): string {
 /**
  * 生成 playground vite.config.ts
  */
-export function generateViteConfig(projectRoot: string): string {
+export function generateViteConfig(projectRoot: string, cssPrefix: string = "vte"): string {
   // 计算相对路径
   const tokenPath = path.relative(
     path.join(projectRoot, ".vte-playground"),
@@ -649,13 +741,14 @@ export function generateViteConfig(projectRoot: string): string {
 
   return `import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import vte from "@vte/vite-plugin";
+import vte from "@vte-js/vite-plugin";
 
 export default defineConfig({
   plugins: [
     vue(),
     vte({
       tokenFile: "${tokenPath}",
+      cssPrefix: "${cssPrefix}",
     }),
   ],
 });
@@ -675,8 +768,8 @@ export function generatePackageJson(projectName: string): string {
     },
     dependencies: {
       vue: "^3.5.0",
-      "@vte/core": "workspace:*",
-      "@vte/vite-plugin": "workspace:*",
+      "@vte-js/core": "workspace:*",
+      "@vte-js/vite-plugin": "workspace:*",
     },
     devDependencies: {
       "@vitejs/plugin-vue": "^5.0.0",

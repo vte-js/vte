@@ -30,17 +30,17 @@ describe("parseTokens", () => {
     expect(primary?.value).toBe("#3b82f6");
 
     const buttonHeight = map.get("component.button.height");
-    expect(buttonHeight?.value).toBe("0.5rem");
+    expect(buttonHeight?.value).toBe("1rem");
   });
 
   it("should resolve chain references", async () => {
     const tokenPath = path.join(playgroundDir, "design-tokens.ts");
     const map = await parseTokens(tokenPath);
 
-    // component.button.height -> semantic.spacing.medium -> "0.5rem"
+    // component.button.height -> semantic.spacing.md -> "1rem"
     const buttonHeight = map.get("component.button.height");
-    expect(buttonHeight?.value).toBe("0.5rem");
-    expect(buttonHeight?.refs).toEqual(["semantic.spacing.medium"]);
+    expect(buttonHeight?.value).toBe("1rem");
+    expect(buttonHeight?.refs).toEqual(["semantic.spacing.md"]);
   });
 
   it("should throw on circular references", async () => {

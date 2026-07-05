@@ -1,4 +1,5 @@
-import type { TokenMap } from "@vte/core";
+import type { TokenMap } from "@vte-js/core";
+import { toCssVarName } from "@vte-js/core";
 
 /**
  * Agent JSON 中的单个 token 信息
@@ -107,7 +108,7 @@ function buildTree(map: TokenMap): Record<string, any> {
 /**
  * 从 tokenMap 生成 agent.json
  */
-export function generateAgentJson(map: TokenMap): AgentJson {
+export function generateAgentJson(map: TokenMap, cssPrefix: string = "vte"): AgentJson {
   const tokens: Record<string, AgentToken> = {};
   const paths: string[] = [];
   let primitives = 0;
@@ -126,7 +127,7 @@ export function generateAgentJson(map: TokenMap): AgentJson {
       original: isRef ? token.raw : token.value,
       refs: token.refs,
       platform: {
-        web: `var(--vte-${path.replace(/\./g, "-")})`,
+        web: `var(${toCssVarName(path, cssPrefix)})`,
         mp: toMpValue(token.value),
         rn: toRnValue(token.value),
       },

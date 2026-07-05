@@ -1,5 +1,5 @@
 {
-  "name": "@vte/playground",
+  "name": "@vte-js/playground",
   "version": "1.0.0",
   "description": "Auto-generated VTE playground for visual debugging",
   "type": "module",
@@ -13,7 +13,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@vte/core": "workspace:*",
+    "@vte-js/core": "workspace:*",
     "commander": "^12.0.0"
   },
   "devDependencies": {

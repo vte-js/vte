@@ -74,6 +74,7 @@ export enum CompletionItemKind {
   Variable = 1,
   Property = 2,
   Color = 3,
+  Module = 4,
 }
 
 /**

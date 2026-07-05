@@ -1,4 +1,4 @@
-import { parseTokens, type TokenMap } from "@vte/core";
+import { parseTokens, type TokenMap } from "@vte-js/core";
 import { generateAgentJson, type AgentJson } from "./agent.js";
 import { generateTokensDts } from "./dts.js";
 
@@ -9,6 +9,8 @@ export interface CompilerOptions {
   outputDir: string;
   /** 输出文件名前缀（默认 "tokens"） */
   prefix?: string;
+  /** CSS 变量前缀（默认 "vte"） */
+  cssPrefix?: string;
 }
 
 export interface CompileResult {
@@ -26,13 +28,13 @@ export interface CompileResult {
  * 编译 design-tokens.ts 生成 agent.json 和 tokens.d.ts
  */
 export async function compile(options: CompilerOptions): Promise<CompileResult> {
-  const { tokenFile, outputDir, prefix = "tokens" } = options;
+  const { tokenFile, outputDir, prefix = "tokens", cssPrefix = "vte" } = options;
 
   // 解析 token 文件
   const tokenMap = await parseTokens(tokenFile);
 
   // 生成 agent.json
-  const agentJson = generateAgentJson(tokenMap);
+  const agentJson = generateAgentJson(tokenMap, cssPrefix);
 
   // 生成 tokens.d.ts
   const tokensDts = generateTokensDts(tokenMap);
@@ -50,4 +52,4 @@ export async function compile(options: CompilerOptions): Promise<CompileResult> 
 
 export { generateAgentJson, type AgentJson, type AgentToken } from "./agent.js";
 export { generateTokensDts } from "./dts.js";
-export type { TokenMap, TokenValue } from "@vte/core";
+export type { TokenMap, TokenValue } from "@vte-js/core";

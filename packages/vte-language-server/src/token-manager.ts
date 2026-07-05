@@ -3,6 +3,8 @@
  * 负责 token 的解析、缓存和查询
  */
 
+import { transform } from "@swc/core";
+import vm from "vm";
 import type { TokenInfo, Range, Position, Location } from "./types.js";
 import { isColorValue } from "./utils/color.js";
 import { parseStyleBlock, type StyleInfo } from "./style-parser.js";
@@ -86,19 +88,51 @@ export class TokenManager {
   /**
    * 解析 token 文件内容
    */
-  parseTokenFile(content: string, uri: string): void {
+  async parseTokenFile(content: string, uri: string): Promise<void> {
     this.tokenMap = new Map();
     this.tokenFileUri = uri;
     this.tokenFileLineMap = new Map();
 
     try {
-      const evalContent = content
-        .replace(/import\s+.*from\s+.*;/g, "")
-        .replace(/export\s+default\s+/, "")
-        .replace(/defineTokens\s*\(/, "(")
-        .replace(/;\s*$/, "");
+      // Transform TypeScript to JavaScript using @swc/core
+      const result = await transform(content, {
+        jsc: {
+          parser: {
+            syntax: "typescript",
+            decorators: true,
+          },
+          target: "es2020",
+        },
+        module: {
+          type: "commonjs",
+        },
+        isModule: true,
+        filename: uri,
+      });
 
-      const tokens = eval(evalContent);
+      // Create sandboxed context for execution
+      const moduleExports: any = {};
+      const moduleObj = { exports: moduleExports };
+
+      const sandbox = {
+        require: (id: string) => {
+          if (id === "@vte-js/core" || id.endsWith("/vte-core/dist/index.js")) {
+            return {
+              defineTokens: (tokens: any) => tokens,
+            };
+          }
+          throw new Error(`Cannot require "${id}" in token files`);
+        },
+        module: moduleObj,
+        exports: moduleExports,
+        console,
+      };
+
+      const script = new vm.Script(result.code, { filename: uri });
+      const context = vm.createContext(sandbox);
+      script.runInContext(context);
+
+      const tokens = moduleObj.exports.default ?? moduleObj.exports;
 
       this.parseObject(tokens);
       this.resolveReferences();

@@ -1,4 +1,4 @@
-import type { TokenMap } from "@vte/core";
+import type { TokenMap } from "@vte-js/core";
 
 /**
  * 小程序平台 (mp)：输出 WXSS 变量

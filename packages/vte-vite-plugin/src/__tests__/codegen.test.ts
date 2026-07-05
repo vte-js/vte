@@ -1,8 +1,10 @@
 import { describe, it, expect } from "vitest";
-import type { TokenMap } from "@vte/core";
-import { webPlatform } from "../codegen/web.js";
+import type { TokenMap } from "@vte-js/core";
+import { createWebPlatform } from "../codegen/web.js";
 import { mpPlatform } from "../codegen/mp.js";
 import { rnPlatform } from "../codegen/rn.js";
+
+const webPlatform = createWebPlatform();
 
 function createTokenMap(
   entries: [string, { path: string; value: string; raw: string; refs: string[] }][],
@@ -59,6 +61,31 @@ describe("web platform", () => {
     const result = webPlatform.replaceRefs(content, map);
 
     expect(result).toBe("content: '$';");
+  });
+});
+
+describe("web platform with custom prefix", () => {
+  const map = createTokenMap([
+    [
+      "semantic.color.primary",
+      { path: "semantic.color.primary", value: "#3b82f6", raw: "{primitive.blue.500}", refs: ["primitive.blue.500"] },
+    ],
+  ]);
+
+  it("should use custom prefix for CSS variables", () => {
+    const customPlatform = createWebPlatform("my-app");
+    const result = customPlatform.generateVars(map);
+
+    expect(result).toContain("--my-app-semantic-color-primary: #3b82f6;");
+    expect(result).not.toContain("--vte-");
+  });
+
+  it("should use custom prefix for token refs", () => {
+    const customPlatform = createWebPlatform("design");
+    const content = "background: $semantic.color.primary;";
+    const result = customPlatform.replaceRefs(content, map);
+
+    expect(result).toBe("background: var(--design-semantic-color-primary);");
   });
 });
 

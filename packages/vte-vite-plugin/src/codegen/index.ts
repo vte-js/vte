@@ -1,5 +1,5 @@
-import type { TokenMap } from "@vte/core";
-import { webPlatform } from "./web.js";
+import type { TokenMap } from "@vte-js/core";
+import { createWebPlatform } from "./web.js";
 import { mpPlatform } from "./mp.js";
 import { rnPlatform } from "./rn.js";
 
@@ -11,14 +11,14 @@ export interface PlatformAdapter {
   replaceRefs(content: string, map: TokenMap): string;
 }
 
-const platforms: Record<Platform, PlatformAdapter> = {
-  web: webPlatform,
-  mp: mpPlatform,
-  rn: rnPlatform,
-};
-
-export function getPlatformAdapter(platform: Platform): PlatformAdapter {
-  return platforms[platform];
+export function getPlatformAdapter(platform: Platform, cssPrefix: string = "vte"): PlatformAdapter {
+  if (platform === "web") {
+    return createWebPlatform(cssPrefix);
+  }
+  if (platform === "mp") {
+    return mpPlatform;
+  }
+  return rnPlatform;
 }
 
-export { webPlatform, mpPlatform, rnPlatform };
+export { createWebPlatform, mpPlatform, rnPlatform };

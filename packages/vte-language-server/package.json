@@ -1,5 +1,5 @@
 {
-  "name": "@vte/language-server",
+  "name": "@vte-js/language-server",
   "version": "1.0.0",
   "description": "IDE-agnostic language server core for Vue Token Engine",
   "type": "module",
@@ -10,7 +10,8 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@vte/core": "workspace:*"
+    "@vte-js/core": "workspace:*",
+    "@swc/core": "^1.3.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",

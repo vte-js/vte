@@ -4,7 +4,7 @@ import { parse } from "@vue/compiler-sfc";
 import path from "path";
 import fs from "fs";
 import MagicString from "magic-string";
-import { parseTokens, type TokenMap } from "@vte/core";
+import { parseTokens, type TokenMap, toCssVarName } from "@vte-js/core";
 import {
   type Platform,
   type PlatformAdapter,
@@ -15,6 +15,8 @@ import { findSimilarTokens, formatTokenError } from "./similar.js";
 export interface VtePluginOptions {
   tokenFile?: string;
   platform?: Platform;
+  /** CSS 变量前缀（默认 "vte"，生成 --vte-{path}） */
+  cssPrefix?: string;
   /** 构建时自动生成的文件配置 */
   output?: {
     /** 是否生成 tokens.d.ts */
@@ -32,6 +34,7 @@ export interface VtePluginOptions {
 
 export default function vtePlugin(options: VtePluginOptions = {}): Plugin {
   const platform: Platform = options.platform ?? "web";
+  const cssPrefix: string = options.cssPrefix ?? "vte";
   const sourcemapOption = options.sourcemap ?? true;
   const outputOptions = {
     types: true,
@@ -80,14 +83,27 @@ export default function vtePlugin(options: VtePluginOptions = {}): Plugin {
   async function reloadTokenMap(): Promise<void> {
     if (!config) return;
     try {
+      const oldSize = tokenMap?.size ?? 0;
       await loadTokenMap(config.root);
-      console.log(`[VTE] Token map reloaded (platform: ${platform})`);
+      const newSize = tokenMap?.size ?? 0;
+
+      console.log(`[VTE] Token map reloaded: ${oldSize} → ${newSize} tokens`);
 
       if (server) {
         server.ws.send({ type: "full-reload" });
       }
     } catch (e) {
       console.error("[VTE] Failed to reload token map:", e);
+      // Send error to client for better DX
+      if (server) {
+        server.ws.send({
+          type: "error",
+          err: {
+            message: `[VTE] Token reload failed: ${(e as Error).message}`,
+            stack: (e as Error).stack ?? "",
+          },
+        });
+      }
     }
   }
 
@@ -194,7 +210,7 @@ export default function vtePlugin(options: VtePluginOptions = {}): Plugin {
         original: isRef ? token.raw : token.value,
         refs: token.refs,
         platform: {
-          web: `var(--vte-${path.replace(/\./g, "-")})`,
+          web: `var(${toCssVarName(path, cssPrefix)})`,
           mp: token.value,
           rn: token.value,
         },
@@ -216,24 +232,39 @@ export default function vtePlugin(options: VtePluginOptions = {}): Plugin {
   }
 
   return {
-    name: "@vte/vite-plugin",
+    name: "@vte-js/vite-plugin",
     enforce: "pre",
 
     configResolved(resolvedConfig) {
       config = resolvedConfig;
-      adapter = getPlatformAdapter(platform);
-      console.log(`[VTE] Platform: ${platform}`);
+      adapter = getPlatformAdapter(platform, cssPrefix);
+      console.log(`[VTE] Platform: ${platform}, CSS prefix: ${cssPrefix}`);
     },
 
     configureServer(_server) {
       server = _server;
 
-      _server.watcher.on("change", (file) => {
-        if (tokenFilePath && path.resolve(file) === tokenFilePath) {
-          console.log("[VTE] Token file changed, reloading...");
+      let reloadTimer: ReturnType<typeof setTimeout> | null = null;
+      const DEBOUNCE_MS = 300;
+
+      const scheduleReload = () => {
+        if (reloadTimer) clearTimeout(reloadTimer);
+        reloadTimer = setTimeout(() => {
+          reloadTimer = null;
           reloadTokenMap();
+        }, DEBOUNCE_MS);
+      };
+
+      const handleTokenFileChange = (file: string) => {
+        if (tokenFilePath && path.resolve(file) === tokenFilePath) {
+          console.log("[VTE] Token file changed, scheduling reload...");
+          scheduleReload();
         }
-      });
+      };
+
+      _server.watcher.on("change", handleTokenFileChange);
+      _server.watcher.on("add", handleTokenFileChange);
+      _server.watcher.on("unlink", handleTokenFileChange);
     },
 
     async buildStart() {
@@ -296,24 +327,28 @@ export default function vtePlugin(options: VtePluginOptions = {}): Plugin {
           this.warn(message);
         }
 
-        // 处理 <style token scoped> -> <style scoped>
-        if (styleBlock.attrs.scoped !== undefined) {
+        // 处理 <style token scoped> -> <style scoped> 或 <style token module> -> <style module>
+        if (styleBlock.attrs.scoped !== undefined || styleBlock.attrs.module !== undefined) {
           const beforeContent = code.substring(0, contentStart);
           const styleTagStart = beforeContent.lastIndexOf("<style");
           if (styleTagStart !== -1) {
             const originalTag = code.substring(styleTagStart, contentStart);
-            const scopedTag = originalTag.replace(
+            const isModule = styleBlock.attrs.module !== undefined;
+            const targetAttr = isModule ? "module" : "scoped";
+
+            const newTag = originalTag.replace(
               /<style\s+token([^>]*)>/,
               (_match, attrs: string) => {
                 const cleanedAttrs = attrs
                   .replace(/\btoken\b/, "")
                   .replace(/\bscoped\b/, "")
+                  .replace(/\bmodule\b/, "")
                   .replace(/\s+/g, " ")
                   .trim();
-                return `<style scoped${cleanedAttrs ? " " + cleanedAttrs : ""}>`;
+                return `<style ${targetAttr}${cleanedAttrs ? " " + cleanedAttrs : ""}>`;
               },
             );
-            s.update(styleTagStart, contentStart, scopedTag);
+            s.update(styleTagStart, contentStart, newTag);
           }
         }
       }

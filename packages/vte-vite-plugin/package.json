@@ -1,5 +1,5 @@
 {
-  "name": "@vte/vite-plugin",
+  "name": "@vte-js/vite-plugin",
   "version": "1.0.0",
   "description": "Vite plugin for Vue Token Engine",
   "type": "module",
@@ -10,7 +10,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@vte/core": "workspace:*",
+    "@vte-js/core": "workspace:*",
     "magic-string": "^0.30.0"
   },
   "devDependencies": {

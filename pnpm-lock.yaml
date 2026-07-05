@@ -23,10 +23,10 @@ importers:
 
   demo-project:
     dependencies:
-      '@vte/core':
+      '@vte-js/core':
         specifier: workspace:*
         version: link:../packages/vte-core
-      '@vte/vite-plugin':
+      '@vte-js/vite-plugin':
         specifier: workspace:*
         version: link:../packages/vte-vite-plugin
       vue:
@@ -48,7 +48,7 @@ importers:
 
   packages/vte-cli:
     dependencies:
-      '@vte/core':
+      '@vte-js/core':
         specifier: workspace:*
         version: link:../vte-core
       commander:
@@ -64,7 +64,7 @@ importers:
 
   packages/vte-compiler:
     dependencies:
-      '@vte/core':
+      '@vte-js/core':
         specifier: workspace:*
         version: link:../vte-core
     devDependencies:
@@ -87,7 +87,10 @@ importers:
 
   packages/vte-language-server:
     dependencies:
-      '@vte/core':
+      '@swc/core':
+        specifier: ^1.3.0
+        version: 1.15.43
+      '@vte-js/core':
         specifier: workspace:*
         version: link:../vte-core
     devDependencies:
@@ -100,7 +103,7 @@ importers:
 
   packages/vte-playground:
     dependencies:
-      '@vte/core':
+      '@vte-js/core':
         specifier: workspace:*
         version: link:../vte-core
       commander:
@@ -116,7 +119,7 @@ importers:
 
   packages/vte-react:
     dependencies:
-      '@vte/core':
+      '@vte-js/core':
         specifier: workspace:*
         version: link:../vte-core
     devDependencies:
@@ -132,7 +135,7 @@ importers:
 
   packages/vte-vite-plugin:
     dependencies:
-      '@vte/core':
+      '@vte-js/core':
         specifier: workspace:*
         version: link:../vte-core
       magic-string:
@@ -157,7 +160,7 @@ importers:
 
   packages/vte-vscode:
     dependencies:
-      '@vte/language-server':
+      '@vte-js/language-server':
         specifier: workspace:*
         version: link:../vte-language-server
     devDependencies:
@@ -173,13 +176,13 @@ importers:
 
   playground:
     dependencies:
-      '@vte/compiler':
+      '@vte-js/compiler':
         specifier: workspace:*
         version: link:../packages/vte-compiler
-      '@vte/core':
+      '@vte-js/core':
         specifier: workspace:*
         version: link:../packages/vte-core
-      '@vte/vite-plugin':
+      '@vte-js/vite-plugin':
         specifier: workspace:*
         version: link:../packages/vte-vite-plugin
       vue:

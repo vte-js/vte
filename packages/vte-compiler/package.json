@@ -1,5 +1,5 @@
 {
-  "name": "@vte/compiler",
+  "name": "@vte-js/compiler",
   "version": "1.0.0",
   "description": "Compiler for Vue Token Engine - generates agent.json and tokens.d.ts",
   "type": "module",
@@ -10,7 +10,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@vte/core": "workspace:*"
+    "@vte-js/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",

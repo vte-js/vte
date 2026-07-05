@@ -1,5 +1,5 @@
 // playground/test-parse.ts
-import { parseTokens } from "@vte/core";
+import { parseTokens } from "@vte-js/core";
 import path from "path";
 
 async function main() {

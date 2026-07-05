@@ -1,4 +1,4 @@
-import type { TokenMap } from "@vte/core";
+import type { TokenMap } from "@vte-js/core";
 
 /**
  * React Native 平台：输出 StyleSheet 格式

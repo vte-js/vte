@@ -1,13 +1,14 @@
-import type { TokenMap } from "@vte/core";
+import type { TokenMap } from "@vte-js/core";
+import { toCssVarName } from "@vte-js/core";
 
 /**
  * Web 平台：输出 CSS Variables
  * 例如: $semantic.color.primary -> var(--vte-semantic-color-primary)
  */
-export function generateWebVars(map: TokenMap): string {
+export function generateWebVars(map: TokenMap, cssPrefix: string = "vte"): string {
   const lines: string[] = [":root {"];
   for (const [tokenPath, token] of map) {
-    const varName = `--vte-${tokenPath.replace(/\./g, "-")}`;
+    const varName = toCssVarName(tokenPath, cssPrefix);
     lines.push(`  ${varName}: ${token.value};`);
   }
   lines.push("}");
@@ -17,6 +18,7 @@ export function generateWebVars(map: TokenMap): string {
 export function replaceTokenRefs(
   content: string,
   map: TokenMap,
+  cssPrefix: string = "vte",
 ): string {
   // 匹配 $token.path 和 $token."path-with-quotes" 两种格式
   // 支持连字符：$semantic.spacing-lg, $semantic.color.primary-hover
@@ -26,14 +28,14 @@ export function replaceTokenRefs(
 
     // 检查直接匹配
     if (map.has(fullPath)) {
-      const varName = `--vte-${fullPath.replace(/\./g, "-")}`;
+      const varName = toCssVarName(fullPath, cssPrefix);
       return `var(${varName})`;
     }
 
     // 尝试带连字符的路径（如 primary-hover）
     const hyphenPath = quotedPart ? `${tokenPath}-${quotedPart}` : null;
     if (hyphenPath && map.has(hyphenPath)) {
-      const varName = `--vte-${hyphenPath.replace(/\./g, "-")}`;
+      const varName = toCssVarName(hyphenPath, cssPrefix);
       return `var(${varName})`;
     }
 
@@ -41,8 +43,12 @@ export function replaceTokenRefs(
   });
 }
 
-export const webPlatform = {
-  name: "web" as const,
-  generateVars: generateWebVars,
-  replaceRefs: replaceTokenRefs,
-};
+export function createWebPlatform(cssPrefix: string = "vte") {
+  return {
+    name: "web" as const,
+    generateVars: (map: TokenMap) => generateWebVars(map, cssPrefix),
+    replaceRefs: (content: string, map: TokenMap) => replaceTokenRefs(content, map, cssPrefix),
+  };
+}
+
+export const webPlatform = createWebPlatform();

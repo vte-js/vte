@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "vue": "^3.5.0",
-    "@vte/core": "workspace:*",
-    "@vte/vite-plugin": "workspace:*"
+    "@vte-js/core": "workspace:*",
+    "@vte-js/vite-plugin": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",

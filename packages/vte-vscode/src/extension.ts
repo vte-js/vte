@@ -524,18 +524,16 @@ export function activate(context: vscode.ExtensionContext) {
   });
 }
 
-function loadTokenMap() {
+async function loadTokenMap() {
   const config = vscode.workspace.getConfiguration("vte");
   const tokenFile = config.get<string>("tokenFile", "design-tokens.ts");
 
-  vscode.workspace.findFiles(`**/${tokenFile}`, "**/node_modules/**", 1).then((files) => {
-    if (files.length === 0) return;
+  const files = await vscode.workspace.findFiles(`**/${tokenFile}`, "**/node_modules/**", 1);
+  if (files.length === 0) return;
 
-    vscode.workspace.fs.readFile(files[0]).then((content) => {
-      tokenManager?.parseTokenFile(content.toString(), files[0].toString());
-      updateAllEditors();
-    });
-  });
+  const content = await vscode.workspace.fs.readFile(files[0]);
+  await tokenManager?.parseTokenFile(content.toString(), files[0].toString());
+  updateAllEditors();
 }
 
 function updateDecorations(editor: vscode.TextEditor) {
