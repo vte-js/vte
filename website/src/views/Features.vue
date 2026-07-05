@@ -5,18 +5,156 @@
         <div class="header-line"></div>
         <span class="section-badge">Features</span>
         <h1 class="page-title">为什么选择 VTE？</h1>
-        <p class="page-desc">解决现代前端样式方案的三大痛点</p>
+        <p class="page-desc">解决现代前端样式方案的三大核心痛点</p>
       </div>
     </div>
-    <FeaturesContent />
-    <Comparison />
+
+    <section class="features-section">
+      <div class="container">
+        <!-- AI 友好 -->
+        <div class="feature-block">
+          <div class="feature-visual">
+            <div class="code-compare">
+              <div class="code-card bad">
+                <div class="card-header">
+                  <span class="card-badge error">传统方案</span>
+                  <span class="card-title">Tailwind CSS</span>
+                </div>
+                <pre><code><span class="hl-comment">// AI 容易拼错或捏造</span>
+&lt;button class="<span class="hl-error">bg-blue-500</span>"&gt;
+  Click me
+&lt;/button&gt;
+
+<span class="hl-comment">// ❌ AI 可能生成不存在的类名</span>
+class="<span class="hl-error">px-999</span>"
+class="<span class="hl-error">text-red-999</span>"</code></pre>
+              </div>
+              <div class="code-card good">
+                <div class="card-header">
+                  <span class="card-badge success">VTE 方案</span>
+                  <span class="card-title">Design Tokens</span>
+                </div>
+                <pre><code><span class="hl-comment">// 强制引用，编译期检查</span>
+&lt;button class="btn"&gt;
+  Click me
+&lt;/button&gt;
+
+<span class="hl-comment">// ✅ 无效路径立即报错</span>
+<span class="hl-comment">// ✅ 支持拼写建议</span>
+<span class="hl-comment">// ✅ IDE 自动补全</span></code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="feature-text">
+            <div class="feature-icon">🤖</div>
+            <h2>告别 AI 幻觉</h2>
+            <p>
+              Tailwind 的字符串类名（如 <code>bg-blue-500</code>）导致 AI 常拼错或凭空捏造不存在的颜色值。
+              VTE 的 <code>$token.path</code> 强制引用设计 token，在编译期拦截错误，并提供智能拼写建议。
+            </p>
+            <ul class="feature-list">
+              <li>编译期类型检查，无效路径立即报错</li>
+              <li>支持拼写建议和自动修复</li>
+              <li>IDE 智能补全所有合法路径</li>
+              <li>AI 只需记住 token 结构，无需记忆具体值</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 跨端支持 -->
+        <div class="feature-block reverse">
+          <div class="feature-visual">
+            <div class="platform-demo">
+              <div class="platform-card">
+                <div class="platform-icon">🌐</div>
+                <div class="platform-name">Web</div>
+                <div class="platform-code">var(--vte-semantic-color-primary)</div>
+              </div>
+              <div class="platform-card">
+                <div class="platform-icon">📱</div>
+                <div class="platform-name">小程序</div>
+                <div class="platform-code">#3b82f6</div>
+              </div>
+              <div class="platform-card">
+                <div class="platform-icon">⚛️</div>
+                <div class="platform-name">React Native</div>
+                <div class="platform-code">"#3b82f6"</div>
+              </div>
+            </div>
+            <div class="platform-source">
+              <div class="code-card">
+                <div class="card-header">
+                  <span class="card-badge source">统一定义</span>
+                  <span class="card-title">design-tokens.ts</span>
+                </div>
+                <pre><code>export default defineTokens({
+  semantic: {
+    color: {
+      primary: <span class="hl-str">"{primitive.blue.500}"</span>,
+    },
+  },
+});</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="feature-text">
+            <div class="feature-icon">🌐</div>
+            <h2>真正的跨端</h2>
+            <p>
+              一套 token 定义，自动输出 Web (CSS Variables)、小程序 (rpx)、React Native (StyleSheet)。
+              无需为每个平台重写样式，统一的设计系统。
+            </p>
+            <ul class="feature-list">
+              <li>Web: CSS Variables，支持主题切换</li>
+              <li>小程序: 自动转换单位 (rem → rpx)</li>
+              <li>React Native: StyleSheet 对象</li>
+              <li>未来扩展: Flutter, SwiftUI</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Vue 原生 -->
+        <div class="feature-block">
+          <div class="feature-visual">
+            <div class="code-card">
+              <div class="card-header">
+                <span class="card-badge success">Vue SFC</span>
+                <span class="card-title">Button.vue</span>
+              </div>
+              <pre><code><span class="hl-tag">&lt;template&gt;</span>
+  <span class="hl-tag">&lt;button</span> <span class="hl-attr">class</span>=<span class="hl-str">"btn"</span><span class="hl-tag">&gt;</span>
+    Click me
+  <span class="hl-tag">&lt;/button&gt;</span>
+<span class="hl-tag">&lt;/template&gt;</span>
+
+<span class="hl-tag">&lt;style token scoped&gt;</span>
+<span class="hl-sel">.btn</span> {
+  <span class="hl-prop">background</span>: <span class="hl-val">$semantic.color.primary</span>;
+  <span class="hl-prop">padding</span>: <span class="hl-val">$semantic.spacing.md</span>;
+  <span class="hl-prop">border-radius</span>: <span class="hl-val">$semantic.borderRadius.md</span>;
+}
+<span class="hl-tag">&lt;/style&gt;</span></code></pre>
+            </div>
+          </div>
+          <div class="feature-text">
+            <div class="feature-icon">💚</div>
+            <h2>Vue 原生体验</h2>
+            <p>
+              <code>&lt;style token&gt;</code> 语法完全符合 Vue SFC 直觉，
+              支持 <code>scoped</code> 作用域隔离，不需要学习新的心智模型。
+            </p>
+            <ul class="feature-list">
+              <li>符合 Vue SFC 直觉的语法设计</li>
+              <li>支持 scoped 作用域隔离</li>
+              <li>自动注入 CSS 变量到 :root</li>
+              <li>与 Vue 3 Composition API 完美配合</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
-
-<script setup lang="ts">
-import FeaturesContent from "../components/FeaturesContent.vue";
-import Comparison from "../components/Comparison.vue";
-</script>
 
 <style scoped>
 .page-features {
@@ -24,13 +162,13 @@ import Comparison from "../components/Comparison.vue";
 }
 
 .page-header {
-  padding: 60px 24px;
+  padding: 80px 24px 60px;
   text-align: center;
   background: linear-gradient(180deg, rgba(66, 184, 131, 0.1) 0%, transparent 100%);
 }
 
 .container {
-  max-width: 800px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -66,5 +204,198 @@ import Comparison from "../components/Comparison.vue";
 .page-desc {
   font-size: 20px;
   color: #94a3b8;
+}
+
+.features-section {
+  padding: 80px 24px;
+}
+
+.feature-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  margin-bottom: 120px;
+}
+
+.feature-block.reverse {
+  direction: rtl;
+}
+
+.feature-block.reverse > * {
+  direction: ltr;
+}
+
+.feature-text {
+  max-width: 480px;
+}
+
+.feature-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.feature-text h2 {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  color: #f1f5f9;
+}
+
+.feature-text p {
+  font-size: 16px;
+  color: #94a3b8;
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+
+.feature-text code {
+  background: rgba(66, 184, 131, 0.15);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #42b883;
+  font-size: 14px;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+}
+
+.feature-list li {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 12px;
+  font-size: 15px;
+  color: #94a3b8;
+}
+
+.feature-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #42b883;
+  font-weight: bold;
+}
+
+.code-compare {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.code-card {
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(66, 184, 131, 0.2);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card-badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.card-badge.error {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.card-badge.success {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.card-badge.source {
+  background: rgba(96, 165, 250, 0.2);
+  color: #60a5fa;
+}
+
+.card-title {
+  font-size: 13px;
+  color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.code-card pre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.code-card code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #e2e8f0;
+}
+
+.hl-comment { color: #64748b; }
+.hl-error { color: #f87171; text-decoration: line-through; }
+.hl-str { color: #86efac; }
+.hl-tag { color: #7dd3fc; }
+.hl-attr { color: #c4b5fd; }
+.hl-sel { color: #fbbf24; }
+.hl-prop { color: #93c5fd; }
+.hl-val { color: #86efac; }
+
+.platform-demo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.platform-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(66, 184, 131, 0.15);
+  border-radius: 10px;
+}
+
+.platform-icon {
+  font-size: 24px;
+}
+
+.platform-name {
+  font-weight: 600;
+  color: #f1f5f9;
+  min-width: 100px;
+}
+
+.platform-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: #42b883;
+  background: rgba(66, 184, 131, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+@media (max-width: 900px) {
+  .feature-block {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .feature-block.reverse {
+    direction: ltr;
+  }
 }
 </style>

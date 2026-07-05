@@ -7,4 +7,10 @@ export default defineConfig({
     outDir: "dist",
     assetsDir: "assets",
   },
+  server: {
+    // Ensure all routes fallback to index.html for client-side routing
+    fs: {
+      allow: [".."],
+    },
+  },
 });
