@@ -4,6 +4,7 @@
 
 import type { TextDocument, Position, Location } from "../types.js";
 import type { TokenManager } from "../token-manager.js";
+import { findTokenMatches } from "../utils/token-match.js";
 
 /**
  * 定义提供器
@@ -25,17 +26,9 @@ export class TokenDefinitionProvider implements DefinitionProvider {
     const line = document.lineAt(position.line);
     const text = line.text;
 
-    // 查找 $token 格式
-    const tokenRegex = /\$([\w][\w.]*)/g;
-    let match;
-
-    while ((match = tokenRegex.exec(text)) !== null) {
-      const start = match.index;
-      const end = start + match[0].length;
-
-      if (position.character >= start && position.character <= end) {
-        const tokenPath = match[1];
-        return this.tokenManager.getTokenDefinition(tokenPath);
+    for (const match of findTokenMatches(text)) {
+      if (position.character >= match.start && position.character <= match.end) {
+        return this.tokenManager.getTokenDefinition(match.path);
       }
     }
 

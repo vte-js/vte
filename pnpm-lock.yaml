@@ -87,9 +87,6 @@ importers:
 
   packages/vte-language-server:
     dependencies:
-      '@swc/core':
-        specifier: ^1.3.0
-        version: 1.15.43
       '@vte-js/core':
         specifier: workspace:*
         version: link:../vte-core
@@ -159,14 +156,13 @@ importers:
         version: 3.5.39(typescript@6.0.3)
 
   packages/vte-vscode:
-    dependencies:
-      '@vte-js/language-server':
-        specifier: workspace:*
-        version: link:../vte-language-server
     devDependencies:
       '@types/vscode':
         specifier: ^1.80.0
         version: 1.125.0
+      '@vte-js/language-server':
+        specifier: workspace:*
+        version: link:../vte-language-server
       esbuild:
         specifier: ^0.20.0
         version: 0.20.2

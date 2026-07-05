@@ -4,8 +4,7 @@
 
 import type { TextDocument, CodeLens, Workspace } from "../types.js";
 import type { TokenManager } from "../token-manager.js";
-
-const TOKEN_REGEX = /\$([\w][\w.]*)/g;
+import { findTokenMatches } from "../utils/token-match.js";
 
 /**
  * Code Lens 提供器
@@ -35,14 +34,8 @@ export class TokenCodeLensProvider implements CodeLensProvider {
 
     for (let i = 0; i < document.lineCount; i++) {
       const line = document.lineAt(i);
-      const text = line.text;
-
-      let match;
-      TOKEN_REGEX.lastIndex = 0;
-
-      while ((match = TOKEN_REGEX.exec(text)) !== null) {
-        const tokenPath = match[1];
-        fileTokenCounts.set(tokenPath, (fileTokenCounts.get(tokenPath) || 0) + 1);
+      for (const match of findTokenMatches(line.text)) {
+        fileTokenCounts.set(match.path, (fileTokenCounts.get(match.path) || 0) + 1);
       }
     }
 
@@ -56,22 +49,16 @@ export class TokenCodeLensProvider implements CodeLensProvider {
     const seen = new Set<string>();
     for (let i = 0; i < document.lineCount; i++) {
       const line = document.lineAt(i);
-      const text = line.text;
 
-      let match;
-      TOKEN_REGEX.lastIndex = 0;
+      for (const match of findTokenMatches(line.text)) {
+        if (!seen.has(match.path)) {
+          seen.add(match.path);
 
-      while ((match = TOKEN_REGEX.exec(text)) !== null) {
-        const tokenPath = match[1];
-
-        if (!seen.has(tokenPath)) {
-          seen.add(tokenPath);
-
-          const fileCount = fileTokenCounts.get(tokenPath) || 0;
-          const projectCount = projectTokenCounts.get(tokenPath) || 0;
+          const fileCount = fileTokenCounts.get(match.path) || 0;
+          const projectCount = projectTokenCounts.get(match.path) || 0;
           const range = {
-            start: { line: i, character: match.index },
-            end: { line: i, character: match.index + match[0].length },
+            start: { line: i, character: match.start },
+            end: { line: i, character: match.end },
           };
 
           // 第一个 Code Lens：当前文件使用次数
@@ -81,7 +68,7 @@ export class TokenCodeLensProvider implements CodeLensProvider {
             command: {
               title: "Find references",
               command: "vte.findTokenReferences",
-              arguments: [tokenPath, "file"],
+              arguments: [match.path, "file"],
             },
             tooltip: `Find references in current file`,
           });
@@ -94,7 +81,7 @@ export class TokenCodeLensProvider implements CodeLensProvider {
               command: {
                 title: "Find all references",
                 command: "vte.findTokenReferences",
-                arguments: [tokenPath, "project"],
+                arguments: [match.path, "project"],
               },
               tooltip: `Find references in entire project`,
             });
@@ -128,14 +115,8 @@ export class TokenCodeLensProvider implements CodeLensProvider {
 
         for (let i = 0; i < document.lineCount; i++) {
           const line = document.lineAt(i);
-          const text = line.text;
-
-          let match;
-          TOKEN_REGEX.lastIndex = 0;
-
-          while ((match = TOKEN_REGEX.exec(text)) !== null) {
-            const tokenPath = match[1];
-            counts.set(tokenPath, (counts.get(tokenPath) || 0) + 1);
+          for (const match of findTokenMatches(line.text)) {
+            counts.set(match.path, (counts.get(match.path) || 0) + 1);
           }
         }
       }

@@ -1,9 +1,15 @@
 {
-  "name": "@vte-js/vscode",
+  "name": "vte-vscode",
   "displayName": "VTE - Vue Token Engine",
   "description": "IDE support for Vue Token Engine <style token> blocks",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "publisher": "vte-js",
+  "license": "ISC",
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vte-js/vte.git"
+  },
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -60,14 +66,13 @@
     }
   },
   "scripts": {
-    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
-    "watch": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch"
-  },
-  "dependencies": {
-    "@vte-js/language-server": "workspace:*"
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "package": "vsce package"
   },
   "devDependencies": {
     "@types/vscode": "^1.80.0",
+    "@vte-js/language-server": "workspace:*",
     "esbuild": "^0.20.0",
     "typescript": "^6.0.3"
   }

@@ -3,7 +3,6 @@
  * 负责 token 的解析、缓存和查询
  */
 
-import { transform } from "@swc/core";
 import vm from "vm";
 import type { TokenInfo, Range, Position, Location } from "./types.js";
 import { isColorValue } from "./utils/color.js";
@@ -94,21 +93,12 @@ export class TokenManager {
     this.tokenFileLineMap = new Map();
 
     try {
-      // Transform TypeScript to JavaScript using @swc/core
-      const result = await transform(content, {
-        jsc: {
-          parser: {
-            syntax: "typescript",
-            decorators: true,
-          },
-          target: "es2020",
-        },
-        module: {
-          type: "commonjs",
-        },
-        isModule: true,
-        filename: uri,
-      });
+      // Convert ES module syntax to CommonJS (token files are simple enough for regex)
+      let code = content;
+      // import { x } from "y" → const { x } = require("y")
+      code = code.replace(/import\s+(\{[^}]+\})\s+from\s+["']([^"']+)["'];?\s*/g, 'const $1 = require("$2");\n');
+      // export default → module.exports =
+      code = code.replace(/export\s+default\s+/, "module.exports = ");
 
       // Create sandboxed context for execution
       const moduleExports: any = {};
@@ -128,7 +118,7 @@ export class TokenManager {
         console,
       };
 
-      const script = new vm.Script(result.code, { filename: uri });
+      const script = new vm.Script(code, { filename: uri });
       const context = vm.createContext(sandbox);
       script.runInContext(context);
 
@@ -212,9 +202,9 @@ export class TokenManager {
         indentStack.pop();
       }
 
-      const kvMatch = trimmed.match(/^(\w+)\s*:/);
+      const kvMatch = trimmed.match(/^(?:(\w+)|"([^"]+)")\s*:/);
       if (kvMatch) {
-        const key = kvMatch[1];
+        const key = kvMatch[1] ?? kvMatch[2];
         const fullPath = [...pathStack, key].join(".");
         this.tokenFileLineMap!.set(fullPath, i);
 

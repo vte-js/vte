@@ -4,6 +4,7 @@
 
 import type { TextDocument, Position, HoverInfo } from "../types.js";
 import type { TokenManager } from "../token-manager.js";
+import { findTokenMatches } from "../utils/token-match.js";
 
 /**
  * 悬停提供器
@@ -26,21 +27,14 @@ export class TokenHoverProvider implements HoverProvider {
     const text = line.text;
 
     // 1. 尝试匹配 $token 格式
-    const tokenRegex = /\$([\w][\w.]*)/g;
-    let match;
-
-    while ((match = tokenRegex.exec(text)) !== null) {
-      const start = match.index;
-      const end = start + match[0].length;
-
-      if (position.character >= start && position.character <= end) {
-        const tokenPath = match[1];
-        const token = this.tokenManager.getToken(tokenPath);
+    for (const match of findTokenMatches(text)) {
+      if (position.character >= match.start && position.character <= match.end) {
+        const token = this.tokenManager.getToken(match.path);
 
         if (token) {
-          return this.createTokenHover(tokenPath, token, {
-            start: { line: position.line, character: start },
-            end: { line: position.line, character: end },
+          return this.createTokenHover(match.path, token, {
+            start: { line: position.line, character: match.start },
+            end: { line: position.line, character: match.end },
           });
         }
       }
@@ -48,6 +42,7 @@ export class TokenHoverProvider implements HoverProvider {
 
     // 2. 尝试匹配 class 名称
     const wordRegex = /[a-zA-Z][\w-]*/g;
+    let match;
     while ((match = wordRegex.exec(text)) !== null) {
       const start = match.index;
       const end = start + match[0].length;
@@ -104,9 +99,9 @@ export class TokenHoverProvider implements HoverProvider {
       // 显示 token 链接
       contents += `**Tokens:**\n\n`;
       for (const [prop, value] of style.properties) {
-        const tokenMatch = value.match(/\$([\w][\w.]*)/);
-        if (tokenMatch) {
-          const tokenPath = tokenMatch[1];
+        const tokenMatches = findTokenMatches(value);
+        if (tokenMatches.length > 0) {
+          const tokenPath = tokenMatches[0].path;
           const token = this.tokenManager.getToken(tokenPath);
 
           if (token) {

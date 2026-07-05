@@ -58,5 +58,7 @@ export {
   generateColorDataUri,
 } from "./utils/color.js";
 
+export { findTokenMatches, type TokenMatch } from "./utils/token-match.js";
+
 // 导出工作区适配器
 export { createWorkspaceAdapter } from "./workspace.js";

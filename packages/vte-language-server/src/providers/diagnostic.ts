@@ -5,8 +5,7 @@
 import type { TextDocument, Diagnostic } from "../types.js";
 import { DiagnosticSeverity } from "../types.js";
 import type { TokenManager } from "../token-manager.js";
-
-const TOKEN_REGEX = /\$([\w][\w.]*)/g;
+import { findTokenMatches } from "../utils/token-match.js";
 
 /**
  * 诊断提供器
@@ -31,22 +30,14 @@ export class TokenDiagnosticProvider implements DiagnosticProvider {
       const line = document.lineAt(i);
       const text = line.text;
 
-      let match;
-      TOKEN_REGEX.lastIndex = 0;
-
-      while ((match = TOKEN_REGEX.exec(text)) !== null) {
-        const tokenPath = match[1];
-
-        if (!this.tokenManager.hasToken(tokenPath)) {
-          const start = match.index;
-          const end = start + match[0].length;
-
+      for (const match of findTokenMatches(text)) {
+        if (!this.tokenManager.hasToken(match.path)) {
           diagnostics.push({
             range: {
-              start: { line: i, character: start },
-              end: { line: i, character: end },
+              start: { line: i, character: match.start },
+              end: { line: i, character: match.end },
             },
-            message: `Token "$${tokenPath}" does not exist`,
+            message: `Token "$${match.path}" does not exist`,
             severity: DiagnosticSeverity.Warning,
             source: "vte",
           });

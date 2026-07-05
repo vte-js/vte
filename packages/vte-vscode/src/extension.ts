@@ -1,7 +1,7 @@
 /**
  * VTE VS Code Extension
  *
- * 基于 @vte/language-server 的 VS Code 适配器
+ * 基于 @vte-js/language-server 的 VS Code 适配器
  */
 
 import * as vscode from "vscode";
@@ -14,8 +14,9 @@ import {
   TokenCodeLensProvider,
   createWorkspaceAdapter,
   generateColorDataUri,
+  findTokenMatches,
   type TokenInfo,
-} from "@vte/language-server";
+} from "@vte-js/language-server";
 
 // 全局状态
 let tokenManager: TokenManager | null = null;
@@ -29,12 +30,11 @@ let diagnosticCollection: vscode.DiagnosticCollection | null = null;
 let inlineDecorationType: vscode.TextEditorDecorationType | null = null;
 let colorDecorationType: vscode.TextEditorDecorationType | null = null;
 
-const TOKEN_REGEX = /\$([\w][\w.]*)/g;
 
 /**
  * VS Code 文档适配器
  */
-class VsCodeDocumentAdapter implements import("@vte/language-server").TextDocument {
+class VsCodeDocumentAdapter implements import("@vte-js/language-server").TextDocument {
   constructor(private doc: vscode.TextDocument) {}
 
   get uri(): string {
@@ -61,12 +61,12 @@ class VsCodeDocumentAdapter implements import("@vte/language-server").TextDocume
     return this.doc.lineCount;
   }
 
-  positionAt(offset: number): import("@vte/language-server").Position {
+  positionAt(offset: number): import("@vte-js/language-server").Position {
     const pos = this.doc.positionAt(offset);
     return { line: pos.line, character: pos.character };
   }
 
-  offsetAt(position: import("@vte/language-server").Position): number {
+  offsetAt(position: import("@vte-js/language-server").Position): number {
     return this.doc.offsetAt(new vscode.Position(position.line, position.character));
   }
 }
@@ -107,15 +107,9 @@ export function activate(context: vscode.ExtensionContext) {
         const text = line.text;
 
         // 1. 尝试匹配 $token 格式
-        const tokenRegex = /\$([\w][\w.]*)/g;
-        let match;
-
-        while ((match = tokenRegex.exec(text)) !== null) {
-          const start = match.index;
-          const end = start + match[0].length;
-
-          if (position.character >= start && position.character <= end) {
-            const tokenPath = match[1];
+        for (const match of findTokenMatches(text)) {
+          if (position.character >= match.start && position.character <= match.end) {
+            const tokenPath = match.path;
             const token = tokenManager?.getToken(tokenPath);
 
             if (token) {
@@ -139,8 +133,8 @@ export function activate(context: vscode.ExtensionContext) {
               }
 
               const range = new vscode.Range(
-                new vscode.Position(position.line, start),
-                new vscode.Position(position.line, end),
+                new vscode.Position(position.line, match.start),
+                new vscode.Position(position.line, match.end),
               );
 
               return new vscode.Hover(md, range);
@@ -149,6 +143,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         // 2. 尝试匹配 class 名称
+        let match;
         const wordRegex = /[a-zA-Z][\w-]*/g;
         while ((match = wordRegex.exec(text)) !== null) {
           const start = match.index;
@@ -177,9 +172,9 @@ export function activate(context: vscode.ExtensionContext) {
                 // Token 链接
                 md.appendMarkdown(`**Tokens:**\n\n`);
                 for (const [prop, value] of style.properties) {
-                  const tokenMatch = value.match(/\$([\w][\w.]*)/);
-                  if (tokenMatch) {
-                    const tokenPath = tokenMatch[1];
+                  const tokenMatches = findTokenMatches(value);
+                  if (tokenMatches.length > 0) {
+                    const tokenPath = tokenMatches[0].path;
                     const token = tokenManager?.getToken(tokenPath);
 
                     if (token) {
@@ -554,16 +549,13 @@ function updateDecorations(editor: vscode.TextEditor) {
     const line = editor.document.lineAt(i);
     const text = line.text;
 
-    let match;
-    TOKEN_REGEX.lastIndex = 0;
-
-    while ((match = TOKEN_REGEX.exec(text)) !== null) {
-      const tokenPath = match[1];
+    for (const match of findTokenMatches(text)) {
+      const tokenPath = match.path;
       const token = tokenManager.getToken(tokenPath);
 
       if (token) {
-        const startPos = new vscode.Position(i, match.index);
-        const endPos = new vscode.Position(i, match.index + match[0].length);
+        const startPos = new vscode.Position(i, match.start);
+        const endPos = new vscode.Position(i, match.end);
         const range = new vscode.Range(startPos, endPos);
 
         if (token.isColor) {

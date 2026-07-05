@@ -1,7 +1,8 @@
-**/.git/**
-**/.DS_Store
-**/node_modules/**
-**/src/**
-**/tsconfig.json
-**/*.ts
+.vscode/**
+.vscodeignore
+node_modules/**
+src/**
+tsconfig.json
+build.mjs
+*.ts
 !dist/**
