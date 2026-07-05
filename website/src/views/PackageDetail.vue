@@ -23,7 +23,7 @@
             <!-- 安装 -->
             <div class="detail-section">
               <h2>安装</h2>
-              <CodeBlock label="Terminal" :code="pkg.install" />
+              <CodeBlock label="Terminal" :code="pkg.install" language="bash" />
             </div>
 
             <!-- 说明 -->
@@ -46,13 +46,13 @@
             <!-- 使用示例 -->
             <div class="detail-section">
               <h2>使用示例</h2>
-              <CodeBlock label="示例代码" :code="pkg.usage" />
+              <CodeBlock label="示例代码" :code="pkg.usage" language="typescript" />
             </div>
 
             <!-- API -->
             <div class="detail-section" v-if="pkg.api">
               <h2>API</h2>
-              <CodeBlock label="API Reference" :code="pkg.api" />
+              <CodeBlock label="API Reference" :code="pkg.api" language="typescript" />
             </div>
           </main>
 
