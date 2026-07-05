@@ -2,6 +2,7 @@
   <section id="packages" class="packages">
     <div class="container">
       <div class="section-header">
+        <div class="header-line"></div>
         <span class="section-badge">Packages</span>
         <h2 class="section-title">包结构</h2>
         <p class="section-desc">VTE 采用 monorepo 架构，按功能拆分为多个包</p>
@@ -9,14 +10,19 @@
 
       <div class="packages-grid">
         <a v-for="pkg in packages" :key="pkg.name" :href="pkg.url" class="package-card" target="_blank">
-          <div class="package-icon">{{ pkg.icon }}</div>
-          <div class="package-info">
-            <div class="package-name">{{ pkg.name }}</div>
-            <div class="package-desc">{{ pkg.desc }}</div>
+          <div class="card-glow"></div>
+          <div class="card-content">
+            <div class="package-icon">{{ pkg.icon }}</div>
+            <div class="package-info">
+              <div class="package-name">{{ pkg.name }}</div>
+              <div class="package-desc">{{ pkg.desc }}</div>
+            </div>
+            <div class="package-arrow">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
           </div>
-          <svg class="package-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
         </a>
       </div>
     </div>
@@ -36,8 +42,9 @@ const packages = [
 
 <style scoped>
 .packages {
-  padding: 120px 24px;
-  background: var(--vte-bg-alt);
+  padding: 140px 24px;
+  background: #1e293b;
+  position: relative;
 }
 
 .container {
@@ -47,32 +54,40 @@ const packages = [
 
 .section-header {
   text-align: center;
-  margin-bottom: 64px;
+  margin-bottom: 72px;
+}
+
+.header-line {
+  width: 40px;
+  height: 2px;
+  background: #42b883;
+  margin: 0 auto 20px;
 }
 
 .section-badge {
   display: inline-block;
-  padding: 6px 14px;
+  padding: 6px 16px;
   background: rgba(66, 184, 131, 0.1);
-  color: var(--vte-primary);
+  border: 1px solid rgba(66, 184, 131, 0.3);
+  color: #42b883;
   border-radius: 100px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 16px;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
 }
 
 .section-title {
-  font-size: 40px;
+  font-size: 48px;
   font-weight: 800;
   margin-bottom: 16px;
-  color: var(--vte-text);
+  color: #f1f5f9;
 }
 
 .section-desc {
-  font-size: 17px;
-  color: var(--vte-text-secondary);
+  font-size: 18px;
+  color: #94a3b8;
 }
 
 .packages-grid {
@@ -82,32 +97,51 @@ const packages = [
 }
 
 .package-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 24px;
-  background: var(--vte-bg);
-  border: 1px solid var(--vte-border);
+  position: relative;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(66, 184, 131, 0.15);
   border-radius: 16px;
   text-decoration: none;
+  overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .package-card:hover {
-  border-color: var(--vte-primary);
+  border-color: rgba(66, 184, 131, 0.4);
   transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(66, 184, 131, 0.1);
+}
+
+.package-card:hover .card-glow {
+  opacity: 1;
+}
+
+.card-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(66, 184, 131, 0.1) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.card-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
 }
 
 .package-icon {
   width: 48px;
   height: 48px;
-  background: var(--vte-bg-alt);
+  background: rgba(66, 184, 131, 0.1);
+  border: 1px solid rgba(66, 184, 131, 0.2);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 22px;
   flex-shrink: 0;
 }
 
@@ -120,26 +154,26 @@ const packages = [
   font-family: 'SF Mono', Monaco, monospace;
   font-size: 15px;
   font-weight: 600;
-  color: var(--vte-text);
+  color: #f1f5f9;
   margin-bottom: 4px;
 }
 
 .package-desc {
   font-size: 13px;
-  color: var(--vte-text-secondary);
+  color: #64748b;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .package-arrow {
-  color: var(--vte-text-secondary);
+  color: #64748b;
   flex-shrink: 0;
-  transition: all 0.2s;
+  transition: all 0.3s;
 }
 
 .package-card:hover .package-arrow {
-  color: var(--vte-primary);
+  color: #42b883;
   transform: translateX(4px);
 }
 

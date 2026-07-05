@@ -2,21 +2,29 @@
   <section id="quickstart" class="quickstart">
     <div class="container">
       <div class="section-header">
+        <div class="header-line"></div>
         <span class="section-badge">Get Started</span>
         <h2 class="section-title">5 分钟上手</h2>
         <p class="section-desc">从安装到使用，快速体验 VTE</p>
       </div>
 
-      <div class="steps-grid">
-        <div v-for="(step, i) in steps" :key="i" class="step-card">
-          <div class="step-header">
-            <div class="step-num">{{ i + 1 }}</div>
-            <h3>{{ step.title }}</h3>
+      <div class="steps-timeline">
+        <div class="timeline-line"></div>
+        <div v-for="(step, i) in steps" :key="i" class="step-item">
+          <div class="step-marker">
+            <div class="marker-ring"></div>
+            <div class="marker-dot"></div>
           </div>
-          <p class="step-desc">{{ step.desc }}</p>
-          <div class="step-code">
-            <div class="code-label">{{ step.file }}</div>
-            <pre><code v-html="step.code"></code></pre>
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-num">{{ i + 1 }}</div>
+              <h3>{{ step.title }}</h3>
+            </div>
+            <p class="step-desc">{{ step.desc }}</p>
+            <div class="step-code">
+              <div class="code-label">{{ step.file }}</div>
+              <pre><code v-html="step.code"></code></pre>
+            </div>
           </div>
         </div>
       </div>
@@ -75,63 +83,117 @@ const steps = [
 
 <style scoped>
 .quickstart {
-  padding: 120px 24px;
-  background: var(--vte-bg);
+  padding: 140px 24px;
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  position: relative;
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
 .section-header {
   text-align: center;
-  margin-bottom: 72px;
+  margin-bottom: 80px;
+}
+
+.header-line {
+  width: 40px;
+  height: 2px;
+  background: #42b883;
+  margin: 0 auto 20px;
 }
 
 .section-badge {
   display: inline-block;
-  padding: 6px 14px;
+  padding: 6px 16px;
   background: rgba(66, 184, 131, 0.1);
-  color: var(--vte-primary);
+  border: 1px solid rgba(66, 184, 131, 0.3);
+  color: #42b883;
   border-radius: 100px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 16px;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
 }
 
 .section-title {
-  font-size: 40px;
+  font-size: 48px;
   font-weight: 800;
   margin-bottom: 16px;
-  color: var(--vte-text);
+  color: #f1f5f9;
 }
 
 .section-desc {
-  font-size: 17px;
-  color: var(--vte-text-secondary);
+  font-size: 18px;
+  color: #94a3b8;
 }
 
-.steps-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+.steps-timeline {
+  position: relative;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 24px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #42b883, rgba(66, 184, 131, 0.2));
+}
+
+.step-item {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.step-marker {
+  position: relative;
+  width: 50px;
+  flex-shrink: 0;
+}
+
+.marker-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(66, 184, 131, 0.3);
+  border-radius: 50%;
+  animation: rotate 10s linear infinite;
+}
+
+.marker-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: #42b883;
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(66, 184, 131, 0.6);
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .step-card {
-  background: var(--vte-bg-alt);
-  border: 1px solid var(--vte-border);
-  border-radius: 20px;
-  padding: 32px;
-  transition: all 0.3s ease;
+  flex: 1;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(66, 184, 131, 0.15);
+  border-radius: 16px;
+  padding: 28px;
+  transition: all 0.3s;
 }
 
 .step-card:hover {
-  border-color: var(--vte-primary);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  border-color: rgba(66, 184, 131, 0.4);
+  transform: translateX(8px);
 }
 
 .step-header {
@@ -142,34 +204,34 @@ const steps = [
 }
 
 .step-num {
-  width: 40px;
-  height: 40px;
-  background: var(--vte-gradient);
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #42b883, #35495e);
   color: white;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .step-card h3 {
   font-size: 18px;
   font-weight: 700;
-  color: var(--vte-text);
+  color: #f1f5f9;
 }
 
 .step-desc {
   font-size: 14px;
-  color: var(--vte-text-secondary);
-  margin-bottom: 20px;
-  line-height: 1.6;
+  color: #94a3b8;
+  margin-bottom: 16px;
 }
 
 .step-code {
-  background: var(--vte-bg-code);
-  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(66, 184, 131, 0.1);
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -179,6 +241,7 @@ const steps = [
   font-size: 12px;
   color: #64748b;
   font-family: 'SF Mono', Monaco, monospace;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .step-code pre {
@@ -202,10 +265,4 @@ const steps = [
 .hl-sel { color: #fbbf24; }
 .hl-prop { color: #93c5fd; }
 .hl-val { color: #86efac; }
-
-@media (max-width: 700px) {
-  .steps-grid {
-    grid-template-columns: 1fr;
-  }
-}
 </style>

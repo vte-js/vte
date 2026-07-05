@@ -2,57 +2,42 @@
   <section id="features" class="features">
     <div class="container">
       <div class="section-header">
+        <div class="header-line"></div>
         <span class="section-badge">Features</span>
         <h2 class="section-title">为什么选择 VTE？</h2>
         <p class="section-desc">解决现代前端样式方案的三大痛点</p>
+        <div class="header-line"></div>
       </div>
 
       <div class="features-grid">
-        <div class="feature-card glass">
-          <div class="feature-icon-wrap">
-            <span class="feature-icon">🤖</span>
-          </div>
-          <h3>告别 AI 幻觉</h3>
-          <p>Tailwind 的字符串类名导致 AI 常拼错或凭空捏造。VTE 的 <code>$token.path</code> 强制引用，编译期拦截错误。</p>
-          <div class="feature-compare">
-            <div class="compare-item bad">
-              <span class="compare-icon">✕</span>
-              <span>AI: bg-blue-500</span>
+        <div class="feature-card" v-for="(feature, i) in features" :key="i">
+          <div class="card-glow"></div>
+          <div class="card-content">
+            <div class="feature-icon-wrap">
+              <span class="feature-icon">{{ feature.icon }}</span>
+              <div class="icon-ring"></div>
             </div>
-            <div class="compare-item good">
-              <span class="compare-icon">✓</span>
-              <span>VTE: $semantic.color.primary</span>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.desc }}</p>
+            <div class="feature-tag" v-if="feature.tag">
+              <code>{{ feature.tag }}</code>
             </div>
-          </div>
-        </div>
-
-        <div class="feature-card glass">
-          <div class="feature-icon-wrap">
-            <span class="feature-icon">🌐</span>
-          </div>
-          <h3>真正的跨端</h3>
-          <p>一套 token 定义，自动输出 Web、小程序、React Native。无需为每个平台重写样式。</p>
-          <div class="feature-platforms">
-            <div class="platform-tag">Web</div>
-            <div class="platform-tag">小程序</div>
-            <div class="platform-tag">RN</div>
-          </div>
-        </div>
-
-        <div class="feature-card glass">
-          <div class="feature-icon-wrap">
-            <span class="feature-icon">💚</span>
-          </div>
-          <h3>Vue 原生体验</h3>
-          <p><code>&lt;style token&gt;</code> 语法符合 Vue SFC 直觉，支持 scoped，零学习成本。</p>
-          <div class="feature-tag">
-            <code>&lt;style token scoped&gt;</code>
+            <div class="feature-compare" v-if="feature.compare">
+              <div class="compare-item bad">
+                <span class="compare-icon">✕</span>
+                <span>{{ feature.compare.bad }}</span>
+              </div>
+              <div class="compare-item good">
+                <span class="compare-icon">✓</span>
+                <span>{{ feature.compare.good }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="highlights">
-        <div class="highlight-item" v-for="item in highlights" :key="item.icon">
+        <div class="highlight-item" v-for="(item, i) in highlights" :key="i">
           <div class="highlight-icon">{{ item.icon }}</div>
           <h4>{{ item.title }}</h4>
           <p>{{ item.desc }}</p>
@@ -60,7 +45,12 @@
       </div>
 
       <div class="comparison-section">
-        <h3 class="comparison-title">对比传统方案</h3>
+        <div class="comparison-header">
+          <h3>对比传统方案</h3>
+          <div class="header-decoration">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
         <div class="comparison-table">
           <div class="table-header">
             <div class="th">特性</div>
@@ -81,6 +71,30 @@
 </template>
 
 <script setup lang="ts">
+const features = [
+  {
+    icon: "🤖",
+    title: "告别 AI 幻觉",
+    desc: "Tailwind 的字符串类名导致 AI 常拼错或凭空捏造。VTE 的强制引用设计 token，编译期拦截错误。",
+    compare: {
+      bad: "AI: bg-blue-500",
+      good: "VTE: $semantic.color.primary",
+    },
+  },
+  {
+    icon: "🌐",
+    title: "真正的跨端",
+    desc: "一套 token 定义，自动输出 Web、小程序、React Native。无需为每个平台重写样式。",
+    tag: "Web · 小程序 · React Native",
+  },
+  {
+    icon: "💚",
+    title: "Vue 原生体验",
+    desc: "语法符合 Vue SFC 直觉，支持 scoped，零学习成本。",
+    tag: "<style token scoped>",
+  },
+];
+
 const highlights = [
   { icon: "⚡", title: "编译期检查", desc: "无效 token 立即报错，支持拼写建议" },
   { icon: "🎨", title: "三层结构", desc: "Primitive → Semantic → Component" },
@@ -99,9 +113,10 @@ const comparison = [
 
 <style scoped>
 .features {
-  padding: 120px 24px;
-  background: var(--vte-bg-alt);
+  padding: 140px 24px;
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
   position: relative;
+  overflow: hidden;
 }
 
 .container {
@@ -111,33 +126,46 @@ const comparison = [
 
 .section-header {
   text-align: center;
-  margin-bottom: 72px;
+  margin-bottom: 80px;
+  position: relative;
+}
+
+.header-line {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #42b883, transparent);
+  margin: 0 auto 24px;
+}
+
+.header-line:last-child {
+  margin: 24px auto 0;
 }
 
 .section-badge {
   display: inline-block;
-  padding: 6px 14px;
+  padding: 6px 16px;
   background: rgba(66, 184, 131, 0.1);
-  color: var(--vte-primary);
+  border: 1px solid rgba(66, 184, 131, 0.3);
+  color: #42b883;
   border-radius: 100px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 16px;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
 }
 
 .section-title {
-  font-size: 44px;
+  font-size: 48px;
   font-weight: 800;
   margin-bottom: 16px;
-  color: var(--vte-text);
+  color: #f1f5f9;
   letter-spacing: -0.02em;
 }
 
 .section-desc {
   font-size: 18px;
-  color: var(--vte-text-secondary);
+  color: #94a3b8;
 }
 
 .features-grid {
@@ -147,64 +175,92 @@ const comparison = [
   margin-bottom: 80px;
 }
 
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-}
-
-.dark .glass {
-  background: rgba(30, 41, 59, 0.7);
-  border-color: rgba(51, 65, 85, 0.8);
-}
-
 .feature-card {
-  padding: 32px;
+  position: relative;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(66, 184, 131, 0.15);
   border-radius: 20px;
-  transition: all 0.3s ease;
+  overflow: hidden;
+  transition: all 0.4s ease;
 }
 
 .feature-card:hover {
+  border-color: rgba(66, 184, 131, 0.4);
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card:hover .card-glow {
+  opacity: 1;
+}
+
+.card-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(66, 184, 131, 0.15) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.card-content {
+  position: relative;
+  z-index: 1;
+  padding: 36px;
 }
 
 .feature-icon-wrap {
-  width: 56px;
-  height: 56px;
-  background: var(--vte-gradient);
-  border-radius: 14px;
+  position: relative;
+  width: 64px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .feature-icon {
-  font-size: 28px;
+  font-size: 32px;
+  position: relative;
+  z-index: 2;
+}
+
+.icon-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(66, 184, 131, 0.3);
+  border-radius: 16px;
+  animation: rotate 8s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .feature-card h3 {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   margin-bottom: 12px;
-  color: var(--vte-text);
+  color: #f1f5f9;
 }
 
 .feature-card p {
-  color: var(--vte-text-secondary);
+  color: #94a3b8;
   line-height: 1.7;
-  margin-bottom: 16px;
   font-size: 15px;
+  margin-bottom: 20px;
 }
 
-.feature-card code {
+.feature-tag {
+  padding: 10px 16px;
   background: rgba(66, 184, 131, 0.1);
-  padding: 2px 8px;
-  border-radius: 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(66, 184, 131, 0.2);
+}
+
+.feature-tag code {
   font-family: 'SF Mono', Monaco, monospace;
-  color: var(--vte-primary);
   font-size: 13px;
+  color: #42b883;
 }
 
 .feature-compare {
@@ -216,25 +272,24 @@ const comparison = [
 .compare-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-size: 13px;
   font-family: 'SF Mono', Monaco, monospace;
 }
 
 .compare-item.bad {
-  color: #ef4444;
-  text-decoration: line-through;
+  color: #f87171;
   opacity: 0.7;
 }
 
 .compare-item.good {
-  color: #22c55e;
+  color: #4ade80;
   font-weight: 500;
 }
 
 .compare-icon {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -244,59 +299,33 @@ const comparison = [
 }
 
 .compare-item.bad .compare-icon {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
+  background: rgba(248, 113, 113, 0.1);
+  color: #f87171;
 }
 
 .compare-item.good .compare-icon {
-  background: rgba(34, 197, 94, 0.1);
-  color: #22c55e;
-}
-
-.feature-platforms {
-  display: flex;
-  gap: 8px;
-}
-
-.platform-tag {
-  padding: 6px 14px;
-  background: var(--vte-bg-alt);
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--vte-text-secondary);
-}
-
-.feature-tag {
-  background: var(--vte-bg-code);
-  padding: 12px 16px;
-  border-radius: 8px;
-}
-
-.feature-tag code {
-  color: #e2e8f0;
-  background: none;
-  padding: 0;
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
 }
 
 .highlights {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  gap: 20px;
   margin-bottom: 80px;
 }
 
 .highlight-item {
   text-align: center;
   padding: 32px 20px;
-  background: var(--vte-bg);
+  background: rgba(30, 41, 59, 0.3);
+  border: 1px solid rgba(66, 184, 131, 0.1);
   border-radius: 16px;
-  border: 1px solid var(--vte-border);
   transition: all 0.3s ease;
 }
 
 .highlight-item:hover {
-  border-color: var(--vte-primary);
+  border-color: rgba(66, 184, 131, 0.4);
   transform: translateY(-4px);
 }
 
@@ -309,39 +338,67 @@ const comparison = [
   font-size: 16px;
   font-weight: 700;
   margin-bottom: 8px;
-  color: var(--vte-text);
+  color: #f1f5f9;
 }
 
 .highlight-item p {
   font-size: 14px;
-  color: var(--vte-text-secondary);
+  color: #94a3b8;
 }
 
 .comparison-section {
-  background: var(--vte-bg);
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(66, 184, 131, 0.15);
   border-radius: 20px;
   padding: 48px;
-  border: 1px solid var(--vte-border);
+  backdrop-filter: blur(20px);
 }
 
-.comparison-title {
+.comparison-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+
+.comparison-header h3 {
   font-size: 24px;
   font-weight: 700;
-  margin-bottom: 32px;
-  text-align: center;
-  color: var(--vte-text);
+  color: #f1f5f9;
+}
+
+.header-decoration {
+  display: flex;
+  gap: 6px;
+}
+
+.header-decoration span {
+  width: 8px;
+  height: 8px;
+  background: #42b883;
+  border-radius: 2px;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.header-decoration span:nth-child(2) { animation-delay: 0.2s; }
+.header-decoration span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
 }
 
 .comparison-table {
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid var(--vte-border);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .table-header {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  background: var(--vte-bg-code);
+  background: rgba(66, 184, 131, 0.1);
 }
 
 .th {
@@ -353,39 +410,39 @@ const comparison = [
 
 .th.highlight {
   background: rgba(66, 184, 131, 0.2);
-  color: var(--vte-primary);
+  color: #42b883;
 }
 
 .table-row {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  border-top: 1px solid var(--vte-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .table-row:nth-child(even) {
-  background: var(--vte-bg-alt);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .td {
   padding: 14px 20px;
   font-size: 14px;
-  color: var(--vte-text-secondary);
+  color: #94a3b8;
 }
 
 .td.feature {
   font-weight: 600;
-  color: var(--vte-text);
+  color: #e2e8f0;
 }
 
 .td.old {
   text-decoration: line-through;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .td.highlight {
-  color: var(--vte-primary);
+  color: #42b883;
   font-weight: 600;
-  background: rgba(66, 184, 131, 0.03);
+  background: rgba(66, 184, 131, 0.05);
 }
 
 @media (max-width: 900px) {

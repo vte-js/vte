@@ -1,5 +1,6 @@
 <template>
   <footer class="footer">
+    <div class="footer-border"></div>
     <div class="container">
       <div class="footer-top">
         <div class="footer-brand">
@@ -11,6 +12,14 @@
             <span class="footer-name">Vue Token Engine</span>
           </div>
           <p class="footer-desc">Design Tokens First — 让样式必须通过 token 引用，编译期拦截错误，天然支持多端转换。</p>
+          <div class="footer-badges">
+            <a href="https://github.com/vte-js/vte" target="_blank" class="badge">
+              <img src="https://img.shields.io/badge/license-ISC-green" alt="License">
+            </a>
+            <a href="https://www.npmjs.com/package/@vte-js/core" target="_blank" class="badge">
+              <img src="https://img.shields.io/npm/v/@vte-js/core" alt="npm">
+            </a>
+          </div>
         </div>
 
         <div class="footer-links">
@@ -50,8 +59,18 @@ const currentYear = new Date().getFullYear();
 
 <style scoped>
 .footer {
-  background: var(--vte-bg-code);
+  background: #0f172a;
   padding: 80px 24px 32px;
+  position: relative;
+}
+
+.footer-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #42b883, transparent);
 }
 
 .container {
@@ -76,7 +95,7 @@ const currentYear = new Date().getFullYear();
 .footer-name {
   font-size: 18px;
   font-weight: 700;
-  color: white;
+  color: #f1f5f9;
 }
 
 .footer-desc {
@@ -84,6 +103,16 @@ const currentYear = new Date().getFullYear();
   line-height: 1.7;
   color: #94a3b8;
   max-width: 320px;
+  margin-bottom: 20px;
+}
+
+.footer-badges {
+  display: flex;
+  gap: 8px;
+}
+
+.badge img {
+  height: 20px;
 }
 
 .footer-links {
@@ -93,7 +122,7 @@ const currentYear = new Date().getFullYear();
 }
 
 .footer-group h4 {
-  color: white;
+  color: #f1f5f9;
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 20px;
@@ -111,11 +140,11 @@ const currentYear = new Date().getFullYear();
 }
 
 .footer-group a:hover {
-  color: var(--vte-primary);
+  color: #42b883;
 }
 
 .footer-bottom {
-  border-top: 1px solid #1e293b;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding-top: 24px;
   display: flex;
   justify-content: space-between;
