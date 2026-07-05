@@ -1,3 +1,12 @@
+export interface ApiItem {
+  name: string;
+  signature: string;
+  description: string;
+  params?: { name: string; type: string; desc: string }[];
+  returns?: string;
+  example?: string;
+}
+
 export interface Package {
   name: string;
   shortName: string;
@@ -11,7 +20,7 @@ export interface Package {
   description: string;
   highlights: string[];
   usage: string;
-  api?: string;
+  apiItems?: ApiItem[];
 }
 
 export const packages: Record<string, Package> = {
@@ -42,9 +51,45 @@ const tokens = defineTokens({
 
 // 解析 Token 文件
 const tokenMap = await parseTokens("./design-tokens.ts");`,
-    api: `// defineTokens<T>(tokens: T): TokenConfig<T>
-// parseTokens(sourceFile: string): Promise<TokenMap>
-// toCssVarName(tokenPath: string, prefix?: string): string`,
+    apiItems: [
+      {
+        name: "defineTokens",
+        signature: "defineTokens<T>(tokens: T): TokenConfig<T>",
+        description: "定义设计 token 的核心函数，提供类型安全的 token 定义",
+        params: [
+          { name: "tokens", type: "T extends object", desc: "token 定义对象" }
+        ],
+        returns: "TokenConfig<T> - 深度只读的 token 配置对象",
+        example: `const tokens = defineTokens({
+  primitive: { blue: { 500: "#3b82f6" } },
+  semantic: { color: { primary: "{primitive.blue.500}" } },
+});`
+      },
+      {
+        name: "parseTokens",
+        signature: "parseTokens(sourceFile: string): Promise<TokenMap>",
+        description: "解析 token 文件，构建扁平化的 TokenMap。使用 @swc/core 进行 AST 解析",
+        params: [
+          { name: "sourceFile", type: "string", desc: "token 文件的绝对路径" }
+        ],
+        returns: "Promise<TokenMap> - 包含所有解析后的 token",
+        example: `const map = await parseTokens("./design-tokens.ts");
+const primary = map.get("semantic.color.primary");
+console.log(primary?.value); // "#3b82f6"`
+      },
+      {
+        name: "toCssVarName",
+        signature: "toCssVarName(tokenPath: string, prefix?: string): string",
+        description: "将 token 路径转换为 CSS 变量名",
+        params: [
+          { name: "tokenPath", type: "string", desc: "token 路径" },
+          { name: "prefix", type: "string", desc: "CSS 变量前缀（默认 'vte'）" }
+        ],
+        returns: "string - CSS 变量名",
+        example: `toCssVarName("semantic.color.primary"); // "--vte-semantic-color-primary"
+toCssVarName("semantic.color.primary", "my-app"); // "--my-app-semantic-color-primary"`
+      }
+    ],
   },
   "vite-plugin": {
     name: "@vte-js/vite-plugin",
@@ -74,14 +119,40 @@ export default {
     }),
   ],
 };`,
-    api: `// vte(options?: VtePluginOptions): Plugin
-//
-// Options:
-// - tokenFile?: string     // token 文件路径
-// - platform?: "web" | "mp" | "rn"  // 目标平台
-// - cssPrefix?: string     // CSS 变量前缀（默认 "vte"）
-// - output.types?: boolean // 生成 tokens.d.ts
-// - output.css?: boolean   // 生成 tokens.css`,
+    apiItems: [
+      {
+        name: "vte",
+        signature: "vte(options?: VtePluginOptions): Plugin",
+        description: "Vite 插件主函数，返回 Vite Plugin 对象",
+        params: [
+          { name: "options", type: "VtePluginOptions", desc: "配置选项（可选）" }
+        ],
+        returns: "Plugin - Vite 插件对象"
+      },
+      {
+        name: "VtePluginOptions",
+        signature: "interface VtePluginOptions",
+        description: "插件配置选项",
+        params: [
+          { name: "tokenFile", type: "string", desc: "token 文件路径（默认自动检测）" },
+          { name: "platform", type: '"web" | "mp" | "rn"', desc: "目标平台（默认 'web'）" },
+          { name: "cssPrefix", type: "string", desc: "CSS 变量前缀（默认 'vte'）" },
+          { name: "output.types", type: "boolean", desc: "生成 tokens.d.ts（默认 true）" },
+          { name: "output.css", type: "boolean", desc: "生成 tokens.css（默认 true）" },
+          { name: "output.agentJson", type: "boolean", desc: "生成 tokens.agent.json（默认 true）" }
+        ],
+        example: `vte({
+  tokenFile: "./design-tokens.ts",
+  platform: "web",
+  cssPrefix: "my-app",
+  output: {
+    types: true,
+    css: true,
+    agentJson: true,
+  },
+})`
+      }
+    ],
   },
   cli: {
     name: "@vte-js/cli",

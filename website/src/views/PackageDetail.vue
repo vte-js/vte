@@ -50,9 +50,41 @@
             </div>
 
             <!-- API -->
-            <div class="detail-section" v-if="pkg.api">
+            <div class="detail-section" v-if="pkg.apiItems && pkg.apiItems.length > 0">
               <h2>API</h2>
-              <CodeBlock label="API Reference" :code="pkg.api" language="typescript" />
+              <div v-for="api in pkg.apiItems" :key="api.name" class="api-item">
+                <div class="api-header">
+                  <span class="api-badge">API</span>
+                  <code class="api-signature">{{ api.signature }}</code>
+                </div>
+                <p class="api-desc">{{ api.description }}</p>
+
+                <div v-if="api.params && api.params.length > 0" class="api-params">
+                  <h4>参数</h4>
+                  <div class="params-table">
+                    <div class="param-row header">
+                      <div class="param-name">名称</div>
+                      <div class="param-type">类型</div>
+                      <div class="param-desc">说明</div>
+                    </div>
+                    <div v-for="param in api.params" :key="param.name" class="param-row">
+                      <div class="param-name">{{ param.name }}</div>
+                      <div class="param-type">{{ param.type }}</div>
+                      <div class="param-desc">{{ param.desc }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="api.returns" class="api-returns">
+                  <h4>返回值</h4>
+                  <p>{{ api.returns }}</p>
+                </div>
+
+                <div v-if="api.example" class="api-example">
+                  <h4>示例</h4>
+                  <CodeBlock label="示例" :code="api.example" language="typescript" />
+                </div>
+              </div>
             </div>
           </main>
 
@@ -220,6 +252,104 @@ const relatedPackages = computed(() => {
 
 .feature-list li:last-child {
   border-bottom: none;
+}
+
+.api-item {
+  background: rgba(15, 23, 42, 0.3);
+  border: 1px solid rgba(66, 184, 131, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.api-item .api-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.api-badge {
+  padding: 4px 10px;
+  background: rgba(96, 165, 250, 0.2);
+  color: #60a5fa;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.api-signature {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: #42b883;
+  background: rgba(66, 184, 131, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.api-desc {
+  font-size: 15px;
+  color: #94a3b8;
+  margin-bottom: 16px;
+}
+
+.api-params h4,
+.api-returns h4,
+.api-example h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 12px;
+}
+
+.params-table {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.params-table .param-row {
+  display: grid;
+  grid-template-columns: 120px 140px 1fr;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.params-table .param-row:last-child {
+  border-bottom: none;
+}
+
+.params-table .param-row.header {
+  background: rgba(66, 184, 131, 0.1);
+  font-weight: 600;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.params-table .param-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: #f1f5f9;
+}
+
+.params-table .param-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #42b883;
+}
+
+.params-table .param-desc {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.api-returns p {
+  font-size: 14px;
+  color: #94a3b8;
+  margin: 0;
 }
 
 .detail-sidebar {
