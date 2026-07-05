@@ -23,15 +23,7 @@
             <!-- 安装 -->
             <div class="detail-section">
               <h2>安装</h2>
-              <div class="code-block">
-                <div class="code-header">
-                  <span class="code-label">Terminal</span>
-                  <button class="copy-btn" @click="copyInstall">
-                    {{ copiedInstall ? '✓ 已复制' : '复制' }}
-                  </button>
-                </div>
-                <pre><code>{{ pkg.install }}</code></pre>
-              </div>
+              <CodeBlock label="Terminal" :code="pkg.install" />
             </div>
 
             <!-- 说明 -->
@@ -54,29 +46,13 @@
             <!-- 使用示例 -->
             <div class="detail-section">
               <h2>使用示例</h2>
-              <div class="code-block">
-                <div class="code-header">
-                  <span class="code-label">示例代码</span>
-                  <button class="copy-btn" @click="copyUsage">
-                    {{ copiedUsage ? '✓ 已复制' : '复制' }}
-                  </button>
-                </div>
-                <pre><code>{{ pkg.usage }}</code></pre>
-              </div>
+              <CodeBlock label="示例代码" :code="pkg.usage" />
             </div>
 
             <!-- API -->
             <div class="detail-section" v-if="pkg.api">
               <h2>API</h2>
-              <div class="code-block">
-                <div class="code-header">
-                  <span class="code-label">API Reference</span>
-                  <button class="copy-btn" @click="copyApi">
-                    {{ copiedApi ? '✓ 已复制' : '复制' }}
-                  </button>
-                </div>
-                <pre><code>{{ pkg.api }}</code></pre>
-              </div>
+              <CodeBlock label="API Reference" :code="pkg.api" />
             </div>
           </main>
 
@@ -118,17 +94,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { packages } from "../data/packages";
+import CodeBlock from "../components/CodeBlock.vue";
 
 const route = useRoute();
 const pkgName = computed(() => route.params.name as string);
 const pkg = computed(() => packages[pkgName.value]);
-
-const copiedInstall = ref(false);
-const copiedUsage = ref(false);
-const copiedApi = ref(false);
 
 const relatedPackages = computed(() => {
   if (!pkg.value) return {};
@@ -140,30 +113,6 @@ const relatedPackages = computed(() => {
   }
   return related;
 });
-
-function copyInstall() {
-  if (pkg.value) {
-    navigator.clipboard.writeText(pkg.value.install);
-    copiedInstall.value = true;
-    setTimeout(() => { copiedInstall.value = false; }, 2000);
-  }
-}
-
-function copyUsage() {
-  if (pkg.value) {
-    navigator.clipboard.writeText(pkg.value.usage);
-    copiedUsage.value = true;
-    setTimeout(() => { copiedUsage.value = false; }, 2000);
-  }
-}
-
-function copyApi() {
-  if (pkg.value && pkg.value.api) {
-    navigator.clipboard.writeText(pkg.value.api);
-    copiedApi.value = true;
-    setTimeout(() => { copiedApi.value = false; }, 2000);
-  }
-}
 </script>
 
 <style scoped>
@@ -252,56 +201,6 @@ function copyApi() {
   font-size: 16px;
   color: #94a3b8;
   line-height: 1.8;
-}
-
-.code-block {
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(66, 184, 131, 0.2);
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.code-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 16px;
-  background: rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.code-label {
-  font-size: 12px;
-  color: #64748b;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.copy-btn {
-  background: rgba(66, 184, 131, 0.2);
-  border: none;
-  color: #42b883;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.copy-btn:hover {
-  background: rgba(66, 184, 131, 0.3);
-}
-
-.code-block pre {
-  margin: 0;
-  padding: 16px;
-  overflow-x: auto;
-}
-
-.code-block code {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  line-height: 1.7;
-  color: #e2e8f0;
 }
 
 .feature-list {
