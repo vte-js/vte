@@ -2,9 +2,9 @@
 
 > **目的**：本文件用于向接续开发的 AI Agent（如 Cursor、Claude Code、ChatGPT）快速同步项目背景、现状及下一步任务
 
-> **版本**：Day 11 - Playground & Documentation Complete
+> **版本**：Day 12 - Token Configurator & Light Mode Complete
 
-> **日期**：2026-07-04
+> **日期**：2026-07-05
 
 > **项目地址**：git@github.com:vte-js/vte.git
 
@@ -30,9 +30,10 @@
 @vte-js/cli               命令行工具
 @vte-js/compiler          编译器（agent.json + tokens.d.ts）
 @vte-js/react             React 绑定（hooks + Provider）
-@vte-js/playground        可视化调试工具
+@vte-js/playground        可视化调试工具（CLI 生成）
 @vte-js/language-server   IDE 无关的语言服务器核心
 @vte-js/vscode             VS Code 扩展
+vte-website               官方网站（含 Token Configurator）
 ```
 
 ### Token 三层结构
@@ -59,16 +60,17 @@ defineTokens({
 
 | Day | 功能 | 包 |
 |-----|------|-----|
-| 1-2 | Token 解析、Vite 插件、多平台 Codegen | `@vte/core`, `@vte/vite-plugin` |
-| 3 | `<style token scoped>` 支持、类型推导增强 | `@vte/vite-plugin` |
-| 4 | 单元测试（23 个用例） | `@vte/core`, `@vte/vite-plugin` |
-| 5 | CLI 工具（validate/extract/generate） | `@vte/cli` |
-| 6 | 错误提示优化（拼写建议） | `@vte/vite-plugin` |
-| 7 | 编译器（agent.json + tokens.d.ts） | `@vte/compiler` |
-| 8 | React 绑定（hooks + Provider） | `@vte/react` |
+| 1-2 | Token 解析、Vite 插件、多平台 Codegen | `@vte-js/core`, `@vte-js/vite-plugin` |
+| 3 | `<style token scoped>` 支持、类型推导增强 | `@vte-js/vite-plugin` |
+| 4 | 单元测试（25 个用例） | `@vte-js/core`, `@vte-js/vite-plugin` |
+| 5 | CLI 工具（validate/extract/generate） | `@vte-js/cli` |
+| 6 | 错误提示优化（拼写建议） | `@vte-js/vite-plugin` |
+| 7 | 编译器（agent.json + tokens.d.ts） | `@vte-js/compiler` |
+| 8 | React 绑定（hooks + Provider） | `@vte-js/react` |
 | 9 | 文档完善 | 全部包 |
-| 10 | IDE 架构重构（language-server） | `@vte/language-server` |
-| 11 | Playground 可视化调试工具 | `@vte/playground` |
+| 10 | IDE 架构重构（language-server） | `@vte-js/language-server` |
+| 11 | Playground 可视化调试工具 | `@vte-js/playground` |
+| 12 | VS Code 扩展发布 + Token Configurator | `@vte-js/vscode`, `vte-website` |
 
 ### 核心功能验证
 
@@ -77,36 +79,69 @@ defineTokens({
 - ✅ `<style token scoped>` 作用域隔离
 - ✅ 多平台输出（Web/小程序/RN）
 - ✅ 无效 Token 诊断 + 拼写建议
-- ✅ VS Code 扩展（悬停/补全/跳转/快速修复/Code Lens）
-- ✅ Playground 可视化调试（暗黑模式/自动补全/复制）
-- ✅ 单元测试覆盖（23 个用例）
+- ✅ VS Code 扩展（悬停/补全/跳转/快速修复/Code Lens）— 已发布 Marketplace v1.0.2
+- ✅ Playground 可视化调试（暗黑模式/自动补全/复制/导出）
+- ✅ Playground 增强（Watch 模式/搜索过滤/多平台预览/依赖关系图）
+- ✅ Token Configurator（可视化编辑器/模板/导入导出/实时预览）
+- ✅ 网站亮色/暗色模式完整适配
+- ✅ 单元测试覆盖（25 个用例）
+- ✅ Changesets 自动化版本管理
+
+### npm 发布状态
+
+| 包 | 版本 | 状态 |
+|---|------|------|
+| `@vte-js/core` | 1.0.0 | ✅ 已发布 |
+| `@vte-js/vite-plugin` | 1.0.0 | ✅ 已发布 |
+| `@vte-js/cli` | 1.0.0 | ✅ 已发布 |
+| `@vte-js/compiler` | 1.0.0 | ✅ 已发布 |
+| `@vte-js/react` | 1.0.0 | ✅ 已发布 |
+| `@vte-js/language-server` | 1.0.2 | ✅ 已发布 |
+| `@vte-js/playground` | 1.1.0 | ✅ 已发布 |
+| `@vte-js/vscode` | 1.0.2 | ✅ Marketplace |
 
 ---
 
-## 4. 已知限制
+## 4. 关键命令
 
-- **CSS 语言服务器**：VS Code 内置 CSS 语言服务器不识别 `$token` 语法，需在 `.vscode/settings.json` 配置 `"css.validate": false` 禁用验证。这是 CSS-in-JS 方案的通病，Tailwind/UnoCSS 也采用同样策略。
+```bash
+pnpm dev              # 生成并启动 Playground（.vte-playground/）
+pnpm dev:website      # 启动网站开发服务器（含 Token Configurator）
+pnpm build:website    # 构建网站
+pnpm test             # 运行单元测试
+pnpm changeset        # 添加 changeset（版本管理）
+pnpm version-packages # 更新版本号 + changelog
+pnpm release          # 构建 + 发布所有包
+```
 
 ---
 
-## 5. 后续开发计划
+## 5. 已知限制
+
+- **CSS 语言服务器**：VS Code 内置 CSS 语言服务器不识别 `$token` 语法，需在 `.vscode/settings.json` 配置 `"css.validate": false` 禁用验证。
+- **Token Configurator**：引用选择器的 `getRefValue()` 函数未实现（返回空字符串），需要接入 tokenMap 获取引用值。
+- **Playground CLI**：`vte-playground start` 生成的项目需要在 workspace 内才能正确解析 `workspace:*` 依赖。
+
+---
+
+## 6. 后续开发计划
 
 ### 短期（1-2 周）
 
-1. **性能优化** ✅
-   - Playground 生成增加缓存机制
-   - Vite 插件 token 文件监听优化
-   - 语言服务器 token 加载异步化
+1. **Token Configurator 完善**
+   - 引用选择器显示引用值
+   - localStorage 持久化优化
+   - 移动端响应式适配
 
-2. **功能增强** ✅
-   - 支持 `<style token module>` (CSS Modules)
-   - 支持 token 分组和折叠
-   - Playground 增加 token 导出功能
+2. **VS Code 扩展增强**
+   - 引用链可视化
+   - Token 使用统计
+   - 批量重命名
 
-3. **IDE 扩展完善**
-   - VS Code 扩展发布到 Marketplace
-   - JetBrains 插件开发
-   - Vim/Neovim LSP 支持
+3. **Playground 优化**
+   - 响应式布局
+   - Token 搜索高亮
+   - 导入/导出功能增强
 
 ### 中期（1-2 月）
 
@@ -144,7 +179,7 @@ defineTokens({
 
 ---
 
-## 6. 关键术语
+## 7. 关键术语
 
 | 术语 | 说明 |
 |------|------|
@@ -155,6 +190,7 @@ defineTokens({
 | Platform | 编译目标：web / mp / rn |
 | agent.json | AI 可读的 token 信息文件 |
 | tokens.d.ts | TypeScript 类型声明文件 |
+| Changesets | monorepo 版本管理工具 |
 
 ---
 
