@@ -31,15 +31,13 @@ export function generatePlaygroundComponent(tokenMap: TokenMap, cssPrefix: strin
   <div :class="['playground', { dark: isDark }]">
     <header class="header">
       <div class="header-content">
-        <svg class="logo" viewBox="0 0 100 100" width="32" height="32">
-          <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#42b883"/><stop offset="100%" stop-color="#35495e"/></linearGradient></defs>
-          <path d="M50 4 L92 26 C95 28 97 31 97 35 L97 75 C97 79 95 82 92 84 L50 106 C47 108 43 108 40 106 L8 84 C5 82 3 79 3 75 L3 35 C3 31 5 28 8 26 Z" fill="url(#logoGrad)"/>
-          <path d="M50 22 L28 66 L39 66 L50 42 L61 66 L72 66 Z" fill="#fff"/>
-          <circle cx="50" cy="82" r="7" fill="#fff"/>
+        <svg class="logo" viewBox="0 0 128 128" width="32" height="32">
+          <path fill="#42b883" d="M12,10 L44,10 L64,72 L84,10 L116,10 L88,104 Q64,124 40,104 Z"/>
+          <path fill="#35495e" d="M32,10 L52,10 L64,32 L76,10 L96,10 L80,76 Q64,84 48,76 L32,10 Z"/>
         </svg>
         <div>
-          <h1 class="title">VTE Playground</h1>
-          <p class="subtitle">Auto-generated from design-tokens.ts</p>
+          <h1 class="title">VTE</h1>
+          <p class="subtitle">Playground</p>
         </div>
       </div>
       <div class="header-actions">
@@ -459,16 +457,17 @@ function downloadExport() {
 }
 
 .title {
-  font-size: $semantic.fontSize.2xl;
+  font-size: $semantic.fontSize.xl;
   font-weight: $semantic.fontWeight.bold;
   letter-spacing: -0.02em;
   margin: 0;
+  line-height: 1;
 }
 
 .subtitle {
-  font-size: $semantic.fontSize.sm;
-  opacity: 0.85;
-  margin-top: $semantic.spacing.xs;
+  font-size: $semantic.fontSize.xs;
+  opacity: 0.7;
+  margin-top: 2px;
 }
 
 .header-actions {
@@ -562,18 +561,20 @@ function downloadExport() {
   height: calc(100vh - 100px);
   background: $semantic.color.background;
   border-right: 1px solid $semantic.color.border;
-  padding: $semantic.spacing.lg $semantic.spacing.md;
+  padding: $semantic.spacing.md;
   overflow-y: auto;
   z-index: 90;
 }
 
 .nav-item {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: $semantic.spacing.sm;
   padding: $semantic.spacing.sm $semantic.spacing.md;
   color: $semantic.color.text-secondary;
   text-decoration: none;
   border-radius: $semantic.borderRadius.md;
-  margin-bottom: $semantic.spacing.sm;
+  margin-bottom: 4px;
   font-size: $semantic.fontSize.sm;
   transition: all 0.15s ease;
 }
@@ -587,6 +588,7 @@ function downloadExport() {
   background: $semantic.color.primary;
   color: $semantic.color.text-inverse;
   font-weight: $semantic.fontWeight.medium;
+  box-shadow: 0 2px 8px rgba(66, 184, 131, 0.3);
 }
 
 .main {
@@ -651,8 +653,8 @@ function downloadExport() {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
-.color-name { font-weight: $semantic.fontWeight.semibold; font-size: $semantic.fontSize.sm; color: inherit; }
-.color-value { font-size: 10px; font-family: monospace; padding: 2px 6px; border-radius: 4px; color: inherit; }
+.color-name { font-weight: $semantic.fontWeight.semibold; font-size: $semantic.fontSize.sm; color: inherit; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+.color-value { font-size: 10px; font-family: monospace; padding: 3px 8px; border-radius: 4px; color: inherit; background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(4px); }
 
 .spacing-grid { display: flex; flex-direction: column; gap: $semantic.spacing.md; }
 .spacing-card { display: flex; align-items: center; gap: $semantic.spacing.md; padding: $semantic.spacing.md; border-radius: $semantic.borderRadius.md; transition: all 0.2s ease; border: 1px solid transparent; }
@@ -667,10 +669,7 @@ function downloadExport() {
 .typography-card:hover { background: $semantic.color.background-secondary; border-color: $semantic.color.primary; }
 .typography-preview { margin: 0; line-height: 1.6; }
 .typography-info { display: flex; flex-direction: column; gap: $semantic.spacing.xs; align-items: flex-end; }
-.typography-name { font-weight: $semantic.fontWeight.semibold; font-family: monospace; font-size: $semantic.fontSize.sm; background: $semantic.color.background-secondary; padding: 2px 8px; border-radius: 4px; }
-.typography-value { color: $semantic.color.text-tertiary; font-family: monospace; font-size: $semantic.fontSize.xs; }
-.typography-info { display: flex; flex-direction: column; gap: $semantic.spacing.xs; align-items: flex-end; }
-.typography-name { font-weight: $semantic.fontWeight.medium; font-family: monospace; font-size: $semantic.fontSize.sm; }
+.typography-name { font-weight: $semantic.fontWeight.medium; font-family: monospace; font-size: $semantic.fontSize.sm; background: $semantic.color.background-secondary; padding: 2px 8px; border-radius: 4px; }
 .typography-value { color: $semantic.color.text-tertiary; font-family: monospace; font-size: $semantic.fontSize.xs; }
 
 .radius-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: $semantic.spacing.md; }
@@ -689,8 +688,8 @@ function downloadExport() {
 
 .editor-container { display: flex; flex-direction: column; gap: $semantic.spacing.lg; }
 .editor-input-wrapper { position: relative; }
-.editor-input { width: 100%; padding: $semantic.spacing.md $semantic.spacing.xl; border: 2px solid $semantic.color.border; border-radius: $semantic.borderRadius.lg; font-family: monospace; font-size: $semantic.fontSize.base; transition: all 0.2s ease; background: $semantic.color.background; }
-.editor-input:focus { outline: none; border-color: $semantic.color.primary; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+.editor-input { width: 100%; padding: $semantic.spacing.md $semantic.spacing.xl; border: 2px solid $semantic.color.border; border-radius: $semantic.borderRadius.lg; font-family: monospace; font-size: $semantic.fontSize.base; transition: all 0.2s ease; background: $semantic.color.background; box-sizing: border-box; }
+.editor-input:focus { outline: none; border-color: $semantic.color.primary; box-shadow: 0 0 0 4px rgba(66, 184, 131, 0.15); }
 .editor-input::placeholder { color: $semantic.color.text-tertiary; font-style: italic; }
 .editor-result { background: $semantic.color.background-secondary; border-radius: $semantic.borderRadius.lg; padding: $semantic.spacing.xl; margin-top: $semantic.spacing.md; border: 1px solid $semantic.color.border; }
 .result-row { display: flex; align-items: center; gap: $semantic.spacing.md; padding: $semantic.spacing.md 0; border-bottom: 1px solid $semantic.color.border; }
