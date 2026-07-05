@@ -16,258 +16,85 @@
           <aside class="docs-sidebar">
             <nav class="sidebar-nav">
               <div class="nav-group">
-                <h4>核心</h4>
-                <a href="#defineTokens" class="nav-item" :class="{ active: activeSection === 'defineTokens' }" @click.prevent="scrollTo('defineTokens')">defineTokens</a>
-                <a href="#parseTokens" class="nav-item" :class="{ active: activeSection === 'parseTokens' }" @click.prevent="scrollTo('parseTokens')">parseTokens</a>
-                <a href="#TokenMap" class="nav-item" :class="{ active: activeSection === 'TokenMap' }" @click.prevent="scrollTo('TokenMap')">TokenMap</a>
+                <h4>@vte-js/core</h4>
+                <a v-for="item in coreApi" :key="item.name" :href="`#${item.name}`" class="nav-item" :class="{ active: activeSection === item.name }" @click.prevent="scrollTo(item.name)">{{ item.name }}</a>
               </div>
               <div class="nav-group">
-                <h4>类型</h4>
-                <a href="#TokenPath" class="nav-item" :class="{ active: activeSection === 'TokenPath' }" @click.prevent="scrollTo('TokenPath')">TokenPath</a>
-                <a href="#TokenRef" class="nav-item" :class="{ active: activeSection === 'TokenRef' }" @click.prevent="scrollTo('TokenRef')">TokenRef</a>
-                <a href="#TokenValue" class="nav-item" :class="{ active: activeSection === 'TokenValue' }" @click.prevent="scrollTo('TokenValue')">TokenValue</a>
+                <h4>@vte-js/vite-plugin</h4>
+                <a v-for="item in vitePluginApi" :key="item.name" :href="`#${item.name}`" class="nav-item" :class="{ active: activeSection === item.name }" @click.prevent="scrollTo(item.name)">{{ item.name }}</a>
               </div>
               <div class="nav-group">
-                <h4>Vite 插件</h4>
-                <a href="#vte-plugin" class="nav-item" :class="{ active: activeSection === 'vte-plugin' }" @click.prevent="scrollTo('vte-plugin')">VtePlugin</a>
-                <a href="#style-token" class="nav-item" :class="{ active: activeSection === 'style-token' }" @click.prevent="scrollTo('style-token')">&lt;style token&gt;</a>
+                <h4>@vte-js/compiler</h4>
+                <a v-for="item in compilerApi" :key="item.name" :href="`#${item.name}`" class="nav-item" :class="{ active: activeSection === item.name }" @click.prevent="scrollTo(item.name)">{{ item.name }}</a>
               </div>
               <div class="nav-group">
-                <h4>React</h4>
-                <a href="#TokenProvider" class="nav-item" :class="{ active: activeSection === 'TokenProvider' }" @click.prevent="scrollTo('TokenProvider')">TokenProvider</a>
-                <a href="#useToken" class="nav-item" :class="{ active: activeSection === 'useToken' }" @click.prevent="scrollTo('useToken')">useToken</a>
+                <h4>@vte-js/react</h4>
+                <a v-for="item in reactApi" :key="item.name" :href="`#${item.name}`" class="nav-item" :class="{ active: activeSection === item.name }" @click.prevent="scrollTo(item.name)">{{ item.name }}</a>
+              </div>
+              <div class="nav-group">
+                <h4>@vte-js/cli</h4>
+                <a v-for="item in cliApi" :key="item.name" :href="`#${item.name}`" class="nav-item" :class="{ active: activeSection === item.name }" @click.prevent="scrollTo(item.name)">{{ item.name }}</a>
+              </div>
+              <div class="nav-group">
+                <h4>@vte-js/language-server</h4>
+                <a v-for="item in languageServerApi" :key="item.name" :href="`#${item.name}`" class="nav-item" :class="{ active: activeSection === item.name }" @click.prevent="scrollTo(item.name)">{{ item.name }}</a>
               </div>
             </nav>
           </aside>
 
           <!-- 主要内容 -->
           <main class="docs-main">
-            <!-- defineTokens -->
-            <div id="defineTokens" class="api-section" data-section="defineTokens">
-              <div class="api-header">
-                <span class="api-badge function">Function</span>
-                <h2>defineTokens</h2>
-                <code class="api-signature">defineTokens&lt;T&gt;(tokens: T): TokenConfig&lt;T&gt;</code>
-              </div>
-              <div class="api-body">
-                <p>定义设计 token 的核心函数。提供类型安全的 token 定义，支持三层结构（Primitive → Semantic → Component）。</p>
-                <h3>参数</h3>
-                <div class="params-table">
-                  <div class="param-row">
-                    <div class="param-name">tokens</div>
-                    <div class="param-type">T extends object</div>
-                    <div class="param-desc">token 定义对象</div>
-                  </div>
-                </div>
-                <h3>返回值</h3>
-                <p>返回深度只读的 token 配置对象 <code>TokenConfig&lt;T&gt;</code></p>
-                <h3>示例</h3>
-                <CodeBlock label="design-tokens.ts" :code="defineTokensExample" language="typescript" />
-
-                <h3>类型推导</h3>
-                <CodeBlock label="类型定义" :code="typeExample" language="typescript" />
+            <!-- @vte-js/core -->
+            <div class="api-group">
+              <h2 class="group-title">@vte-js/core</h2>
+              <p class="group-desc">核心解析器，提供 Token 解析、类型定义和工具函数</p>
+              <div v-for="item in coreApi" :key="item.name" :id="item.name" class="api-section" :data-section="item.name">
+                <ApiItem :item="item" />
               </div>
             </div>
 
-            <!-- parseTokens -->
-            <div id="parseTokens" class="api-section" data-section="parseTokens">
-              <div class="api-header">
-                <span class="api-badge async">Async</span>
-                <h2>parseTokens</h2>
-                <code class="api-signature">parseTokens(sourceFile: string): Promise&lt;TokenMap&gt;</code>
-              </div>
-              <div class="api-body">
-                <p>解析 token 文件，构建扁平化的 TokenMap。使用 @swc/core 进行 AST 解析，支持 TypeScript。</p>
-                <h3>参数</h3>
-                <div class="params-table">
-                  <div class="param-row">
-                    <div class="param-name">sourceFile</div>
-                    <div class="param-type">string</div>
-                    <div class="param-desc">token 文件的绝对路径</div>
-                  </div>
-                </div>
-                <h3>返回值</h3>
-                <p>返回 <code>Promise&lt;TokenMap&gt;</code>，包含所有解析后的 token。</p>
-                <h3>异常</h3>
-                <ul class="exception-list">
-                  <li><code>Circular reference detected</code> - 检测到循环引用</li>
-                  <li><code>Unresolved reference</code> - 引用了不存在的 token</li>
-                </ul>
-                <h3>示例</h3>
-                <CodeBlock label="使用示例" :code="parseTokensExample" language="typescript" />
+            <!-- @vte-js/vite-plugin -->
+            <div class="api-group">
+              <h2 class="group-title">@vte-js/vite-plugin</h2>
+              <p class="group-desc">Vite 插件，提供 &lt;style token&gt; 语法支持</p>
+              <div v-for="item in vitePluginApi" :key="item.name" :id="item.name" class="api-section" :data-section="item.name">
+                <ApiItem :item="item" />
               </div>
             </div>
 
-            <!-- TokenMap -->
-            <div id="TokenMap" class="api-section" data-section="TokenMap">
-              <div class="api-header">
-                <span class="api-badge type">Type</span>
-                <h2>TokenMap</h2>
-                <code class="api-signature">type TokenMap = Map&lt;string, TokenValue&gt;</code>
-              </div>
-              <div class="api-body">
-                <p>扁平化的 Token 字典，键为点路径（如 <code>semantic.color.primary</code>）。</p>
-                <h3>TokenValue 结构</h3>
-                <CodeBlock label="TokenValue" :code="tokenValueExample" language="typescript" />
+            <!-- @vte-js/compiler -->
+            <div class="api-group">
+              <h2 class="group-title">@vte-js/compiler</h2>
+              <p class="group-desc">编译器，生成 agent.json 和 tokens.d.ts</p>
+              <div v-for="item in compilerApi" :key="item.name" :id="item.name" class="api-section" :data-section="item.name">
+                <ApiItem :item="item" />
               </div>
             </div>
 
-            <!-- TokenPath -->
-            <div id="TokenPath" class="api-section" data-section="TokenPath">
-              <div class="api-header">
-                <span class="api-badge type">Type</span>
-                <h2>TokenPath&lt;T&gt;</h2>
-                <code class="api-signature">type TokenPath&lt;T&gt; = FlattenPaths&lt;T&gt;</code>
-              </div>
-              <div class="api-body">
-                <p>类型工具，从 token 定义中提取所有合法的点路径联合类型。用于 IDE 自动补全和类型检查。</p>
-                <h3>示例</h3>
-                <CodeBlock label="类型推导" :code="tokenPathExample" language="typescript" />
+            <!-- @vte-js/react -->
+            <div class="api-group">
+              <h2 class="group-title">@vte-js/react</h2>
+              <p class="group-desc">React 绑定，提供 hooks 和 Provider</p>
+              <div v-for="item in reactApi" :key="item.name" :id="item.name" class="api-section" :data-section="item.name">
+                <ApiItem :item="item" />
               </div>
             </div>
 
-            <!-- TokenRef -->
-            <div id="TokenRef" class="api-section" data-section="TokenRef">
-              <div class="api-header">
-                <span class="api-badge type">Type</span>
-                <h2>TokenRef&lt;P&gt;</h2>
-                <code class="api-signature">type TokenRef&lt;P extends string&gt; = \`{${P}}\`</code>
-              </div>
-              <div class="api-body">
-                <p>Token 引用类型，表示对其他 token 的引用。</p>
-                <h3>示例</h3>
-                <CodeBlock label="引用语法" :code="tokenRefExample" language="typescript" />
+            <!-- @vte-js/cli -->
+            <div class="api-group">
+              <h2 class="group-title">@vte-js/cli</h2>
+              <p class="group-desc">命令行工具，提供验证、提取、生成功能</p>
+              <div v-for="item in cliApi" :key="item.name" :id="item.name" class="api-section" :data-section="item.name">
+                <ApiItem :item="item" />
               </div>
             </div>
 
-            <!-- TokenValue -->
-            <div id="TokenValue" class="api-section" data-section="TokenValue">
-              <div class="api-header">
-                <span class="api-badge type">Type</span>
-                <h2>TokenValue</h2>
-                <code class="api-signature">type TokenValue = string | number</code>
-              </div>
-              <div class="api-body">
-                <p>Token 值的类型，可以是字符串或数字。</p>
-              </div>
-            </div>
-
-            <!-- Vite Plugin -->
-            <div id="vte-plugin" class="api-section" data-section="vte-plugin">
-              <div class="api-header">
-                <span class="api-badge plugin">Plugin</span>
-                <h2>Vite Plugin</h2>
-                <code class="api-signature">vte(options?: VtePluginOptions): Plugin</code>
-              </div>
-              <div class="api-body">
-                <p>Vite 插件，提供 <code>&lt;style token&gt;</code> 语法支持。</p>
-                <h3>配置选项</h3>
-                <div class="params-table">
-                  <div class="param-row">
-                    <div class="param-name">tokenFile</div>
-                    <div class="param-type">string</div>
-                    <div class="param-desc">token 文件路径（默认自动检测）</div>
-                  </div>
-                  <div class="param-row">
-                    <div class="param-name">platform</div>
-                    <div class="param-type">"web" | "mp" | "rn"</div>
-                    <div class="param-desc">目标平台（默认 "web"）</div>
-                  </div>
-                  <div class="param-row">
-                    <div class="param-name">cssPrefix</div>
-                    <div class="param-type">string</div>
-                    <div class="param-desc">CSS 变量前缀（默认 "vte"）</div>
-                  </div>
-                  <div class="param-row">
-                    <div class="param-name">output.types</div>
-                    <div class="param-type">boolean</div>
-                    <div class="param-desc">生成 tokens.d.ts（默认 true）</div>
-                  </div>
-                  <div class="param-row">
-                    <div class="param-name">output.css</div>
-                    <div class="param-type">boolean</div>
-                    <div class="param-desc">生成 tokens.css（默认 true）</div>
-                  </div>
-                </div>
-                <h3>示例</h3>
-                <CodeBlock label="vite.config.ts" :code="vitePluginExample" language="javascript" />
-              </div>
-            </div>
-
-            <!-- style token -->
-            <div id="style-token" class="api-section" data-section="style-token">
-              <div class="api-header">
-                <span class="api-badge syntax">Syntax</span>
-                <h2>&lt;style token&gt;</h2>
-                <code class="api-signature">&lt;style token [scoped]&gt;...&lt;/style&gt;</code>
-              </div>
-              <div class="api-body">
-                <p>VTE 的 SFC 扩展语法，用于在 Vue 组件中引用 design token。</p>
-                <h3>属性</h3>
-                <div class="params-table">
-                  <div class="param-row">
-                    <div class="param-name">token</div>
-                    <div class="param-type">必填</div>
-                    <div class="param-desc">启用 VTE token 编译</div>
-                  </div>
-                  <div class="param-row">
-                    <div class="param-name">scoped</div>
-                    <div class="param-type">可选</div>
-                    <div class="param-desc">启用作用域隔离</div>
-                  </div>
-                  <div class="param-row">
-                    <div class="param-name">module</div>
-                    <div class="param-type">可选</div>
-                    <div class="param-desc">启用 CSS Modules</div>
-                  </div>
-                </div>
-                <h3>示例</h3>
-                <CodeBlock label="Vue SFC" :code="styleTokenExample" language="css" />
-                <h3>编译输出</h3>
-                <CodeBlock label="CSS" :code="styleTokenOutput" language="css" />
-              </div>
-            </div>
-
-            <!-- TokenProvider -->
-            <div id="TokenProvider" class="api-section" data-section="TokenProvider">
-              <div class="api-header">
-                <span class="api-badge component">Component</span>
-                <h2>TokenProvider</h2>
-                <code class="api-signature">&lt;TokenProvider :tokenMap="map" :platform="web"&gt;</code>
-              </div>
-              <div class="api-body">
-                <p>React 组件，提供 token 上下文给子组件。</p>
-                <h3>Props</h3>
-                <div class="params-table">
-                  <div class="param-row">
-                    <div class="param-name">tokenMap</div>
-                    <div class="param-type">TokenMap</div>
-                    <div class="param-desc">token 映射对象（必填）</div>
-                  </div>
-                  <div class="param-row">
-                    <div class="param-name">platform</div>
-                    <div class="param-type">"web" | "mp" | "rn"</div>
-                    <div class="param-desc">目标平台（默认 "web"）</div>
-                  </div>
-                </div>
-                <h3>示例</h3>
-                <CodeBlock label="React 使用" :code="tokenProviderExample" language="typescript" />
-              </div>
-            </div>
-
-            <!-- useToken -->
-            <div id="useToken" class="api-section" data-section="useToken">
-              <div class="api-header">
-                <span class="api-badge hook">Hook</span>
-                <h2>useToken</h2>
-                <code class="api-signature">useToken(): TokenContextValue</code>
-              </div>
-              <div class="api-body">
-                <p>获取完整的 token 上下文。</p>
-                <h3>返回值</h3>
-                <CodeBlock label="TokenContextValue" :code="tokenContextExample" language="typescript" />
-                <h3>示例</h3>
-                <CodeBlock label="React 使用" :code="useTokenExample" language="typescript" />
+            <!-- @vte-js/language-server -->
+            <div class="api-group">
+              <h2 class="group-title">@vte-js/language-server</h2>
+              <p class="group-desc">IDE 无关的语言服务器核心</p>
+              <div v-for="item in languageServerApi" :key="item.name" :id="item.name" class="api-section" :data-section="item.name">
+                <ApiItem :item="item" />
               </div>
             </div>
           </main>
@@ -278,155 +105,351 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
-import CodeBlock from "../components/CodeBlock.vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
+import ApiItem from "../components/ApiItem.vue";
 
 const activeSection = ref("defineTokens");
 
-const sections = [
-  "defineTokens", "parseTokens", "TokenMap", "TokenPath", "TokenRef",
-  "TokenValue", "vte-plugin", "style-token", "TokenProvider", "useToken"
+// Core API
+const coreApi = [
+  {
+    name: "defineTokens",
+    badge: "Function",
+    signature: "defineTokens<T>(tokens: T): TokenConfig<T>",
+    description: "定义设计 token 的核心函数，提供类型安全的 token 定义",
+    params: [{ name: "tokens", type: "T extends object", desc: "token 定义对象" }],
+    returns: "TokenConfig<T> - 深度只读的 token 配置对象",
+    example: `import { defineTokens } from "@vte-js/core";
+
+const tokens = defineTokens({
+  primitive: { blue: { 500: "#3b82f6" } },
+  semantic: { color: { primary: "{primitive.blue.500}" } },
+});`
+  },
+  {
+    name: "parseTokens",
+    badge: "Async",
+    signature: "parseTokens(sourceFile: string): Promise<TokenMap>",
+    description: "解析 token 文件，构建扁平化的 TokenMap。使用 @swc/core 进行 AST 解析",
+    params: [{ name: "sourceFile", type: "string", desc: "token 文件的绝对路径" }],
+    returns: "Promise<TokenMap>",
+    example: `const map = await parseTokens("./design-tokens.ts");
+const primary = map.get("semantic.color.primary");
+console.log(primary?.value); // "#3b82f6"`
+  },
+  {
+    name: "toCssVarName",
+    badge: "Function",
+    signature: "toCssVarName(tokenPath: string, prefix?: string): string",
+    description: "将 token 路径转换为 CSS 变量名",
+    params: [
+      { name: "tokenPath", type: "string", desc: "token 路径" },
+      { name: "prefix", type: "string", desc: "CSS 变量前缀（默认 'vte'）" }
+    ],
+    returns: "string",
+    example: `toCssVarName("semantic.color.primary"); // "--vte-semantic-color-primary"
+toCssVarName("semantic.color.primary", "my"); // "--my-semantic-color-primary"`
+  },
+  {
+    name: "TokenMap",
+    badge: "Type",
+    signature: "type TokenMap = Map<string, TokenValue>",
+    description: "扁平化的 Token 字典，键为点路径",
+    code: `interface TokenValue {
+  path: string;      // token 的点路径
+  value: string;     // 解析后的值
+  raw: string;       // 原始值（可能是引用）
+  refs: string[];    // 引用的其他 token 路径
+}`
+  },
+  {
+    name: "TokenPath<T>",
+    badge: "Type",
+    signature: "type TokenPath<T> = FlattenPaths<T>",
+    description: "类型工具，提取所有合法的 token 路径联合类型",
+    example: `type Paths = TokenPath<typeof tokens>;
+// "semantic" | "semantic.color" | "semantic.color.primary"`
+  }
 ];
 
-const defineTokensExample = `import { defineTokens } from "@vte-js/core";
-
-export default defineTokens({
-  // 原始值
-  primitive: {
-    blue: {
-      500: "#3b82f6",
-      600: "#2563eb",
-    },
-  },
-  // 语义映射
-  semantic: {
-    color: {
-      primary: "{primitive.blue.500}",
-      primaryHover: "{primitive.blue.600}",
-    },
-  },
-  // 组件级
-  component: {
-    button: {
-      height: "{semantic.spacing.md}",
-    },
-  },
-});`;
-
-const typeExample = `// TokenPath 提取所有合法的 token 路径
-type Paths = TokenPath<typeof tokens>;
-// "primitive" | "primitive.blue" | "primitive.blue.500" | ...
-
-// 使用示例
-const path: Paths = "semantic.color.primary"; // ✅
-const bad: Paths = "invalid.path"; // ❌ 编译错误`;
-
-const parseTokensExample = `import { parseTokens } from "@vte-js/core";
-
-const map = await parseTokens("./design-tokens.ts");
-
-// 获取 token
-const primary = map.get("semantic.color.primary");
-console.log(primary?.value); // "#3b82f6"
-
-// 遍历所有 token
-for (const [path, token] of map) {
-  console.log(path, token.value);
-}`;
-
-const tokenValueExample = `interface TokenValue {
-  // token 的点路径
-  path: string;
-  // 解析后的值（如 "#3b82f6"）
-  value: string;
-  // 原始值（可能是引用 "{primitive.blue.500}"）
-  raw: string;
-  // 引用的其他 token 路径
-  refs: string[];
-}`;
-
-const tokenPathExample = `const tokens = defineTokens({
-  semantic: {
-    color: { primary: "#3b82f6" },
-  },
-});
-
-type Paths = TokenPath<typeof tokens>;
-// "semantic" | "semantic.color" | "semantic.color.primary"`;
-
-const tokenRefExample = `// 引用语法：{path.to.token}
-const tokens = defineTokens({
-  primitive: {
-    blue: { 500: "#3b82f6" },
-  },
-  semantic: {
-    color: {
-      // 引用 primitive.blue.500
-      primary: "{primitive.blue.500}",
-    },
-  },
-});`;
-
-const vitePluginExample = `// vite.config.ts
-import vte from "@vte-js/vite-plugin";
+// Vite Plugin API
+const vitePluginApi = [
+  {
+    name: "vte",
+    badge: "Plugin",
+    signature: "vte(options?: VtePluginOptions): Plugin",
+    description: "Vite 插件主函数",
+    params: [{ name: "options", type: "VtePluginOptions", desc: "配置选项" }],
+    example: `import vte from "@vte-js/vite-plugin";
 
 export default {
-  plugins: [
-    vte({
-      cssPrefix: "my-app",  // 自定义前缀
-      platform: "web",       // 目标平台
-    }),
-  ],
-};`;
-
-const styleTokenExample = `<style token scoped>
+  plugins: [vte({ cssPrefix: "my-app", platform: "web" })],
+};`
+  },
+  {
+    name: "VtePluginOptions",
+    badge: "Interface",
+    signature: "interface VtePluginOptions",
+    description: "插件配置选项",
+    params: [
+      { name: "tokenFile", type: "string", desc: "token 文件路径" },
+      { name: "platform", type: '"web" | "mp" | "rn"', desc: "目标平台（默认 'web'）" },
+      { name: "cssPrefix", type: "string", desc: "CSS 变量前缀（默认 'vte'）" },
+      { name: "output.types", type: "boolean", desc: "生成 tokens.d.ts" },
+      { name: "output.css", type: "boolean", desc: "生成 tokens.css" },
+    ]
+  },
+  {
+    name: "<style token>",
+    badge: "Syntax",
+    signature: "<style token [scoped] [module]>...</style>",
+    description: "VTE 的 SFC 扩展语法",
+    code: `<style token scoped>
 .btn {
   background: $semantic.color.primary;
   padding: $semantic.spacing.md;
-  border-radius: $semantic.borderRadius.md;
 }
-</style>`;
+</style>`
+  }
+];
 
-const styleTokenOutput = `.btn {
-  background: var(--vte-semantic-color-primary);
-  padding: var(--vte-semantic-spacing-md);
-  border-radius: var(--vte-semantic-borderRadius-md);
-}
+// Compiler API
+const compilerApi = [
+  {
+    name: "compile",
+    badge: "Async",
+    signature: "compile(options: CompilerOptions): Promise<CompileResult>",
+    description: "编译 design-tokens.ts，生成 agent.json 和 tokens.d.ts",
+    params: [
+      { name: "tokenFile", type: "string", desc: "token 文件路径" },
+      { name: "outputDir", type: "string", desc: "输出目录" },
+      { name: "prefix", type: "string", desc: "输出文件名前缀（默认 'tokens'）" },
+      { name: "cssPrefix", type: "string", desc: "CSS 变量前缀（默认 'vte'）" }
+    ],
+    returns: "CompileResult",
+    example: `const result = await compile({
+  tokenFile: "./design-tokens.ts",
+  outputDir: "./dist",
+});`
+  },
+  {
+    name: "CompilerOptions",
+    badge: "Interface",
+    signature: "interface CompilerOptions",
+    description: "编译器配置选项",
+    params: [
+      { name: "tokenFile", type: "string", desc: "token 文件路径" },
+      { name: "outputDir", type: "string", desc: "输出目录" },
+      { name: "prefix", type: "string", desc: "输出文件名前缀" },
+      { name: "cssPrefix", type: "string", desc: "CSS 变量前缀" }
+    ]
+  },
+  {
+    name: "CompileResult",
+    badge: "Interface",
+    signature: "interface CompileResult",
+    description: "编译结果",
+    params: [
+      { name: "agentJson", type: "AgentJson", desc: "agent.json 内容" },
+      { name: "tokensDts", type: "string", desc: "tokens.d.ts 内容" },
+      { name: "agentJsonPath", type: "string", desc: "agent.json 文件路径" },
+      { name: "tokensDtsPath", type: "string", desc: "tokens.d.ts 文件路径" }
+    ]
+  }
+];
 
-:root {
-  --vte-semantic-color-primary: #3b82f6;
-  --vte-semantic-spacing-md: 1rem;
-}`;
+// React API
+const reactApi = [
+  {
+    name: "TokenProvider",
+    badge: "Component",
+    signature: "<TokenProvider tokenMap={map} platform=\"web\">",
+    description: "React 组件，提供 token 上下文给子组件",
+    params: [
+      { name: "tokenMap", type: "TokenMap", desc: "token 映射对象" },
+      { name: "platform", type: '"web" | "mp" | "rn"', desc: "目标平台" }
+    ],
+    example: `<TokenProvider tokenMap={tokenMap} platform="web">
+  <App />
+</TokenProvider>`
+  },
+  {
+    name: "useToken",
+    badge: "Hook",
+    signature: "useToken(): TokenContextValue",
+    description: "获取完整的 token 上下文",
+    returns: "TokenContextValue",
+    example: `const { tokenMap, getTokenValue } = useToken();`
+  },
+  {
+    name: "useTokenValue",
+    badge: "Hook",
+    signature: "useTokenValue(path: string, platform?: string): string | number | undefined",
+    description: "获取单个 token 的值",
+    params: [
+      { name: "path", type: "string", desc: "token 路径" },
+      { name: "platform", type: "string", desc: "目标平台" }
+    ],
+    example: `const color = useTokenValue("semantic.color.primary");`
+  },
+  {
+    name: "useTokenMap",
+    badge: "Hook",
+    signature: "useTokenMap(): TokenMap",
+    description: "获取完整的 token 映射",
+    returns: "TokenMap"
+  },
+  {
+    name: "useTokenStyle",
+    badge: "Hook",
+    signature: "useTokenStyle<T>(styles: T): { [K in keyof T]: string | number }",
+    description: "根据 token 路径生成样式对象",
+    example: `const style = useTokenStyle({
+  color: "semantic.color.primary",
+  padding: "semantic.spacing.md",
+});`
+  }
+];
 
-const tokenProviderExample = `import { TokenProvider } from "@vte-js/react";
-import { tokenMap } from "./tokens";
+// CLI API
+const cliApi = [
+  {
+    name: "validate",
+    badge: "Command",
+    signature: "vte validate <file>",
+    description: "验证 Token 定义文件",
+    params: [{ name: "file", type: "string", desc: "token 文件路径" }],
+    example: `vte validate design-tokens.ts`
+  },
+  {
+    name: "extract",
+    badge: "Command",
+    signature: "vte extract <file> [--json]",
+    description: "提取所有 Token 路径",
+    params: [
+      { name: "file", type: "string", desc: "token 文件路径" },
+      { name: "--json", type: "flag", desc: "输出 JSON 格式" }
+    ],
+    example: `vte extract design-tokens.ts`
+  },
+  {
+    name: "generate",
+    badge: "Command",
+    signature: "vte generate <file> --platform <platform>",
+    description: "生成多端代码",
+    params: [
+      { name: "file", type: "string", desc: "token 文件路径" },
+      { name: "--platform", type: '"web" | "mp" | "rn"', desc: "目标平台" }
+    ],
+    example: `vte generate design-tokens.ts --platform web`
+  }
+];
 
-function App() {
-  return (
-    <TokenProvider tokenMap={tokenMap} platform="web">
-      <MyApp />
-    </TokenProvider>
-  );
-}`;
+// Language Server API
+const languageServerApi = [
+  {
+    name: "TokenManager",
+    badge: "Class",
+    signature: "new TokenManager(config: TokenManagerConfig)",
+    description: "Token 管理器，负责 token 的解析、缓存和查询",
+    params: [
+      { name: "tokenFile", type: "string", desc: "token 文件路径" },
+      { name: "cacheTtl", type: "number", desc: "缓存有效期（毫秒，默认 30000）" }
+    ],
+    example: `const manager = new TokenManager({
+  tokenFile: "design-tokens.ts",
+});`
+  },
+  {
+    name: "TokenManager.getTokenMap",
+    badge: "Method",
+    signature: "getTokenMap(): Map<string, TokenInfo> | null",
+    description: "获取所有 token 的映射"
+  },
+  {
+    name: "TokenManager.getToken",
+    badge: "Method",
+    signature: "getToken(path: string): TokenInfo | undefined",
+    description: "获取单个 token",
+    params: [{ name: "path", type: "string", desc: "token 路径" }]
+  },
+  {
+    name: "TokenManager.getTokenPaths",
+    badge: "Method",
+    signature: "getTokenPaths(): string[]",
+    description: "获取所有 token 路径"
+  },
+  {
+    name: "TokenManager.findSimilarTokens",
+    badge: "Method",
+    signature: "findSimilarTokens(target: string, maxResults?: number): string[]",
+    description: "查找与目标相似的 token（用于拼写建议）",
+    params: [
+      { name: "target", type: "string", desc: "目标路径" },
+      { name: "maxResults", type: "number", desc: "最大返回数量" }
+    ]
+  },
+  {
+    name: "TokenHoverProvider",
+    badge: "Class",
+    signature: "new TokenHoverProvider(manager: TokenManager)",
+    description: "悬停预览提供器，鼠标悬停时显示 token 信息",
+    example: `const hover = new TokenHoverProvider(manager);
+const result = hover.provideHover(document, position);`
+  },
+  {
+    name: "TokenCompletionProvider",
+    badge: "Class",
+    signature: "new TokenCompletionProvider(manager: TokenManager)",
+    description: "自动补全提供器，输入 $ 时触发补全",
+    example: `const completion = new TokenCompletionProvider(manager);
+const items = completion.provideCompletionItems(document, position);`
+  },
+  {
+    name: "TokenDefinitionProvider",
+    badge: "Class",
+    signature: "new TokenDefinitionProvider(manager: TokenManager)",
+    description: "定义跳转提供器，支持跳转到 token 定义位置",
+    example: `const definition = new TokenDefinitionProvider(manager);
+const location = definition.provideDefinition(document, position);`
+  },
+  {
+    name: "TokenDiagnosticProvider",
+    badge: "Class",
+    signature: "new TokenDiagnosticProvider(manager: TokenManager)",
+    description: "诊断提供器，检测未解析的 token 引用",
+    example: `const diagnostic = new TokenDiagnosticProvider(manager);
+const diagnostics = diagnostic.provideDiagnostics(document);`
+  },
+  {
+    name: "TokenDocumentSymbolProvider",
+    badge: "Class",
+    signature: "new TokenDocumentSymbolProvider(manager: TokenManager)",
+    description: "文档符号提供器，支持大纲视图",
+    example: `const symbolProvider = new TokenDocumentSymbolProvider(manager);
+const symbols = symbolProvider.provideDocumentSymbols(document);`
+  },
+  {
+    name: "TokenCodeLensProvider",
+    badge: "Class",
+    signature: "new TokenCodeLensProvider(manager: TokenManager)",
+    description: "CodeLens 提供器，显示 token 使用统计",
+    example: `const codeLens = new TokenCodeLensProvider(manager);
+const lenses = codeLens.provideCodeLenses(document);`
+  }
+];
 
-const tokenContextExample = `interface TokenContextValue {
-  tokenMap: TokenMap;
-  platform: "web" | "mp" | "rn";
-  getToken: (path: string) => string | undefined;
-  getTokenValue: (path: string, platform?: string) => string | number | undefined;
-}`;
-
-const useTokenExample = `import { useToken } from "@vte-js/react";
-
-function MyComponent() {
-  const { tokenMap, getTokenValue } = useToken();
-
-  return (
-    <div style={{ color: getTokenValue("semantic.color.primary") }}>
-      Hello
-    </div>
-  );
-}`;
+// 所有 section ID
+const allSections = computed(() => {
+  return [
+    ...coreApi.map(i => i.name),
+    ...vitePluginApi.map(i => i.name),
+    ...compilerApi.map(i => i.name),
+    ...reactApi.map(i => i.name),
+    ...cliApi.map(i => i.name),
+    ...languageServerApi.map(i => i.name),
+  ];
+});
 
 function scrollTo(id: string) {
   const el = document.getElementById(id);
@@ -453,7 +476,7 @@ onMounted(() => {
     },
     { rootMargin: "-100px 0px -70% 0px", threshold: 0 }
   );
-  sections.forEach((id) => {
+  allSections.value.forEach((id) => {
     const el = document.getElementById(id);
     if (el) observer!.observe(el);
   });
@@ -480,29 +503,9 @@ onUnmounted(() => {
 .nav-item { display: block; padding: 8px 12px; color: #94a3b8; text-decoration: none; font-size: 14px; border-radius: 6px; transition: all 0.2s; }
 .nav-item:hover { background: rgba(66, 184, 131, 0.1); color: #f1f5f9; }
 .nav-item.active { background: rgba(66, 184, 131, 0.15); color: #42b883; }
-.api-section { margin-bottom: 80px; padding-bottom: 80px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-.api-section:last-child { border-bottom: none; }
-.api-header { margin-bottom: 32px; }
-.api-badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }
-.api-badge.function { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
-.api-badge.async { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
-.api-badge.type { background: rgba(34, 211, 238, 0.2); color: #22d3ee; }
-.api-badge.plugin { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
-.api-badge.syntax { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
-.api-badge.component { background: rgba(244, 114, 182, 0.2); color: #f472b6; }
-.api-badge.hook { background: rgba(251, 146, 60, 0.2); color: #fb923c; }
-.api-header h2 { font-size: 32px; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
-.api-signature { display: inline-block; padding: 8px 16px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(66, 184, 131, 0.2); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #42b883; }
-.api-body p { font-size: 16px; color: #94a3b8; line-height: 1.8; margin-bottom: 24px; }
-.api-body code { background: rgba(66, 184, 131, 0.15); padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; color: #42b883; font-size: 14px; }
-.api-body h3 { font-size: 20px; font-weight: 700; color: #f1f5f9; margin: 32px 0 16px; }
-.params-table { border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
-.param-row { display: grid; grid-template-columns: 140px 140px 1fr; gap: 16px; padding: 14px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-.param-row:last-child { border-bottom: none; }
-.param-name { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: #f1f5f9; }
-.param-type { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #42b883; }
-.param-desc { font-size: 14px; color: #94a3b8; }
-.exception-list { list-style: none; padding: 0; margin-bottom: 24px; }
-.exception-list li { padding: 12px 16px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #f87171; }
+.api-group { margin-bottom: 80px; padding-bottom: 60px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.group-title { font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+.group-desc { font-size: 15px; color: #94a3b8; margin-bottom: 32px; }
+.api-section { margin-bottom: 48px; }
 @media (max-width: 900px) { .docs-layout { grid-template-columns: 1fr; } .docs-sidebar { position: static; display: none; } }
 </style>
