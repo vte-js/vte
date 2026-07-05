@@ -22,21 +22,15 @@
             <div class="install-options">
               <div class="install-card">
                 <div class="install-label">pnpm (推荐)</div>
-                <div class="install-cmd">
-                  <code>pnpm add @vte-js/core @vte-js/vite-plugin</code>
-                </div>
+                <CodeBlock label="Terminal" :code="installPnpm" language="bash" />
               </div>
               <div class="install-card">
                 <div class="install-label">npm</div>
-                <div class="install-cmd">
-                  <code>npm install @vte-js/core @vte-js/vite-plugin</code>
-                </div>
+                <CodeBlock label="Terminal" :code="installNpm" language="bash" />
               </div>
               <div class="install-card">
                 <div class="install-label">yarn</div>
-                <div class="install-cmd">
-                  <code>yarn add @vte-js/core @vte-js/vite-plugin</code>
-                </div>
+                <CodeBlock label="Terminal" :code="installYarn" language="bash" />
               </div>
             </div>
           </div>
@@ -52,49 +46,7 @@
             <p>
               在项目根目录创建 <code>design-tokens.ts</code> 文件，使用三层结构定义你的设计 token：
             </p>
-            <div class="code-block">
-              <div class="code-header">
-                <span class="code-label">design-tokens.ts</span>
-              </div>
-              <pre><code><span class="hl-kw">import</span> { defineTokens } <span class="hl-kw">from</span> <span class="hl-str">"@vte-js/core"</span>;
-
-<span class="hl-kw">export default</span> <span class="hl-fn">defineTokens</span>({
-  <span class="hl-comment">// 原始值 - 基础颜色、间距等</span>
-  primitive: {
-    blue: {
-      50: <span class="hl-str">"#eff6ff"</span>,
-      100: <span class="hl-str">"#dbeafe"</span>,
-      500: <span class="hl-str">"#3b82f6"</span>,
-      600: <span class="hl-str">"#2563eb"</span>,
-    },
-    gray: {
-      500: <span class="hl-str">"#6b7280"</span>,
-      900: <span class="hl-str">"#111827"</span>,
-    },
-  },
-  <span class="hl-comment">// 语义映射 - 有含义的命名</span>
-  semantic: {
-    color: {
-      primary: <span class="hl-str">"{primitive.blue.500}"</span>,
-      primaryHover: <span class="hl-str">"{primitive.blue.600}"</span>,
-      background: <span class="hl-str">"#ffffff"</span>,
-      text: <span class="hl-str">"{primitive.gray.900}"</span>,
-    },
-    spacing: {
-      sm: <span class="hl-str">"0.5rem"</span>,
-      md: <span class="hl-str">"1rem"</span>,
-      lg: <span class="hl-str">"1.5rem"</span>,
-    },
-  },
-  <span class="hl-comment">// 组件级 - 特定组件的 token</span>
-  component: {
-    button: {
-      height: <span class="hl-str">"{semantic.spacing.md}"</span>,
-      padding: <span class="hl-str">"{semantic.spacing.sm}"</span>,
-    },
-  },
-});</code></pre>
-            </div>
+            <CodeBlock label="design-tokens.ts" :code="designTokensExample" language="typescript" />
             <div class="tip-box">
               <div class="tip-icon">💡</div>
               <div class="tip-content">
@@ -113,25 +65,7 @@
           </div>
           <div class="section-body">
             <p>在 <code>vite.config.ts</code> 中添加 VTE 插件：</p>
-            <div class="code-block">
-              <div class="code-header">
-                <span class="code-label">vite.config.ts</span>
-              </div>
-              <pre><code><span class="hl-kw">import</span> { defineConfig } <span class="hl-kw">from</span> <span class="hl-str">"vite"</span>;
-<span class="hl-kw">import</span> vue <span class="hl-kw">from</span> <span class="hl-str">"@vitejs/plugin-vue"</span>;
-<span class="hl-kw">import</span> vte <span class="hl-kw">from</span> <span class="hl-str">"@vte-js/vite-plugin"</span>;
-
-<span class="hl-kw">export default</span> <span class="hl-fn">defineConfig</span>({
-  plugins: [
-    <span class="hl-fn">vue</span>(),
-    <span class="hl-fn">vte</span>({
-      <span class="hl-comment">// 可选配置</span>
-      cssPrefix: <span class="hl-str">"my-app"</span>,  <span class="hl-comment">// 自定义前缀，默认 "vte"</span>
-      platform: <span class="hl-str">"web"</span>,     <span class="hl-comment">// 目标平台：web | mp | rn</span>
-    }),
-  ],
-});</code></pre>
-            </div>
+            <CodeBlock label="vite.config.ts" :code="viteConfigExample" language="typescript" />
             <div class="options-table">
               <div class="table-header">
                 <div class="th">选项</div>
@@ -175,32 +109,7 @@
           </div>
           <div class="section-body">
             <p>使用 <code>&lt;style token&gt;</code> 语法引用 token：</p>
-            <div class="code-block">
-              <div class="code-header">
-                <span class="code-label">Button.vue</span>
-              </div>
-              <pre><code><span class="hl-tag">&lt;template&gt;</span>
-  <span class="hl-tag">&lt;button</span> <span class="hl-attr">class</span>=<span class="hl-str">"btn"</span><span class="hl-tag">&gt;</span>
-    Click me
-  <span class="hl-tag">&lt;/button&gt;</span>
-<span class="hl-tag">&lt;/template&gt;</span>
-
-<span class="hl-tag">&lt;style token scoped&gt;</span>
-<span class="hl-sel">.btn</span> {
-  <span class="hl-prop">background</span>: <span class="hl-val">$semantic.color.primary</span>;
-  <span class="hl-prop">padding</span>: <span class="hl-val">$semantic.spacing.md</span>;
-  <span class="hl-prop">border-radius</span>: <span class="hl-val">$semantic.borderRadius.md</span>;
-  <span class="hl-prop">color</span>: <span class="hl-val">$semantic.color.text-inverse</span>;
-  <span class="hl-prop">border</span>: <span class="hl-val">none</span>;
-  <span class="hl-prop">cursor</span>: <span class="hl-val">pointer</span>;
-  <span class="hl-prop">transition</span>: <span class="hl-val">all 0.2s ease</span>;
-}
-
-<span class="hl-sel">.btn:hover</span> {
-  <span class="hl-prop">background</span>: <span class="hl-val">$semantic.color.primary-hover</span>;
-}
-<span class="hl-tag">&lt;/style&gt;</span></code></pre>
-            </div>
+            <CodeBlock label="Button.vue" :code="vueExample" language="css" />
             <div class="tip-box warning">
               <div class="tip-icon">⚠️</div>
               <div class="tip-content">
@@ -251,6 +160,90 @@
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+import CodeBlock from "../components/CodeBlock.vue";
+
+const installPnpm = "pnpm add @vte-js/core @vte-js/vite-plugin";
+const installNpm = "npm install @vte-js/core @vte-js/vite-plugin";
+const installYarn = "yarn add @vte-js/core @vte-js/vite-plugin";
+
+const designTokensExample = `import { defineTokens } from "@vte-js/core";
+
+export default defineTokens({
+  // 原始值 - 基础颜色、间距等
+  primitive: {
+    blue: {
+      50: "#eff6ff",
+      100: "#dbeafe",
+      500: "#3b82f6",
+      600: "#2563eb",
+    },
+    gray: {
+      500: "#6b7280",
+      900: "#111827",
+    },
+  },
+  // 语义映射 - 有含义的命名
+  semantic: {
+    color: {
+      primary: "{primitive.blue.500}",
+      primaryHover: "{primitive.blue.600}",
+      background: "#ffffff",
+      text: "{primitive.gray.900}",
+    },
+    spacing: {
+      sm: "0.5rem",
+      md: "1rem",
+      lg: "1.5rem",
+    },
+  },
+  // 组件级 - 特定组件的 token
+  component: {
+    button: {
+      height: "{semantic.spacing.md}",
+      padding: "{semantic.spacing.sm}",
+    },
+  },
+});`;
+
+const viteConfigExample = `import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import vte from "@vte-js/vite-plugin";
+
+export default defineConfig({
+  plugins: [
+    vue(),
+    vte({
+      // 可选配置
+      cssPrefix: "my-app",  // 自定义前缀，默认 "vte"
+      platform: "web",       // 目标平台：web | mp | rn
+    }),
+  ],
+});`;
+
+const vueExample = `<template>
+  <button class="btn">
+    Click me
+  </button>
+</template>
+
+<style token scoped>
+.btn {
+  background: $semantic.color.primary;
+  padding: $semantic.spacing.md;
+  border-radius: $semantic.borderRadius.md;
+  color: $semantic.color.text-inverse;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background: $semantic.color.primary-hover;
+}
+</style>`;
+</script>
 
 <style scoped>
 .page-quickstart {
@@ -360,10 +353,10 @@
 }
 
 .install-card {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(15, 23, 42, 0.5);
   border: 1px solid rgba(66, 184, 131, 0.15);
   border-radius: 12px;
-  padding: 20px;
+  padding: 16px;
 }
 
 .install-label {
@@ -371,64 +364,8 @@
   color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
-
-.install-cmd {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 12px;
-  border-radius: 8px;
-  overflow-x: auto;
-}
-
-.install-cmd code {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  color: #e2e8f0;
-}
-
-.code-block {
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(66, 184, 131, 0.2);
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 24px;
-}
-
-.code-header {
-  padding: 12px 16px;
-  background: rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.code-label {
-  font-size: 12px;
-  color: #64748b;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.code-block pre {
-  margin: 0;
-  padding: 20px;
-  overflow-x: auto;
-}
-
-.code-block code {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  line-height: 1.7;
-  color: #e2e8f0;
-}
-
-.hl-kw { color: #c084fc; }
-.hl-str { color: #86efac; }
-.hl-fn { color: #60a5fa; }
-.hl-comment { color: #64748b; }
-.hl-tag { color: #7dd3fc; }
-.hl-attr { color: #c4b5fd; }
-.hl-sel { color: #fbbf24; }
-.hl-prop { color: #93c5fd; }
-.hl-val { color: #86efac; }
 
 .tip-box {
   display: flex;
